@@ -4,6 +4,7 @@
   "dependencies": {
     "express": "^4.14.1",
     "octokat": "^0.6.2",
-    "pug": "^2.0.0-beta11"
+    "pug": "^2.0.0-beta11",
+    "set": "^1.1.1"
   }
 }
