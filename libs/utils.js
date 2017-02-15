@@ -149,9 +149,19 @@ Libs.getRepositories = function (repo, callback) {
  * @returns {number}
  */
 Libs.calculateCosine = function (list1, list2) {
-    var set1 = new buckets.Set(list1), set2 = new buckets.Set(list2);
-    var intersect = set1.intersect(set2);
-    return intersect.size() / Math.sqrt(set1.size() * set2.size());
+    console.log(list1, list2);
+    var table = {}, sum = 0;
+    for(var i = 0; i < list1.length; i++) {
+        table[list1[i].id] = 1;
+    }
+    for(i = 0; i < list2.length; i++) {
+        table[list2[i].id] = 0;
+    }
+    for(var key in table) {
+        sum += 1 - table[key];
+    }
+    console.log(sum / Math.sqrt(list1.length * list2.length));
+    return sum / Math.sqrt(list1.length * list2.length);
 };
 
 /**
@@ -176,7 +186,7 @@ Libs.getSimilarity = function (repo1, repo2, callback) {
             return callback(err);
         }
         list2 = users;
-        if (list2) {
+        if (list1) {
             callback(null, Libs.calculateCosine(list1, list2));
         }
     });

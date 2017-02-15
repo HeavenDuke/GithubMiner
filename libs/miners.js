@@ -26,7 +26,32 @@ Miner.expand = function (repository, callback) {
  * @param callback
  */
 Miner.rank = function (repository, list, callback) {
-    return callback(null, list);
+    var similarities = [], cnt = 0;
+    for(var i = 0; i < list.length; i++) {
+        var j = i;
+        utils.getSimilarity(repository, list[j], function (err, similarity) {
+            if (err) {
+                return callback(err);
+            }
+            similarities[j] = similarity;
+            if (cnt++ >= list.length) {
+                var table = [];
+                for(var i = 0; i < list.length; i++) {
+                    table.push({
+                        similarity: similarities[i],
+                        repository: list[i]
+                    });
+                }
+                table.sort(function (item1, item2) {
+                    return item1.similarity > item2.similarity;
+                });
+                for(i = 0; i < list.length; i++) {
+                    list[i] = table[i].repository;
+                }
+                return callback(null, list);
+            }
+        });
+    }
 };
 
 /**
