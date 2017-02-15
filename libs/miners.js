@@ -2,8 +2,7 @@
  * Created by heavenduke on 17-2-14.
  */
 
-var config = require('../config');
-var RepoList = require('./RepoList');
+var utils = require('./utils');
 var Miner = {};
 
 /**
@@ -12,8 +11,12 @@ var Miner = {};
  * @param callback
  */
 Miner.expand = function (repository, callback) {
-    var list = new RepoList(config.maxLen);
-
+    utils.getRepositories(repository, function (err, repositories) {
+        if (err) {
+            return callback(err);
+        }
+        return callback(null, repositories);
+    });
 };
 
 /**
@@ -23,7 +26,7 @@ Miner.expand = function (repository, callback) {
  * @param callback
  */
 Miner.rank = function (repository, list, callback) {
-
+    return callback(null, list);
 };
 
 /**
@@ -40,7 +43,7 @@ Miner.search = function (repository, callback) {
             if (err) {
                 return callback(err);
             }
-            return callback(rank);
+            return callback(null, rank);
         });
     });
 };

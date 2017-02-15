@@ -2,9 +2,10 @@
   "name": "application-name",
   "version": "0.0.1",
   "dependencies": {
+    "buckets-js": "^1.98.2",
     "express": "^4.14.1",
     "octokat": "^0.6.2",
     "pug": "^2.0.0-beta11",
-    "set": "^1.1.1"
+    "set": "latest"
   }
 }

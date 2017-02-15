@@ -7,6 +7,6 @@ var controllers = require('./controllers');
 
 router.get('/', controllers.page);
 
-router.get('/repositories/:repository', controllers.api);
+router.get('/repositories/:username/:repository', controllers.api);
 
 module.exports = router;

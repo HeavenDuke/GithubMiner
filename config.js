@@ -3,5 +3,10 @@
  */
 
 module.exports = {
-    maxLen: 5000
+    maxLen: 5000,
+
+    basicUser: {
+        username: "DoubleDeckers",
+        password: "15tfosaaub_rees"
+    }
 };
