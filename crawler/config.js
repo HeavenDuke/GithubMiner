@@ -44,4 +44,5 @@ module.exports = function (environment) {
     if (environment == "development") {
         config.database.password = "win32.luhzu.a";
     }
+    return config;
 };
