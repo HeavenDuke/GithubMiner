@@ -2,7 +2,7 @@
  * Created by heavenduke on 17-4-2.
  */
 
-var sleep = require('sleep');
+// var sleep = require('sleep');
 var Crawlers = require('./libs');
 var config = require('./config')(process.env);
 
@@ -12,15 +12,15 @@ var userCrawler = new Crawlers.UserCrawler(config.authentication.preview);
 
 var searchRepository = function (callback) {
     var Repository = database.models.repository;
-    var count = 0, startTime = Date.now();
+    // var count = 0, startTime = Date.now();
     var page = 1, total = 0, periodTotal = 0;
     var repoConfig = config.repository;
     function search() {
-        if (Date.now() - startTime < 60 * 1000 && count >= 30) {
-            count = 0;
-            startTime = Date.now();
-            sleep.msleep(60 * 1000);
-        }
+        // if (Date.now() - startTime < 60 * 1000 && count >= 30) {
+        //     count = 0;
+        //     startTime = Date.now();
+        //     sleep.msleep(60 * 1000);
+        // }
         previewRepositoryCrawler.fetchTopStarred(repoConfig, page, function (result) {
             if (result.items.length != 0) {
                 var _reposData = {}, reposData = [];
@@ -72,15 +72,15 @@ var searchRepository = function (callback) {
 
 var searchUser = function (callback) {
     var User = database.models.user;
-    var count = 0, startTime = Date.now();
+    // var count = 0, startTime = Date.now();
     var page = 1, total = 0, periodTotal = 0;
     var userConfig = config.user;
     function search() {
-        if (Date.now() - startTime < 60 * 1000 && count >= 30) {
-            count = 0;
-            startTime = Date.now();
-            sleep.msleep(60 * 1000);
-        }
+        // if (Date.now() - startTime < 60 * 1000 && count >= 30) {
+        //     count = 0;
+        //     startTime = Date.now();
+        //     sleep.msleep(60 * 1000);
+        // }
         userCrawler.fetchTopFollowed(userConfig, page, function (result) {
             if (result.items.length != 0) {
                 var _usersData = {}, usersData = [];
@@ -131,25 +131,25 @@ var searchUser = function (callback) {
 var updateUser = function () {
     var User = database.models.user;
     var count = 0, startTime = Date.now(), rate = 0;
-    function updateRate() {
-        rate++;
-        if (Date.now() - startTime <= 60 * 60 * 1000 && rate >= 5000) {
-            sleep.msleep(60 * 60 * 1000 -(Date.now() - startTime));
-            startTime = Date.now();
-            rate = 0;
-        }
-    }
+    // function updateRate() {
+    //     rate++;
+    //     if (Date.now() - startTime <= 60 * 60 * 1000 && rate >= 5000) {
+    //         sleep.msleep(60 * 60 * 1000 -(Date.now() - startTime));
+    //         startTime = Date.now();
+    //         rate = 0;
+    //     }
+    // }
     User.findAll({}).then(function (users) {
         function search() {
             if (users.length != count) {
                 userCrawler.fetchDetail(users[count].login, function (user) {
-                    updateRate();
+                    // updateRate();
                     userCrawler.fetchFollowersCount(users[count].login, function (followersCount) {
-                        updateRate();
+                        // updateRate();
                         userCrawler.fetchFollowingsCount(users[count].login, function (followingsCount) {
-                            updateRate();
+                            // updateRate();
                             userCrawler.fetchStarredCount(users[count].login, function (starredCount) {
-                                updateRate();
+                                // updateRate();
                                 var res = {
                                     email: user.email,
                                     name: user.name,
@@ -182,19 +182,19 @@ var fetchStar = function () {
     var User = database.models.user;
     var Star = database.models.star;
     var count = 0, startTime = Date.now(), rate = 0, page = 1, total_page = 1;
-    function updateRate() {
-        rate++;
-        if (Date.now() - startTime <= 60 * 60 * 1000 && rate >= 5000) {
-            sleep.msleep(60 * 60 * 1000 -(Date.now() - startTime));
-            startTime = Date.now();
-            rate = 0;
-        }
-    }
+    // function updateRate() {
+    //     rate++;
+    //     if (Date.now() - startTime <= 60 * 60 * 1000 && rate >= 5000) {
+    //         sleep.msleep(60 * 60 * 1000 -(Date.now() - startTime));
+    //         startTime = Date.now();
+    //         rate = 0;
+    //     }
+    // }
     User.findAll({}).then(function (users) {
         function search() {
             function searchSingle() {
                 userCrawler.fetchStarred(users[count].login, page, function (repositories) {
-                    updateRate();
+                    // updateRate();
                     var finished = repositories.finished;
                     repositories = repositories.data;
                     var repoIds = [];

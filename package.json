@@ -9,6 +9,6 @@
     "pug": "^2.0.0-beta11",
     "sequelize": "latest",
     "set": "latest",
-    "sleep": "^5.1.0"
+//    "sleep": "^5.1.0"
   }
 }
