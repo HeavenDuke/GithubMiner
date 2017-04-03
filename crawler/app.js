@@ -160,7 +160,6 @@ var updateUser = function () {
                                     followees_count: followingsCount,
                                     starred_count: starredCount
                                 };
-                                console.log(JSON.stringify(res));
                                 User.update(res, {
                                     where: {login: users[count].login}
                                 }).then(function () {
