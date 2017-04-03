@@ -3,7 +3,7 @@
  */
 
 module.exports = function () {
-    return {
+    var config = {
         authentication: {
             basic: {
                 username: "HeavenDuke",
@@ -26,7 +26,7 @@ module.exports = function () {
         database: {
             dbname: "GithubMinerData",
             username: "root",
-            password: "win32.luhzu.a",
+            password: "win32.luhzu.b",
             config: {
                 host: "localhost",
                 dialect: "mysql",
@@ -40,5 +40,8 @@ module.exports = function () {
                 logging: null
             }
         }
+    };
+    if (environment == "development") {
+        config.database.password = "win32.luhzu.a";
     }
 };

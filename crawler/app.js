@@ -241,18 +241,18 @@ var database = require('../database')(
     config.database.config
 );
 // Note: 如果是从头开始运行爬虫，请使用这部分
-// database.sync().then(function () {
-//     searchRepository(function () {
-//         searchUser(function () {
-//             updateUser();
-//             fetchStar();
-//         });
-//     });
-// });
+database.sync().then(function () {
+    searchRepository(function () {
+        searchUser(function () {
+            updateUser();
+            fetchStar();
+        });
+    });
+});
 
 // Note: 如果是从头开始运行爬虫，请注释掉这部分
-database.sync().then(function () {
-    updateUser();
-    fetchStar();
-});
+// database.sync().then(function () {
+//     updateUser();
+//     fetchStar();
+// });
 
