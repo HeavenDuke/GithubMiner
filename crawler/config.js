@@ -2,7 +2,7 @@
  * Created by heavenduke on 17-4-2.
  */
 
-module.exports = function () {
+module.exports = function (environment) {
     var config = {
         authentication: {
             basic: {
