@@ -240,7 +240,7 @@ var database = require('../database')(
     config.database.password,
     config.database.config
 );
-
+// Note: 如果是从头开始运行爬虫，请使用这部分
 // database.sync().then(function () {
 //     searchRepository(function () {
 //         searchUser(function () {
@@ -250,6 +250,7 @@ var database = require('../database')(
 //     });
 // });
 
+// Note: 如果是从头开始运行爬虫，请注释掉这部分
 database.sync().then(function () {
     updateUser();
     fetchStar();
