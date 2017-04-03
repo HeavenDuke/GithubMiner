@@ -4,8 +4,11 @@
   "dependencies": {
     "buckets-js": "^1.98.2",
     "express": "^4.14.1",
+    "mysql": "^2.13.0",
     "octokat": "^0.6.2",
     "pug": "^2.0.0-beta11",
-    "set": "latest"
+    "sequelize": "latest",
+    "set": "latest",
+    "sleep": "^5.1.0"
   }
 }
