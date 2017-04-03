@@ -139,7 +139,7 @@ var updateUser = function () {
             rate = 0;
         }
     }
-    User.findAll({where: {followers_count: 0}}).then(function (users) {
+    User.findAll({}).then(function (users) {
         function search() {
             if (users.length != count) {
                 userCrawler.fetchDetail(users[count].login, function (user) {
@@ -148,22 +148,26 @@ var updateUser = function () {
                         updateRate();
                         userCrawler.fetchFollowingsCount(users[count].login, function (followingsCount) {
                             updateRate();
-                            var res = {
-                                email: user.email,
-                                name: user.name,
-                                company: user.company,
-                                blog: user.blog,
-                                location: user.location,
-                                followers_count: followersCount,
-                                followees_count: followingsCount
-                            };
-                            console.log(JSON.stringify(res));
-                            User.update(res, {
-                                where: {login: users[count].login}
-                            }).then(function () {
-                                count++;
-                                console.log("finish update user info No." + count + " username = " + users[count].login);
-                                setTimeout(search, 1);
+                            userCrawler.fetchStarredCount(users[count].login, function (starredCount) {
+                                updateRate();
+                                var res = {
+                                    email: user.email,
+                                    name: user.name,
+                                    company: user.company,
+                                    blog: user.blog,
+                                    location: user.location,
+                                    followers_count: followersCount,
+                                    followees_count: followingsCount,
+                                    starred_count: starredCount
+                                };
+                                console.log(JSON.stringify(res));
+                                User.update(res, {
+                                    where: {login: users[count].login}
+                                }).then(function () {
+                                    count++;
+                                    console.log("finish update user info No." + count + " username = " + users[count].login);
+                                    setTimeout(search, 1);
+                                });
                             });
                         });
                     });
@@ -190,7 +194,7 @@ var fetchStar = function () {
     User.findAll({}).then(function (users) {
         function search() {
             function searchSingle() {
-                userCrawler.fetchStars(users[count].login, page, function (repositories) {
+                userCrawler.fetchStarred(users[count].login, page, function (repositories) {
                     updateRate();
                     var finished = repositories.finished;
                     repositories = repositories.data;
@@ -237,12 +241,17 @@ var database = require('../database')(
     config.database.config
 );
 
+// database.sync().then(function () {
+//     searchRepository(function () {
+//         searchUser(function () {
+//             updateUser();
+//             fetchStar();
+//         });
+//     });
+// });
+
 database.sync().then(function () {
-    searchRepository(function () {
-        searchUser(function () {
-            updateUser();
-            fetchStar();
-        });
-    });
+    updateUser();
+    fetchStar();
 });
 
