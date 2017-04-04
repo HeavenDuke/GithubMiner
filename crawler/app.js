@@ -190,46 +190,54 @@ var fetchStar = function () {
     //         rate = 0;
     //     }
     // }
-    User.findAll({}).then(function (users) {
-        function search() {
-            function searchSingle() {
-                userCrawler.fetchStarred(users[count].login, page, function (repositories) {
-                    // updateRate();
-                    var finished = repositories.finished;
-                    repositories = repositories.data;
-                    var repoIds = [];
-                    repositories.items.forEach(function (repo) {
-                        repoIds.push(repo.id);
-                    });
-                    Repository.findAll({where: {repositoryId: {$in: repoIds}}}).then(function (repositories) {
-                        var starData = [];
-                        repositories.forEach(function (repo) {
-                            starData.push({
-                                userId: users[count].userId,
-                                repositoryId: repo.repositoryId
+    User.findAll({where: {finished: 0}}).then(function (users) {
+        var invalidUserIds = [];
+        users.forEach(function (user) {
+            invalidUserIds.push(user.userId);
+        });
+        Star.destroy({where: {userId: {$in: invalidUserIds}}}).then(function () {
+            function search() {
+                function searchSingle() {
+                    userCrawler.fetchStarred(users[count].login, page, function (repositories) {
+                        // updateRate();
+                        var finished = repositories.finished;
+                        repositories = repositories.data;
+                        var repoIds = [];
+                        repositories.items.forEach(function (repo) {
+                            repoIds.push(repo.id);
+                        });
+                        Repository.findAll({where: {repositoryId: {$in: repoIds}}}).then(function (repositories) {
+                            var starData = [];
+                            repositories.forEach(function (repo) {
+                                starData.push({
+                                    userId: users[count].userId,
+                                    repositoryId: repo.repositoryId
+                                });
+                            });
+                            Star.bulkCreate(starData).then(function () {
+                                console.log("finish fetch starred repository for user No." + users[count].userId + '(page = ' + page + ')');
+                                if (!finished) {
+                                    page++;
+                                    setTimeout(searchSingle, 1);
+                                }
+                                else {
+                                    User.update({finished: 1}, {where: {userId: users[count].userId}}).then(function () {
+                                        console.log("finish fetch starred repository for user No." + users[count].userId);
+                                        count++;
+                                        page = 1;
+                                        if (count < users.length) {
+                                            setTimeout(search, 1);
+                                        }
+                                    });
+                                }
                             });
                         });
-                        Star.bulkCreate(starData).then(function () {
-                            console.log("finish fetch starred repository for user No." + count + '(page = ' + page + ')');
-                            if (!finished) {
-                                page++;
-                                setTimeout(searchSingle, 1);
-                            }
-                            else {
-                                console.log("finish fetch starred repository for user No." + count);
-                                count++;
-                                page = 1;
-                                if (count < users.length) {
-                                    setTimeout(search, 1);
-                                }
-                            }
-                        });
                     });
-                });
+                }
+                setTimeout(searchSingle, 1);
             }
-            setTimeout(searchSingle, 1);
-        }
-        setTimeout(search, 1);
+            setTimeout(search, 1);
+        });
     });
 };
 
@@ -268,6 +276,6 @@ var database = require('../database')(
 // Note: 如果是从头开始运行爬虫，请注释掉这部分
 database.sync().then(function () {
     updateUser();
-    // fetchStar();
+    fetchStar();
 });
 
