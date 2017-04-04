@@ -268,6 +268,6 @@ var database = require('../database')(
 // Note: 如果是从头开始运行爬虫，请注释掉这部分
 database.sync().then(function () {
     updateUser();
-    fetchStar();
+    // fetchStar();
 });
 
