@@ -4,7 +4,7 @@
 
 // var sleep = require('sleep');
 var Crawlers = require('./libs');
-var config = require('./config')(process.env);
+var config = require('./config')(process.env.environment);
 
 // var repositoryCrawler = new Crawlers.RepositoryCrawler(config.authentication.basic);
 var previewRepositoryCrawler = new Crawlers.RepositoryCrawler(config.authentication.preview);
@@ -139,7 +139,7 @@ var updateUser = function () {
     //         rate = 0;
     //     }
     // }
-    User.findAll({}).then(function (users) {
+    User.findAll({where: {followers_count : 0}}).then(function (users) {
         function search() {
             if (users.length != count) {
                 userCrawler.fetchDetail(users[count].login, function (user) {
