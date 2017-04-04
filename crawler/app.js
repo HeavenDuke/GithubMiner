@@ -241,33 +241,33 @@ var database = require('../database')(
 );
 
 // Note: 如果是从头开始运行爬虫，请使用这部分
-database.sync().then(function () {
-    var status = {
-        repo: false,
-        user: false,
-        initFinished: function () {
-            return this.repo && this.user
-        }
-    };
-    searchRepository(function () {
-        status.repo = true;
-        if (status.initFinished()) {
-            updateUser();
-            fetchStar();
-        }
-    });
-    searchUser(function () {
-        status.user = true;
-        if (status.initFinished()) {
-            updateUser();
-            fetchStar();
-        }
-    });
-});
+// database.sync().then(function () {
+//     var status = {
+//         repo: false,
+//         user: false,
+//         initFinished: function () {
+//             return this.repo && this.user
+//         }
+//     };
+//     searchRepository(function () {
+//         status.repo = true;
+//         if (status.initFinished()) {
+//             updateUser();
+//             fetchStar();
+//         }
+//     });
+//     searchUser(function () {
+//         status.user = true;
+//         if (status.initFinished()) {
+//             updateUser();
+//             fetchStar();
+//         }
+//     });
+// });
 
 // Note: 如果是从头开始运行爬虫，请注释掉这部分
-// database.sync().then(function () {
-//     updateUser();
-//     fetchStar();
-// });
+database.sync().then(function () {
+    updateUser();
+    // fetchStar();
+});
 
