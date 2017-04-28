@@ -3,7 +3,9 @@
  */
 
 var express = require('express');
-var user_controller = require('../../controllers').users;
+var v1_router = require('./v1');
 var router = express.Router();
+
+router.use('/v1', v1_router);
 
 module.exports = router;
