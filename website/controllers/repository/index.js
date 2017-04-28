@@ -3,5 +3,8 @@
  */
 
 exports.show = function (req, res, next) {
-
+    res.render("repository/show", {
+        title: "Repository Detail",
+        repository_id: req.params.repository_id
+    });
 };

@@ -3,5 +3,7 @@
  */
 
 exports.index = function (req, res, next) {
-
+    res.render("search/index", {
+        title: "Search Page"
+    });
 };
