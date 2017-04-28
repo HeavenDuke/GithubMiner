@@ -1,0 +1,15 @@
+{
+  "name": "GithubMiner",
+  "version": "0.0.1",
+  "repository": "https://github.com/HeavenDuke/GithubMiner.git",
+  "description": "Mining Github Repository and constructing a recommendation website",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "latest",
+    "express": "^4.14.1",
+    "neo4j-driver": "^1.2.0",
+    "node-neo4j": "latest",
+    "octokat": "^0.6.2",
+    "pug": "^2.0.0-beta11"
+  }
+}
