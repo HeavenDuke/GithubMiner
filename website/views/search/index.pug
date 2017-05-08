@@ -2,3 +2,26 @@ extends ../layout/layout
 
 block content
     h1 Welcome to GithubMiner(searching page)!
+    p
+        strong Query:
+        = query
+
+    .row
+        form
+            .form-group
+                label 搜索
+                input.form-control(value=query placeholder="请输入搜索内容")
+    .row
+        h4 Advanced
+        .col-lg-6
+            ul
+                li.active JavaScript
+                li Python
+                li C++
+
+        .col-lg-6
+            ul
+                li deep learning
+                li visualization
+                li data mining
+                li kdd

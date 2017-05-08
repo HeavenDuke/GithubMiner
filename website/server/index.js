@@ -11,6 +11,7 @@ var RedisStore = require('connect-redis')(session);
 var morgan = require('morgan');
 var fs = require('fs');
 var path = require('path');
+var neo4j = require('node-neo4j');
 var routers = require('../routers');
 
 var Server = function (config) {
@@ -49,7 +50,7 @@ var Server = function (config) {
 };
 
 Server.prototype.listen = function (port) {
-    var config = require('../config')(this.environment);
+    var config = require('../../config')(this.environment);
     if (this.app) {
         var server = this.app.listen(port, function () {
             var host = server.address().address;
@@ -66,6 +67,8 @@ Server.prototype.listen = function (port) {
 
 Server.prototype.initialize_global_variables = function () {
     require('../libs').date();
+    global.config = require('../../config')(this.environment);
+    global.db = new neo4j(global.config.database.queryString);
 };
 
 Server.prototype.start_tasks = function () {

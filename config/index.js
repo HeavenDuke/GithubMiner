@@ -11,7 +11,16 @@ module.exports = function (environment) {
             port: 3002
         },
         database: {
-            port: 7474
+            host: "localhost",
+            username: "github",
+            password: "github",
+            port: 7474,
+            queryString: function () {
+                return "http://" + config.database.username + ":"
+                                 + config.database.password + "@"
+                                 + config.database.host + ":"
+                                 + config.database.port;
+            }
         },
         redis: {
             options: {
@@ -38,7 +47,7 @@ module.exports = function (environment) {
     if (environment == "development" || environment == "local") {
 
     }
-
+    config.database.queryString = config.database.queryString();
     return config;
 
 };

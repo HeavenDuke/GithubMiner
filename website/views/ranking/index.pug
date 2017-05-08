@@ -2,3 +2,9 @@ extends ../layout/layout
 
 block content
     h1 Welcome to GithubMiner(ranking page)!
+    p
+        strong 数据：
+    for rank in ranking
+        p
+            a(href="/repositories/" + rank.repository_id)= rank.name
+            strong= " (" + rank.stargazers_count + ")"

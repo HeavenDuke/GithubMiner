@@ -11,11 +11,12 @@
     "connect-redis": "^3.2.0",
     "express": "^4.14.1",
     "express-session": "^1.15.2",
+    "github": "^9.2.0",
     "method-override": "^2.3.8",
     "morgan": "^1.8.1",
-    "neo4j-driver": "^1.2.0",
     "node-neo4j": "latest",
     "octokat": "^0.6.2",
-    "pug": "^2.0.0-beta11"
+    "pug": "^2.0.0-beta11",
+    "sleep": "latest"
   }
 }

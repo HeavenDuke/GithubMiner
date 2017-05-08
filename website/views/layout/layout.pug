@@ -5,7 +5,16 @@ html
     head
         title= title
         link(rel="icon" href="/favicon.ico")
+        link(rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css")
+        link(rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css")
+        link(rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/Buttons/2.0.0/css/buttons.min.css")
+        link(rel="stylesheet" type="text/css" href="/css/theme.css")
+        script(type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js")
+        script(type="text/javascript" src="https://cdn.bootcss.com/Buttons/2.0.0/js/buttons.min.js")
+        script(type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js")
     body
         include ./header
-        block content
+        .container(style="min-height: 100px")
+            block content
         include ./footer
+        script(type="text/javascript" src="/javascript/shared.js")
