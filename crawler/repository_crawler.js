@@ -19,14 +19,24 @@ var github = new Github({
 
 // github.authenticate({
 //     type: "basic",
-//     username: "HeavenDuke",
+//     username: "7@buaa.edu.cn",
 //     password: "win32.luhzu.a"
+// });
+
+// github.authenticate({
+//     type: "basic",
+//     username: "DoubleDeckers",
+//     password: "15tfosaaub_rees"
 // });
 
 github.authenticate({
     type: "basic",
-    username: "DoubleDeckers",
-    password: "15tfosaaub_rees"
+    username: "githubminer18@mailinator.com",
+    password: "githubgoogle20"
+});
+
+github.misc.getRateLimit({}).then(function (result) {
+    console.log(result);
 });
 
 var get_repository_comparison = function (github, repository, callback) {
@@ -146,18 +156,18 @@ var get_repository_list = function (db, callback) {
     });
 };
 
-get_repository_list(db, function (err, repositories) {
-    if (err) {
-        throw err;
-    }
-    else {
-        update_repositories(db, github, repositories, function (err) {
-            if (err) {
-                throw err;
-            }
-            else {
-                console.log("success!");
-            }
-        });
-    }
-});
+// get_repository_list(db, function (err, repositories) {
+//     if (err) {
+//         throw err;
+//     }
+//     else {
+//         update_repositories(db, github, repositories, function (err) {
+//             if (err) {
+//                 throw err;
+//             }
+//             else {
+//                 console.log("success!");
+//             }
+//         });
+//     }
+// });

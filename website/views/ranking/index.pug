@@ -3,8 +3,14 @@ extends ../layout/layout
 block content
     h1 Welcome to GithubMiner(ranking page)!
     p
-        strong 数据：
-    for rank in ranking
+        strong Overall数据：
+    for rank in ranking.overall.data
+        p
+            a(href="/repositories/" + rank.repository_id)= rank.name
+            strong= " (" + rank.stargazers_count + ")"
+    p
+        strong Daily数据：
+    for rank in ranking.daily.data
         p
             a(href="/repositories/" + rank.repository_id)= rank.name
             strong= " (" + rank.stargazers_count + ")"
