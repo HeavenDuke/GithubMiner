@@ -1,6 +1,95 @@
 extends ../layout/layout
 
+block specified_ref
+    link(rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/github-markdown-css/2.6.0/github-markdown.min.css")
+    script(type="text/javascript" src="https://cdn.bootcss.com/marked/0.3.6/marked.min.js")
+    script(type="text/javascript" src="https://cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js")
+
 block content
-    h1= "Welcome to GithubMiner(repository page with id = " + repository_id + ")!"
-    h3= repository.name
-    p= readme
+    .repository-header.row
+        .col-lg-8.col-md-8
+            .repository-title
+                h3
+                    a(href="https://github.com/" + repository.name)= repository.name
+        .col-lg-4.col-md-4
+    .row.hidden-sm.hidden-xs(style="margin-top: 10px;")
+        .col-lg-8.col-md-9.markdown-body.readme= readme
+        .col-lg-4.col-md-3
+            .list-title Information
+            ul.list-group
+                li.list-group-item
+                    | Created by
+                    a(href="github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
+                li.list-group-item
+                    a(href="github.com/" + repository.name)= "github.com/" + repository.name
+                li.list-group-item Licensed with
+                    a(href="github.com/" + repository.name)= " " + (repository.license ? repository.license : "MIT")
+                li.list-group-item
+                    | Developed with
+                    a(href="/search?q=")= " " + (repository.language ? repository.language : "JavaScript")
+            .list-title Stat
+            ul.list-group
+                li.list-group-item
+                    i.fa.fa-star
+                    = " " + (repository.stargazers_count ? repository.stargazers_count : 0) + " stars"
+                li.list-group-item
+                    i.fa.fa-eye
+                    = " " + (repository.watchers_count ? repository.watchers_count : 0) + " watchers"
+                li.list-group-item
+                    i.fa.fa-exclamation-circle
+                    = " " + (repository.open_issues_count ? repository.open_issues_count : 0) + " open issues"
+                li.list-group-item
+                    i.fa.fa-code-fork
+                    = " " + (repository.forks_count ? repository.forks_count : 0) + " forks"
+            .list-title
+                | Related Repositories
+                span.pull-right
+                    a.refresher(title="refresh")
+                        i.fa.fa-refresh
+            ul.list-group
+                - for(var i = 0; i < 6; i++)
+                    li.list-group-item
+                        a.list-item-title(href="/repositories/1") HeavenDuke/ABlog
+                        p.list-item-description The https://freeCodeCamp.com open source codebase and curriculum. Learn to code and help nonprofits.
+    .row.hidden-lg.hidden-md(style="margin-top: 10px;")
+        .col-sm-6.col-xs-6
+            ul.list-group
+                li.list-group-item
+                    | Created by
+                    a(href="github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
+                li.list-group-item
+                    a(href="github.com/" + repository.name)= "github.com/" + repository.name
+                li.list-group-item Last updated at
+                    strong= " " + new Date().format("yyyy-MM-dd hh:mm:ss")
+                li.list-group-item
+                    | Developed with
+                    a(href="/search?q=")= " " + (repository.language ? repository.language : "JavaScript")
+        .col-sm-6.col-xs-6
+            ul.list-group
+                li.list-group-item
+                    i.fa.fa-star
+                    = " " + (repository.stargazers_count ? repository.stargazers_count : 0) + " stars"
+                li.list-group-item
+                    i.fa.fa-eye
+                    = " " + (repository.watchers_count ? repository.watchers_count : 0) + " watchers"
+                li.list-group-item
+                    i.fa.fa-exclamation-circle
+                    = " " + (repository.open_issues_count ? repository.open_issues_count : 0) + " open issues"
+                li.list-group-item
+                    i.fa.fa-code-fork
+                    = " " + (repository.forks_count ? repository.forks_count : 0) + " forks"
+        .col-sm-12.col-xs-12
+            .markdown-body.readme(style="display: none;")= readme
+            button.btn.btn-default.btn-flat.btn-block#readme-viewer
+                a show README
+        .col-sm-12.col-xs-12(style="margin-top: 10px;")
+            .list-title Related Repositories
+            ul.list-group
+                - for(var i = 0; i < 6; i++)
+                    li.list-group-item
+                        a.list-item-title(href="/repositories/1") HeavenDuke/ABlog
+                        p.list-item-description The https://freeCodeCamp.com open source codebase and curriculum. Learn to code and help nonprofits.
+                button.btn.btn-default.btn-flat.btn-block
+                    a Show More
+
+    script(type="text/javascript" src="/javascript/repository.js")

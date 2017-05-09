@@ -12,9 +12,10 @@ html
         script(type="text/javascript" src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js")
         script(type="text/javascript" src="https://cdn.bootcss.com/Buttons/2.0.0/js/buttons.min.js")
         script(type="text/javascript" src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js")
+        block specified_ref
     body
         include ./header
-        .container(style="min-height: 100px")
+        .container(style="min-height: 100px; margin-bottom: 100;")
             block content
         include ./footer
         script(type="text/javascript" src="/javascript/shared.js")
