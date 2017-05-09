@@ -39,6 +39,8 @@ exports.index = function (req, res, next) {
             }
             res.render("search/index", {
                 title: "Search Page",
+                info: req.flash('info'),
+                error: req.flash('error'),
                 query: query,
                 sort: sort,
                 order: order,

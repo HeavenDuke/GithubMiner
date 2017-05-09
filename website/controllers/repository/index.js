@@ -14,6 +14,8 @@ exports.show = function (req, res, next) {
             Repository.getReadme(repository.name, function (readme) {
                 res.render("repository/show", {
                     title: "Repository Detail",
+                    info: req.flash('info'),
+                    error: req.flash('error'),
                     repository: repository,
                     readme: readme
                 });

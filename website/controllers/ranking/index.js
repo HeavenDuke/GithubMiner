@@ -42,6 +42,8 @@ exports.index = function (req, res, next) {
                     };
                     if (ranking.isFinished()) {
                         res.render("ranking/index", {
+                            info: req.flash('info'),
+                            error: req.flash('error'),
                             ranking: ranking,
                             title: "Ranking"
                         });
@@ -59,6 +61,8 @@ exports.index = function (req, res, next) {
                     };
                     if (ranking.isFinished()) {
                         res.render("ranking/index", {
+                            info: req.flash('info'),
+                            error: req.flash('error'),
                             ranking: ranking,
                             title: "Ranking"
                         });
@@ -76,6 +80,8 @@ exports.index = function (req, res, next) {
                     };
                     if (ranking.isFinished()) {
                         res.render("ranking/index", {
+                            info: req.flash('info'),
+                            error: req.flash('error'),
                             ranking: ranking,
                             title: "Ranking"
                         });
@@ -93,6 +99,8 @@ exports.index = function (req, res, next) {
                     };
                     if (ranking.isFinished()) {
                         res.render("ranking/index", {
+                            info: req.flash('info'),
+                            error: req.flash('error'),
                             ranking: ranking,
                             title: "Ranking"
                         });
