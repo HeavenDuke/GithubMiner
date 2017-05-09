@@ -5,5 +5,3 @@
 exports.date = require('./date');
 
 exports.repository = require('./repository');
-
-exports.search = require('./search');
