@@ -15,8 +15,14 @@
         }
     }
 
-    $(document).ready(function () {
+    function prepare_search_page() {
 
+    }
+
+    $(document).ready(function () {
+        if (window.location.href.match(/\/search/) != null) {
+            prepare_search_page();
+        }
     });
 
 })();
