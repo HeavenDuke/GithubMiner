@@ -6,8 +6,7 @@ block specified_ref
     script(type="text/javascript" src="https://cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js")
 
 block content
-    h4.hidden-xs Today's Top 3 Trending Repositories
-    .row.visible-xs.hidden-lg.hidden-md.hidden-sm
+    .row
         .col-xs-10
             h4 Today's Top 3 Trending Repositories
         .col-xs-2
@@ -65,17 +64,6 @@ block content
         .col-lg-8.col-md-8.col-sm-12.col-xs-12
             .list-title Events
         .col-lg-4.col-md-4.hidden-sm.hidden-xs
-            .list-title
-                | Ranking
-                span.pull-right
-                    a(href="/ranking" title="more")
-                        | more
-                        i.fa.fa-angle-double-right
-            ul.list-group
-                for repository in ranking
-                    li.list-group-item
-                        i.fa.fa-star
-                        = " " + (repository.stargazers_count ? repository.stargazers_count : 0) + " stars"
             .list-title
                 | You might like ...
                 span.pull-right

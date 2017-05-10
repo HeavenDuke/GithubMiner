@@ -4,13 +4,7 @@ block content
     h1 Welcome to GithubMiner(ranking page)!
     p
         strong Overall数据：
-    for rank in ranking.overall.data
-        p
-            a(href="/repositories/" + rank.repository_id)= rank.name
-            strong= " (" + rank.stargazers_count + ")"
-    p
-        strong Daily数据：
-    for rank in ranking.daily.data
+    for rank in ranking
         p
             a(href="/repositories/" + rank.repository_id)= rank.name
             strong= " (" + rank.stargazers_count + ")"
