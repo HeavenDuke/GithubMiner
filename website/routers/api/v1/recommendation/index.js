@@ -6,8 +6,8 @@ var express = require('express');
 var recommendation_controller = require('../../../../controllers').api.v1.recommendations;
 var router = express.Router();
 
-router.get('/', recommendation_controller.index);
-
 router.get('/repository', recommendation_controller.repository);
+
+router.get('/guess', recommendation_controller.guess);
 
 module.exports = router;

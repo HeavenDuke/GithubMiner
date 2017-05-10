@@ -4,8 +4,39 @@
 
 var engines = require('../../../../libs').recommendation;
 
-exports.index = function (req, res, next) {
-
+exports.guess = function (req, res, next) {
+    var pagination = 6, restart = !!req.query.restart, excludes;
+    if (restart) {
+        excludes = [];
+        req.session.guess_excludes = excludes;
+    }
+    else {
+        excludes = req.session.guess_excludes;
+        if (!excludes) {
+            excludes = [];
+        }
+    }
+    global.db.cypherQuery("MATCH (r:Repository) WHERE NOT(r.repository_id IN " + JSON.stringify(excludes) + ") RETURN r.repository_id as repository_id, r.name as name, r.description as description, r.stargazers_count as stargazers_count, rand() as score ORDER BY score DESC LIMIT " + pagination + "", function (err, result) {
+        if (err) {
+            return next(err);
+        }
+        else {
+            for(var i = 0; i < result.data.length; i++) {
+                excludes.push(result.data[i][0]);
+                result.data[i] = {
+                    repository_id: result.data[i][0],
+                    name: result.data[i][1],
+                    description: result.data[i][2],
+                    stargazers_count: result.data[i][3]
+                }
+            }
+            req.session.guess_excludes = excludes;
+            res.json({
+                message: "success",
+                recommendations: result.data
+            });
+        }
+    });
 };
 
 exports.repository = function (req, res, next) {
