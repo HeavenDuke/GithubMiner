@@ -28,6 +28,9 @@ form.navbar-form input {
 .list-item-title {
     font-size: 15px;
     font-weight: bold;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
 }
 
 .list-item-description {

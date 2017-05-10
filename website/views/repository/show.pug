@@ -8,13 +8,14 @@ block specified_ref
 block content
     .repository-header.row
         .col-lg-8.col-md-8
+            #rid.hidden= repository.repository_id
             .repository-title
                 h3
                     a(href="https://github.com/" + repository.name)= repository.name
         .col-lg-4.col-md-4
     .row.hidden-sm.hidden-xs(style="margin-top: 10px;")
-        .col-lg-8.col-md-9.markdown-body.readme= readme
-        .col-lg-4.col-md-3
+        .col-lg-8.col-md-8.markdown-body.readme= readme
+        .col-lg-4.col-md-4
             .list-title Information
             ul.list-group
                 li.list-group-item
@@ -46,11 +47,7 @@ block content
                 span.pull-right
                     a.refresher(title="refresh")
                         i.fa.fa-refresh
-            ul.list-group
-                - for(var i = 0; i < 6; i++)
-                    li.list-group-item
-                        a.list-item-title(href="/repositories/1") HeavenDuke/ABlog
-                        p.list-item-description The https://freeCodeCamp.com open source codebase and curriculum. Learn to code and help nonprofits.
+            ul.list-group#recommendation-container
     .row.hidden-lg.hidden-md(style="margin-top: 10px;")
         .col-sm-6.col-xs-6
             ul.list-group
@@ -85,11 +82,7 @@ block content
         .col-sm-12.col-xs-12(style="margin-top: 10px;")
             .list-title Related Repositories
             ul.list-group
-                - for(var i = 0; i < 6; i++)
-                    li.list-group-item
-                        a.list-item-title(href="/repositories/1") HeavenDuke/ABlog
-                        p.list-item-description The https://freeCodeCamp.com open source codebase and curriculum. Learn to code and help nonprofits.
-                button.btn.btn-default.btn-flat.btn-block
+                button.btn.btn-default.btn-flat.btn-block#recommendation-refresher
                     a Show More
 
     script(type="text/javascript" src="/javascript/repository.js")

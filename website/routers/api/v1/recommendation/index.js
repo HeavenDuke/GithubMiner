@@ -8,4 +8,6 @@ var router = express.Router();
 
 router.get('/', recommendation_controller.index);
 
+router.get('/repository', recommendation_controller.repository);
+
 module.exports = router;
