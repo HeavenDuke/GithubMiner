@@ -2,6 +2,7 @@
  * Created by heavenduke on 17-5-10.
  */
 
+//TODO: 完成这个模块的测试
 var Github = require('github');
 require('../website/libs').date();
 

@@ -1,173 +1,167 @@
-/**
- * Created by heavenduke on 17-5-7.
- */
-
 var Github = require('github');
-var neo4j = require('node-neo4j');
-var config = require('../config')(this.environment);
-var db = new neo4j(config.database.queryString);
-var sleep = require('sleep');
+var RepositoryCrawler = {};
 
-var github = new Github({
-    protocol: "https",
-    host: "api.github.com",
-    headers: {
-        Accept: "application/vnd.github.mercy-preview+json"
-    },
-    Promise: require('bluebird')
-});
+RepositoryCrawler.master = {};
 
-// github.authenticate({
-//     type: "basic",
-//     username: "7@buaa.edu.cn",
-//     password: "win32.luhzu.a"
-// });
+RepositoryCrawler.slave = {};
 
-// github.authenticate({
-//     type: "basic",
-//     username: "DoubleDeckers",
-//     password: "15tfosaaub_rees"
-// });
+var master = RepositoryCrawler.master;
+var slave = RepositoryCrawler.slave;
 
-github.authenticate({
-    type: "basic",
-    username: "githubminer18@mailinator.com",
-    password: "githubgoogle20"
-});
+slave.run = function (account, batch, db, callback) {
+    var github = new Github({
+        protocol: "https",
+        host: "api.github.com",
+        pathPrefix: "/api/v3",
+        headers: {
+            "user-agent": "HeavenDuke",
+            "Accept": "application/vnd.github.mercy-preview+json"
+        },
+        Promise: require('bluebird')
+    });
+    var cnt = 0, total = batch.length;
+    github.authenticate({
+        type: "basic",
+        username: account.username,
+        password: account.password
+    });
 
-github.misc.getRateLimit({}).then(function (result) {
-    console.log(result);
-});
-
-var get_repository_comparison = function (github, repository, callback) {
-    github.repos.getById({id: repository.repository_id}).then(function (result) {
-        var _repository = {
-            name: result.data.full_name,
-            stargazers_count: result.data.stargazers_count
+    var update_repository = function (repository, repository_new) {
+        var status = {
+            basic: false,
+            topics: false,
+            language: false,
+            finished: function () {
+                return this.basic && this.topics && this.language;
+            }
         };
-        if (_repository.name == repository.name && _repository.stargazers_count == repository.stargazers_count) {
-            callback(null, result.data.topics, language)
-        }
-        else {
-            callback({
-                old: repository,
-                new: _repository
-            }, result.data.topics, language);
-        }
-    });
-};
 
-var construct_query = function (list) {
-    var query = ["MATCH "], first = true;
-    for(var i = 0; i < list.length; i++) {
-        if (!first) {
-            query.push(",");
-        }
-        query.push("(r" + i + ":Repository {repository_id:'" + list[i].old.repository_id + "'})");
-        first = false;
-    }
-    first = true;
-    query.push(" SET ");
-    for(i = 0; i < list.length; i++) {
-        if (!first) {
-            query.push(",");
-        }
-        query.push("r" + i + ".name='" + list[i].new.name + "',r" + i + ".stargazers_count=" + list[i].new.stargazers_count + "");
-        first = false;
-    }
-    return query.join('');
-};
-
-var flush_update_into_database = function (db, list, callback) {
-    var batch_size = 100;
-    var batch_num = Math.ceil(list.length / batch_size), cnt = 0;
-    for(var i = 0; i < list.length; i+= batch_size) {
-        db.cypherQuery(construct_query(list.slice(i, batch_size)), function (err, result) {
+        // UPDATE BASIC INFO
+        var query = "MATCH (r:Repository {repository_id: '" + repository.repository_id + "'}) "
+                  + "SET r.name='" + repository_new.full_name
+                  + "', r.stargazers_count=" + repository_new.stargazers_count
+                  + "', r.description=" + repository_new.description
+                  + ", r.watchers_count=" + repository_new.watchers_count
+                  + ", r.forks_count=" + repository_new.forks_count
+                  + ", r.default_branch='" + repository_new.default_branch
+                  + "', r.open_issues_count=" + repository_new.forks_count;
+        db.cypherQuery(query, function (err, result) {
             if (err) {
-                callback(err);
+                return callback(err);
             }
-            else {
+            status.basic = true;
+            if (status.finished()) {
                 cnt++;
-                if (cnt == batch_num) {
-                    callback();
+                if (cnt == total) {
+                    return callback();
                 }
             }
         });
-    }
-};
 
+        // UPDATE LANGUAGE INFO
+        // 如果原本有和一门语言的关联，那么删掉这个关联
+        // 如果新的这个语言已经存在，那么直接创建边，否则创建语言之后再创建边
+        query = "MATCH p=(r:Repository {repository_id: '" + repository.repository_id + "'})<-[rl]-(l:Language),(t:Language {name: '" + repository_new.language + "'}) DELETE rl RETURN count(t)";
+        db.cypherQuery(query, function (err, result) {
+            if (err) {
+                return callback(err);
+            }
+            // TODO: 这个地方看看怎么判断（调用一下接口看看返回什么东西）
+            if (repository_new.language != "null") {
+                if (result.data[0][1] == 0) {
+                    query = "MATCH (r:Repository {repository_id: '" + repository.repository_id + "'}) CREATE (r)<-[]-(l:Language {name: '" + repository_new.language + "'})";
+                }
+                else {
+                    query = "MATCH (r:Repository {repository_id: '" + repository.repository_id + "'}),(l:Language {name: '" + repository_new.language + "'}) CREATE (r)<-[]-(l)";
+                }
+                db.cypherQuery(query, function (err, result) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    status.language = true;
+                    if (status.finished()) {
+                        cnt++;
+                        if (cnt == total) {
+                            return callback();
+                        }
+                    }
+                });
+            }
+        });
 
-// TODO: 增加对language与topics的管理代码
-var update_repository_batch = function (db, github, list, callback) {
-    var update_data = [];
-    var cnt = 0, i = 0;
-    list.forEach(function (item) {
-        function _get_repository_comparison() {
-            get_repository_comparison(github, item, function (comparison, topics, language) {
-                if (comparison) {
-                    update_data.push(comparison);
-                }
-                cnt++;
-                console.log(cnt);
-                if (cnt == list.length) {
-                    console.log("finish fetching a batch");
-                    flush_update_into_database(db, update_data, callback);
-                }
+        // UPDATE TOPIC INFO
+        query = "MATCH p=(r:Repository {repository_id: '" + repository.repository_id + "'})<-[rl]-(t:Topic),(tp:Topic) DELETE rl RETURN tp.name";
+        db.cypherQuery(query, function (err, result) {
+            if (err) {
+                return callback(err);
+            }
+            if (repository_new.topics.length != 0) {
+                var _topics = {};
+                repository_new.forEach(function (topic) {
+                    _topics[topic] = topic;
+                });
+                result.data.forEach(function (topic) {
+                    delete _topics[topic];
+                });
+                _topics = Object.keys(_topics);
+                query = "CREATE ";
+                var first = true, _cnt = 0;
+                _topics.forEach(function (topic) {
+                    if (!first) {
+                        query += ",";
+                    }
+                    query += "(:Topic {name: '" + topic + "'})";
+                    first = false;
+                });
+                db.cypherQuery(query, function (err, result) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    query = "MATCH (r:Repository {repository_id: '" + repository.repository_id + "'})";
+                    repository_new.topics.forEach(function (topic) {
+                        query += ",(t" + _cnt++ + " {name: '" + topic + "'})";
+                    });
+                    _cnt = 0;
+                    first = true;
+                    query += " CREATE ";
+                    repository_new.topics.forEach(function (topic) {
+                        if (!first) {
+                            query += ",";
+                        }
+                        query += "(t" + _cnt++ + ")-[:Have]->(r)";
+                        first = false;
+                    });
+                    db.cypherQuery(query, function (err, result) {
+                        if (err) {
+                            return callback(err);
+                        }
+                        status.topics = true;
+                        if (status.finished()) {
+                            cnt++;
+                            if (cnt == total) {
+                                callback();
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    };
+
+    var generate_update_function = function (github, repository) {
+        return function () {
+            github.repos.getById({id: repository.repository_id}).then(function (result) {
+                var repository_new = result.data;
+                update_repository(repository, repository_new);
+            }).catch(function (err) {
+                return callback(err);
             });
-        }
-        setTimeout(_get_repository_comparison, 500 * i++);
-    });
-};
+        };
+    };
 
-var update_repositories = function (db, github, list, callback) {
-    var batch_size = 5000;
-    var start_time = new Date(), current;
-    var index = 0;
-    function _update_repository_batch() {
-        update_repository_batch(db, github, list.slice(index, batch_size), function () {
-            console.log("finish a batch: " + index);
-            current = new Date();
-            if (current - start_time < 60 * 60 * 1000) {
-                console.log("sleep for a while");
-                sleep.msleep(60 * 61 * 1000 - (current - start_time));
-            }
-            start_time = new Date();
-            index += batch_size;
-            if (index < list.length) {
-                setTimeout(_update_repository_batch, 0)
-            }
-            else {
-                console.log("finished");
-            }
-        });
+    for(var i = 0; i < total; i++) {
+        setTimeout(generate_update_function(github, batch[i]), i * 300);
     }
-    setTimeout(_update_repository_batch, 0);
 };
 
-
-var get_repository_list = function (db, callback) {
-    db.cypherQuery("MATCH (r:Repository) RETURN r", function (err, result) {
-        if (err) {
-            callback(err);
-        }
-        else {
-            callback(null, result.data);
-        }
-    });
-};
-
-// get_repository_list(db, function (err, repositories) {
-//     if (err) {
-//         throw err;
-//     }
-//     else {
-//         update_repositories(db, github, repositories, function (err) {
-//             if (err) {
-//                 throw err;
-//             }
-//             else {
-//                 console.log("success!");
-//             }
-//         });
-//     }
-// });
+module.exports = RepositoryCrawler;
