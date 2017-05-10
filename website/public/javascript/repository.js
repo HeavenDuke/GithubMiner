@@ -75,6 +75,9 @@
     var prepare_repository_detail = function () {
         var container = $(".readme");
         container.html(marked(container.text(), {renderer: renderer}));
+        $('pre code').each(function () {
+            hljs.highlightBlock(this);
+        });
         $("#readme-viewer").click(toggle_readme);
         repository_id = $("#rid").text();
         $("#rid").remove();
