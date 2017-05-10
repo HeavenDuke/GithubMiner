@@ -6,6 +6,15 @@
 (function () {
 
     var offset = 0, repository_id;
+    var renderer = new marked.Renderer();
+    renderer.image = function(href, title, text) {
+        var out = '<img class="md-image" style="max-width: 100%;" src="' + href + '" alt="' + text + '"';
+        if (title) {
+            out += ' title="' + title + '"';
+        }
+        out += this.options.xhtml ? '/>' : '>';
+        return out;
+    };
 
     var toggle_readme = function () {
         var actions = {
@@ -22,7 +31,7 @@
         var construct_recommendation_item = function (item) {
             var result = "<li class='list-group-item'>";
             result += "<a class='list-item-title' href='/repositories/" + item.repository_id + "'>" + item.name + "</a>";
-            result += "<p class='list-item-description'>" + item.description + "</p>";
+            result += "<p class='list-item-description'>" + marked(item.description ? item.description : "null", {renderer: renderer}) + "</p>";
             result += "</li>";
             return result;
         };
@@ -65,15 +74,6 @@
 
     var prepare_repository_detail = function () {
         var container = $(".readme");
-        var renderer = new marked.Renderer();
-        renderer.image = function(href, title, text) {
-            var out = '<img class="md-image" style="max-width: 100%;" src="' + href + '" alt="' + text + '"';
-            if (title) {
-                out += ' title="' + title + '"';
-            }
-            out += this.options.xhtml ? '/>' : '>';
-            return out;
-        };
         container.html(marked(container.text(), {renderer: renderer}));
         $("#readme-viewer").click(toggle_readme);
         repository_id = $("#rid").text();

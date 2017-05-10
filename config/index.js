@@ -22,6 +22,7 @@ module.exports = function (environment) {
                                  + config.database.port;
             }
         },
+        mongoose: "mongodb://localhost:27017/githubminer",
         redis: {
             options: {
                 host: '127.0.0.1',

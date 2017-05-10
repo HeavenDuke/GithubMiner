@@ -13,6 +13,7 @@
     "express-session": "^1.15.2",
     "github": "^9.2.0",
     "method-override": "^2.3.8",
+    "mongoose": "^4.9.8",
     "morgan": "^1.8.1",
     "node-neo4j": "latest",
     "octokat": "^0.6.2",

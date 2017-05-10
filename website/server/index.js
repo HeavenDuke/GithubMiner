@@ -12,6 +12,7 @@ var morgan = require('morgan');
 var fs = require('fs');
 var path = require('path');
 var neo4j = require('node-neo4j');
+var mongoose = require('mongoose');
 var routers = require('../routers');
 
 var Server = function (config) {
@@ -65,14 +66,25 @@ Server.prototype.listen = function (port) {
 
 };
 
-Server.prototype.initialize_global_variables = function () {
+Server.prototype.initialize_global_variables = function (config) {
     require('../libs').date();
-    global.config = require('../../config')(this.environment);
-    global.db = new neo4j(global.config.database.queryString);
+    global.db = new neo4j(config.database.queryString);
+    global.mongoose = require('../database').loader;
 };
 
 Server.prototype.start_tasks = function () {
 
+};
+
+Server.prototype.connect_database = function (config) {
+    mongoose.connect(config.mongoose, {
+        server: {
+            poolSize: 12,
+            socketOptions: {
+                keepAlive: 1
+            }
+        }
+    });
 };
 
 

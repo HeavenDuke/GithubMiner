@@ -1,4 +1,91 @@
 extends ./layout/layout
 
+block specified_ref
+    link(rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/github-markdown-css/2.6.0/github-markdown.min.css")
+    script(type="text/javascript" src="https://cdn.bootcss.com/marked/0.3.6/marked.min.js")
+    script(type="text/javascript" src="https://cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js")
+
 block content
-    h1 Welcome to GithubMiner!
+    h4.hidden-xs Today's Top 3 Trending Repositories
+    .row.visible-xs.hidden-lg.hidden-md.hidden-sm
+        .col-xs-10
+            h4 Today's Top 3 Trending Repositories
+        .col-xs-2
+            h4.pull-right
+                a(href="/ranking" title="more")
+                    | more
+                    i.fa.fa-angle-double-right
+    .row
+        .col-lg-4.col-md-4.col-sm-12.col-xs-12
+            ul.list-group
+                li.list-group-item.golden.medal-title.text-center
+                    a(href="/repositories/" + ranking[0].repository_id)= ranking[0].name.replace(/.*\//, "")
+                li.list-group-item.medal-description.text-center
+                    p= ranking[0].description
+                li.list-group-item
+                    div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-star
+                                = " " + ranking[0].stargazers_count + " Star"
+                    div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-code-fork
+                                = " " + ranking[0].forks_count + " Fork"
+        .col-lg-4.col-md-4.col-sm-12.col-xs-12
+            ul.list-group
+                li.list-group-item.silver.medal-title.text-center
+                    a(href="/repositories/" + ranking[2].repository_id)= ranking[1].name.replace(/.*\//, "")
+                li.list-group-item.medal-description.text-center
+                    p= ranking[1].description
+                li.list-group-item
+                    div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                        a.btn.btn-default.btn-block.btn-flat
+                            i.fa.fa-star
+                            = " " + ranking[1].stargazers_count + " Star"
+                    div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                        a.btn.btn-default.btn-block.btn-flat
+                            i.fa.fa-code-fork
+                            = " " + ranking[1].forks_count + " Fork"
+        .col-lg-4.col-md-4.col-sm-12.col-xs-12
+            ul.list-group
+                li.list-group-item.bronze.medal-title.text-center
+                    a(href="/repositories/" + ranking[2].repository_id)= ranking[2].name.replace(/.*\//, "")
+                li.list-group-item.medal-description.text-center
+                    p= ranking[2].description
+                li.list-group-item
+                    div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                        a.btn.btn-default.btn-block.btn-flat
+                            i.fa.fa-star
+                            = " " + ranking[2].stargazers_count + " Star"
+                    div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                        a.btn.btn-default.btn-block.btn-flat
+                            i.fa.fa-code-fork
+                            = " " + ranking[2].forks_count + " Fork"
+    .row(style="margin-top: 10px;")
+        .col-lg-8.col-md-8.col-sm-12.col-xs-12
+            .list-title Events
+        .col-lg-4.col-md-4.hidden-sm.hidden-xs
+            .list-title
+                | Ranking
+                span.pull-right
+                    a(href="/ranking" title="more")
+                        | more
+                        i.fa.fa-angle-double-right
+            ul.list-group
+                for repository in ranking
+                    li.list-group-item
+                        i.fa.fa-star
+                        = " " + (repository.stargazers_count ? repository.stargazers_count : 0) + " stars"
+            .list-title
+                | You might like ...
+                span.pull-right
+                    a.refresher(title="refresh")
+                        i.fa.fa-refresh
+            ul.list-group#recommendation-container
+        .visible-sm.visible-xs.col-sm-12.col-xs-12
+            .list-title
+                | You might like ...
+            ul.list-group
+                button.btn.btn-default.btn-flat.btn-block#recommendation-refresher
+                    a Show More
+    script(type="text/javascript" src="/javascript/home.js")

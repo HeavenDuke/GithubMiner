@@ -45,3 +45,37 @@ a {
 .refresher {
     color: darkgray;
 }
+
+.golden {
+    background-color: goldenrod;
+}
+
+.silver {
+    background-color: silver;
+}
+
+.bronze {
+    background-color: chocolate;
+}
+
+ul.list-group li.medal-title {
+    height: 75px;
+    font-size: 25px;
+    line-height: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+ul.list-group li.medal-title a{
+    color: white;
+}
+
+li.medal-description {
+    height: 100px;
+}
+
+li.medal-description p {
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
