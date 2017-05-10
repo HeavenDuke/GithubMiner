@@ -82,10 +82,3 @@ block content
                     h1 Temp-Block-1
                 .row.panel
                     h1 Temp-Block-2
-    h1 Welcome to GithubMiner(ranking page)!
-    p
-        strong Overall数据：
-    for rank in ranking
-        p
-            a(href="/repositories/" + rank.repository_id)= rank.name
-            strong= " (" + rank.stargazers_count + ")"
