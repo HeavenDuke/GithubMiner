@@ -11,6 +11,9 @@ exports.show = function (req, res, next) {
         }
         else {
             var repository = result.data[0];
+            if (repository) {
+
+            }
             Repository.getReadme(repository.name, function (readme) {
                 res.render("repository/show", {
                     title: repository.name,

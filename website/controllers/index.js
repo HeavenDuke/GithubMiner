@@ -17,7 +17,7 @@ exports.home = function (req, res, next) {
                         info: req.flash('info'),
                         error: req.flash('error'),
                         ranking: result.data,
-                        title: "Ranking"
+                        title: "GithubMiner"
                     });
                 }
             });

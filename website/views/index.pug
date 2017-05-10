@@ -11,8 +11,8 @@ block content
             h4 Today's Top 3 Trending Repositories
         .col-xs-2
             h4.pull-right
-                a(href="/ranking" title="more")
-                    | more
+                a.darkgray(href="/ranking" title="more")
+                    = "more "
                     i.fa.fa-angle-double-right
     .row
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
@@ -63,11 +63,14 @@ block content
     .row(style="margin-top: 10px;")
         .col-lg-8.col-md-8.col-sm-12.col-xs-12
             .list-title Events
+            ul.list-group
+                button.btn.btn-default.btn-flat.btn-block#event-refresher
+                    a Show More
         .col-lg-4.col-md-4.hidden-sm.hidden-xs
             .list-title
                 | You might like ...
                 span.pull-right
-                    a.refresher(title="refresh")
+                    a.refresher.darkgray(title="refresh")
                         i.fa.fa-refresh
             ul.list-group#recommendation-container
         .visible-sm.visible-xs.col-sm-12.col-xs-12

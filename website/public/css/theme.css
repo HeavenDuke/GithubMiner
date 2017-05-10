@@ -37,12 +37,20 @@ form.navbar-form input {
     margin-top: 5px;
 }
 
+.list-nothing {
+    height: 150px;
+    font-size: 30px;
+    line-height: 30px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
 a {
     cursor: pointer;
     color: #0366d6;
 }
 
-.refresher {
+.darkgray {
     color: darkgray;
 }
 
@@ -78,4 +86,12 @@ li.medal-description p {
     overflow: hidden;
     -ms-text-overflow: ellipsis;
     text-overflow: ellipsis;
+}
+
+.event-item {
+    font-size: 16px;
+}
+
+.event-item span {
+    font-size: 12px;
 }
