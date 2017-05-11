@@ -13,14 +13,11 @@ nav.navbar.navbar-inverse
                 i.fa.fa-github
                 |  GithubMiner
             form.visible-xs(style="margin: 0px;")
-                input.form-control(type="text" name="query" placeholder="search here")
-
+                input.form-control(type="text" name="query" value=query placeholder="search here")
         .collapse.navbar-collapse#navbar-collapse
             ul.nav.navbar-nav
                 li
                     a(href="/ranking") Ranking
-                //li
-                //    a(href="/explore") Explore
                 li.visible-xs
                     a(href="#")
                         i.fa.fa-github
@@ -31,5 +28,9 @@ nav.navbar.navbar-inverse
                         i.fa.fa-github
                         |  Sign In
             form.navbar-form.pull-right.hidden-xs(action="/search" method="GET")
-                .form-group
-                    input.form-control(type="text" name="query" placeholder="search here")
+                .form-group.input-group
+                    input.form-control(type="text" name="query" value=query placeholder="search here")
+                    span.input-group-btn
+                        button.btn.btn-inverse
+                            i.fa.fa-search
+                            = " GO"

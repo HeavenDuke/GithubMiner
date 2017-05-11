@@ -20,15 +20,15 @@ github.authenticate({
 });
 
 exports.index = function (req, res, next) {
-    var query = req.query.query;
-    var sort = req.query.sort;
-    var order = req.query.order;
-    var page = req.query.page ? parseInt(req.query.page) : 0;
+    var query = req.query.query ? req.query.query : "";
+    var sort = ["stars", "forks", "updated"].includes(req.query.sort) ? req.query.sort : "";
+    var order = ["desc", "asc"].includes(req.query.order) ? req.query.order : "";
+    var page = Math.min((req.query.page ? parseInt(req.query.page) : 1), 10);
     var pagination = 10;
-    if (query) {
+    if (query && query != "") {
         github.search.repos({q: query, sort: sort, order: order, per_page: pagination, page: page}).then(function (result) {
             console.log(result);
-            var total_pages = Math.ceil(result.data.total_count / pagination);
+            var total_pages = Math.min(Math.ceil(result.data.total_count / pagination), 10);
             var options = {};
             var _options = query.split(' ');
             for(var _option in _options) {
@@ -43,6 +43,7 @@ exports.index = function (req, res, next) {
                 error: req.flash('error'),
                 query: query,
                 sort: sort,
+                language_style: global.language_style,
                 order: order,
                 options: options,
                 result: result.data.items,

@@ -33,6 +33,14 @@ form.navbar-form input {
     text-overflow: ellipsis;
 }
 
+.list-item-title-lg {
+    font-size: 20px;
+    font-weight: bold;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+}
+
 .list-item-description {
     margin-top: 5px;
 }
@@ -94,4 +102,22 @@ li.medal-description p {
 
 .event-item span {
     font-size: 12px;
+}
+
+.query {
+    margin-top: 10%;
+}
+
+.btn-inverse {
+    background-color: #404448;
+    color: #9d9d9d;
+    border-left-color: transparent;
+}
+
+.empty-list li{
+    height: 400px;
+    font-size: 30px;
+    line-height: 30px;
+    padding-top: 185px;
+    padding-bottom: 185px;
 }

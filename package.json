@@ -5,6 +5,7 @@
   "description": "Mining Github Repository and constructing a recommendation website",
   "license": "MIT",
   "dependencies": {
+    "better-require": "0.0.3",
     "bluebird": "latest",
     "body-parser": "^1.17.1",
     "connect-flash": "^0.1.1",

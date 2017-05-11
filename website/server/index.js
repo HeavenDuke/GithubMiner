@@ -70,6 +70,7 @@ Server.prototype.initialize_global_variables = function (config) {
     require('../libs').date();
     global.db = new neo4j(config.database.queryString);
     global.mongoose = require('../database').loader;
+    global.language_style = require('../../config/laguage_colors.json');
 };
 
 Server.prototype.start_tasks = function () {

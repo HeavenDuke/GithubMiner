@@ -1,27 +1,153 @@
 extends ../layout/layout
 
 block content
-    h1 Welcome to GithubMiner(searching page)!
-    p
-        strong Query:
-        = query
+    div
 
-    .row
-        form
+        mixin order-filter()
             .form-group
-                label 搜索
-                input.form-control(value=query placeholder="请输入搜索内容")
-    .row
-        h4 Advanced
-        .col-lg-6
-            ul
-                li.active JavaScript
-                li Python
-                li C++
+                label Sorted by
+                select.form-control(name="sort")
+                    option(value="") default
+                    option(value="stars") stars
+                    option(value="forks") forks
+                    option(value="updated") updated
+            .form-group
+                label order
+                select.form-control(name="order")
+                    option(value="desc") desc
+                    option(value="asc") asc
 
-        .col-lg-6
-            ul
-                li deep learning
-                li visualization
-                li data mining
-                li kdd
+        mixin basic-filter(params)
+            .form-group
+                label Owned by
+                input.form-control(name="owner" placeholder="repository owner")
+            .form-group
+                label including forks?
+                select.form-control(name="forks")
+                    option(value="") no
+                    option(value="yes") yes
+                    option(value="only") only
+        mixin language-filter(languages)
+            .list-title Languages
+            ul.list-group
+                li.list-group-item(style="padding: 0px;")
+                    input.form-control(style="border-radius: 0px; border: 0px;" placeholder="Enter Language...")
+                for language in languages.slice(0, 5)
+                    li.list-group-item= language
+                for language in languages.slice(5)
+                    li.list-group-item(style="display: none;" type="collapsed")= language
+                if languages.length > 5
+                    li.list-group-item.text-center(style="padding: 0px;")
+                        a#language-filter-expander
+                            button.btn.btn-default.btn.flat.btn-block(style="border-radius: 0px; border: 0px;") more
+        if !(query && query != "")
+            .row.query
+                .col-lg-2.col-md-2.col-sm-1.col-xs-1
+                .col-lg-8.col-md-8.col-sm-10.col-xs-10
+                    h4 Search
+                    form(action="/search" method="GET")
+                        .input-group.form-group
+                            input.form-control(value=query name="query" placeholder="Please input your query here.")
+                            span.input-group-btn
+                                button.btn.btn-default
+                                    i.fa.fa-search
+                                    = " GO"
+            .row
+                .col-lg-2.col-md-2.col-sm-1.col-xs-1
+                .col-lg-8.col-md-8.col-sm-10.col-xs-10
+                    p
+                        = "You can also try "
+                        a#advanced-toggler advanced search
+                        = " or use github official query syntax."
+            .row#advanced(style="display: none;")
+                .col-lg-2.col-md-2.col-sm-1.col-xs-1
+                .col-lg-4.col-md-4.col-sm-5.col-xs-5
+                    +basic-filter
+                    +order-filter
+                .col-lg-4.col-md-4.col-sm-5.col-xs-5
+                    +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"])
+        else
+            .row
+                .col-lg-3.col-md-3.hidden-sm.hidden-xs
+                    h4 Filter
+                    +basic-filter
+                    +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"])
+                .col-lg-9.col-md-9
+                    .row
+                        .col-xs-10
+                            h4 Search result
+                        .col-xs-2.visible-xs.visible-sm
+                            h4.pull-right
+                                a.darkgray(data-toggle="modal" data-target="#filter-modal")
+                                    i.fa.fa-filter
+                                    = "Filter"
+                    .row
+                        .col-lg-10.col-md-10.col-sm-9.col-xs-9
+                            form(action="/search" method="GET")
+                                .input-group.form-group
+                                    input.form-control(value=query name="query" placeholder="Please input your query here.")
+                                    span.input-group-btn
+                                        button.btn.btn-default
+                                            i.fa.fa-search
+                                            = " GO"
+                                input.hidden(name="sort" value=sort)
+                                input.hidden(name="order" value=order)
+                        .col-lg-2.col-md-2.col-sm-3.col-xs-3
+                            a.btn.btn-default.btn-block(data-toggle="dropdown" data-target="#sort_dropdown")= "sort "
+                                i.fa.fa-sort
+                            ul.dropdown-menu
+                                li
+                                    a()
+                                        i.fa.fa-search
+                                        = " default"
+                                li
+                                    a()
+                                        i.fa.fa-star
+                                        = " stars"
+                                li
+                                    a()
+                                        i.fa.fa-code-fork
+                                        = " forks"
+                                li
+                                    a()
+                                        i.fa.fa-calendar
+                                        = " updated"
+                    if result.length != 0
+                        ul.list-group
+                            for item in result
+                                li.list-group-item
+                                    a.list-item-title-lg(href="/repositories/" + item.id)= item.full_name
+                                    if item.language
+                                        span.pull-right.badge(style="margin-top: 5px;" + (language_style[item.language] ? "background-color: " + language_style[item.language].color + ";" : ""))
+                                            = " " + item.language
+                                    p.list-item-description= item.description
+                                    .row
+                                        .col-lg-10.col-md-10.col-sm-10.col-xs-10
+                                            p.text-muted= "Updated at " + new Date(item.updated_at).format("yyyy-MM-dd hh:mm:ss")
+                                        .col-lg-2.col-md-2.col-sm-2.col-xs-2
+                                            span.pull-right
+                                                i.fa.fa-star
+                                                = " " + item.stargazers_count
+                    else
+                        ul.list-group.empty-list.text-center
+                            li.list-group-item
+                                i.fa.fa-search
+                                = "Sorry, but nothing is found."
+                    .text-center
+                        ul.pagination
+                            if current_page > 1
+                                li
+                                    a(href="/search?query=" + query + "&page=" + (current_page - 1) + "&sort=" + sort + "&order=" + order) &laquo; 上一页
+                            - var i = Math.max(1, current_page - 3)
+                            - while(i <= Math.min(current_page + 3, total_pages))
+                                if i == current_page
+                                    li.active
+                                        a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
+                                else
+                                    li
+                                        a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
+                                - i++
+                            if current_page < total_pages
+                                li
+                                    a(href="/search?query=" + query + "&page=" + (current_page + 1) + "&sort=" + sort + "&order=" + order) 下一页 &raquo;
+    script(type="text/javascript" src="/javascript/search.js")

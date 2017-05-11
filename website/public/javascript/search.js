@@ -15,7 +15,25 @@
         }
     }
 
+    function prepare_language_filter () {
+        $("#language-filter-expander").click(function () {
+            var states = {
+                more: "collapse",
+                collapse: "more"
+            };
+            $(this).parent().prevAll("[type='collapsed']").toggle("fast");
+            $(this).children().text(states[$(this).children().text().trim()]);
+            $(this).children().blur();
+            return false;
+        });
+
+        $("#advanced-toggler").click(function () {
+            $("#advanced").show("fast");
+        });
+    }
+
     function prepare_search_page() {
+        prepare_language_filter();
 
     }
 
