@@ -2,83 +2,96 @@ extends ../layout/layout
 
 block content
     .container
-        .row.panel
-            #carousel-example-generic.carousel.slide(data-ride='carousel')
-                // Indicators
-                ol.carousel-indicators
-                    li.active(data-target='#carousel-example-generic', data-slide-to='0')
-                    li(data-target='#carousel-example-generic', data-slide-to='1')
-                    li(data-target='#carousel-example-generic', data-slide-to='2')
-                // Wrapper for slides
-                .carousel-inner(role='listbox')
-                    .item.active
-                        img(src='https://scarletphoenixolivia.files.wordpress.com/2015/04/carousel2_slideshow1560x592_0.jpg', alt='...')
-                        .carousel-caption
-                            h1 Image1
-                            p 1st
-                    .item
-                        img(src='https://scarletphoenixolivia.files.wordpress.com/2015/04/carousel2_slideshow1560x592_0.jpg', alt='...')
-                        .carousel-caption
-                            h1 Image2
-                            p 2nd
-                    .item
-                        img(src='https://scarletphoenixolivia.files.wordpress.com/2015/04/carousel2_slideshow1560x592_0.jpg', alt='...')
-                        .carousel-caption
-                            h1 Image3
-                            p 3rd
-                // Controls
-                a.left.carousel-control(href='#carousel-example-generic', role='button', data-slide='prev')
-                    span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
-                    span.sr-only Previous
-                a.right.carousel-control(href='#carousel-example-generic', role='button', data-slide='next')
-                    span.glyphicon.glyphicon-chevron-right(aria-hidden='true')
-                    span.sr-only Next
         .row
-            .row.col-md-8.panel
-                .row.panel-heading
-                    h1.col-md-10
-                        strong Ranking
-                    h1.btn-group.col-md-1
-                        button.btn.btn-default.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-                            | Filter
-                            span.caret
-                        ul.dropdown-menu
-                            li
-                                a(href='#') Best Match
-                            li
-                                a(href='#') Most Stars
-                            li
-                                a(href='#') Most Popular
-                            li.divider(role='separator')
-                            li
-                                a(href='#') Special
-                .row.panel-body
-                    for rank in ranking
-                        .row.panel.col-md-offset-1.col-md-11
-                            h2 
-                                a(href="/repositories/" + rank.repository_id)= rank.name
-                            p=rank.description
-                            
-                    nav(aria-label='Page navigation')
-                        ul.pagination
-                            li
-                                a(href='#', aria-label='Previous')
-                                    span(aria-hidden='true') «
-                            li
-                                a(href='#') 1
-                            li
-                                a(href='#') 2
-                            li
-                                a(href='#') 3
-                            li
-                                a(href='#') 4
-                            li
-                                a(href='#') 5
-                            li
-                                a(href='#', aria-label='Next')
-                                    span(aria-hidden='true') »
-            .row.col-md-4
-                .row.panel
-                    h1 Temp-Block-1
-                .row.panel
-                    h1 Temp-Block-2
+            .col-xs-6
+                h4= type + " Ranking"
+            .col-xs-6
+                h4.pull-right(style="display: inline-block;")
+                    - var types = ["Daily", "Weekly", "Monthly", "Overall"]
+                    - var first = true
+                    for t in types
+                        if !first
+                            a.darkgray= " / "
+                        a.darkgray(href="/ranking?type=" + t title=t + " Ranking")
+                            = t
+                        - first = false
+        .row
+            .col-lg-4.col-md-4.col-sm-12.col-xs-12
+                ul.list-group
+                    li.list-group-item.golden.medal-title.text-center
+                        a(href="/repositories/" + ranking[0].repository_id)= ranking[0].name.replace(/.*\//, "")
+                    li.list-group-item.medal-description.text-center
+                        p= ranking[0].description
+                    li.list-group-item
+                        div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-star
+                                = " " + ranking[0].stargazers_count + " Star"
+                        div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-code-fork
+                                = " " + ranking[0].forks_count + " Fork"
+            .col-lg-4.col-md-4.col-sm-12.col-xs-12
+                ul.list-group
+                    li.list-group-item.silver.medal-title.text-center
+                        a(href="/repositories/" + ranking[2].repository_id)= ranking[1].name.replace(/.*\//, "")
+                    li.list-group-item.medal-description.text-center
+                        p= ranking[1].description
+                    li.list-group-item
+                        div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-star
+                                = " " + ranking[1].stargazers_count + " Star"
+                        div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-code-fork
+                                = " " + ranking[1].forks_count + " Fork"
+            .col-lg-4.col-md-4.col-sm-12.col-xs-12
+                ul.list-group
+                    li.list-group-item.bronze.medal-title.text-center
+                        a(href="/repositories/" + ranking[2].repository_id)= ranking[2].name.replace(/.*\//, "")
+                    li.list-group-item.medal-description.text-center
+                        p= ranking[2].description
+                    li.list-group-item
+                        div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-star
+                                = " " + ranking[2].stargazers_count + " Star"
+                        div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                            a.btn.btn-default.btn-block.btn-flat
+                                i.fa.fa-code-fork
+                                = " " + ranking[2].forks_count + " Fork"
+        .row.hidden-sm.hidden-xs
+            .col-lg-6.col-md-6
+                - var i = 4
+                ul.list-group
+                    for item in ranking.slice(3, 52)
+                        li.list-group-item
+                            a.list-item-title(href="/repositories/" + item.repository_id)= item.name + "　"
+                            span
+                                i.fa.fa-star
+                                = " " + item.stargazers_count
+                            span.pull-right.badge= i++
+                            //p.list-item-description= item.description
+            .col-lg-6.col-md-6
+                ul.list-group
+                    for item in ranking.slice(52, 100)
+                        li.list-group-item
+                            a.list-item-title(href="/repositories/" + item.repository_id)= item.name + "　"
+                            span
+                                i.fa.fa-star
+                                = " " + item.stargazers_count
+                            span.pull-right.badge= i++
+                            //p.list-item-description= item.description
+        .row.hidden-md.hidden-lg
+            .col-sm-12.col-xs-12
+                ul.list-group
+                    - var i = 4
+                    for item in ranking
+                        li.list-group-item
+                            a.list-item-title(href="/repositories/" + item.repository_id)= item.name + "　"
+                            span
+                                i.fa.fa-star
+                                = " " + item.stargazers_count
+                            span.pull-right.badge= i++
+                            //p.list-item-description= item.description

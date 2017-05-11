@@ -37,7 +37,6 @@ exports.index = function (req, res, next) {
     });
     if (term != "") {
         github.search.repos({q: term, sort: sort, order: order, per_page: pagination, page: page}).then(function (result) {
-            console.log(result);
             var total_pages = Math.min(Math.ceil(result.data.total_count / pagination), 10);
             var options = {};
             var _options = query.split(' ');
