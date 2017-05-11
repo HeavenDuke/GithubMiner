@@ -28,14 +28,22 @@ block content
             ul.list-group
                 li.list-group-item
                     | Created by
-                    a(href="github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
+                    a(href="https://github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
                 li.list-group-item
-                    a(href="github.com/" + repository.name)= "github.com/" + repository.name
+                    a(href="https://github.com/" + repository.name)= "github.com/" + repository.name
                 li.list-group-item Licensed with
-                    a(href="github.com/" + repository.name)= " " + (repository.license ? repository.license : "MIT")
+                    a(href="https://github.com/" + repository.name)= " " + (repository.license ? repository.license : "MIT")
                 li.list-group-item
-                    | Developed with
-                    a(href="/search?q=")= " " + (repository.language ? repository.language : "JavaScript")
+                    span.pull-left= "Developed with："
+                    span.badge(style="float: left;" + (language_style[repository.language] ? "background-color: " + language_style[repository.language].color + ";" : ""))
+                        a(style="color: white;" href="/search?language=" + repository.language ? repository.language : "")= " " + repository.language ? repository.language : "Unknown"
+                    | 　
+                if repository.topics && repository.topics.length != 0
+                    li.list-group-item.text-center
+                        for topic in repository.topics
+                            span.badge(style="float: none; margin-left: 3px; margin-right: 3px;")
+                                a(style="color: white;" href="/search?topic=" + topic)= topic
+                        | 　
             .list-title Stat
             ul.list-group
                 li.list-group-item
@@ -61,14 +69,16 @@ block content
             ul.list-group
                 li.list-group-item
                     | Created by
-                    a(href="github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
+                    a(href="https://github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
                 li.list-group-item
-                    a(href="github.com/" + repository.name)= "github.com/" + repository.name
+                    a(href="https://github.com/" + repository.name)= "github.com/" + repository.name
                 li.list-group-item Last updated at
                     strong= " " + new Date().format("yyyy-MM-dd hh:mm:ss")
                 li.list-group-item
-                    | Developed with
-                    a(href="/search?q=")= " " + (repository.language ? repository.language : "JavaScript")
+                    span.pull-left= "Developed with："
+                    span.badge(style="float: left;" + (language_style[repository.language] ? "background-color: " + language_style[repository.language].color + ";" : ""))
+                        a(style="color: white;" href="/search?language=" + repository.language ? repository.language : "")= " " + repository.language ? repository.language : "Unknown"
+                    | 　
         .col-sm-6.col-xs-6
             ul.list-group
                 li.list-group-item
