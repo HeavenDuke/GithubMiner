@@ -162,7 +162,7 @@ block content
                                         a.list-item-title-lg(href="/repositories/" + item.id)= item.full_name
                                         if item.language
                                             span.pull-right.badge(style="margin-top: 5px;" + (language_style[item.language] ? "background-color: " + language_style[item.language].color + ";" : ""))
-                                                = " " + item.language
+                                                a(style="color: white;" href=Helper("/search", {query: query, language: item.language}))= " " + item.language
                                         p.list-item-description= item.description
                                         .row
                                             .col-lg-10.col-md-10.col-sm-10.col-xs-10
