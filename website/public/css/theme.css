@@ -121,3 +121,7 @@ li.medal-description p {
     padding-top: 185px;
     padding-bottom: 185px;
 }
+
+.language-selector {
+    cursor: pointer;
+}

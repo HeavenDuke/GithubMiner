@@ -4,17 +4,6 @@
 
 (function () {
 
-    function compose_query(query, options) {
-        var result = [query];
-        for(var key in options) {
-            result.push(key + ":" + options[key])
-        }
-        return {
-            query: result.join(" "),
-            encoded: result.join("+")
-        }
-    }
-
     function prepare_language_filter () {
         $("#language-filter-expander").click(function () {
             var states = {
@@ -30,11 +19,36 @@
         $("#advanced-toggler").click(function () {
             $("#advanced").show("fast");
         });
+
+        $("#language-filter-expander").parent().prevAll(".language-selector").click(function () {
+            $("#language-filter-expander").parent().prevAll().find("input").val($(this).text().trim());
+        });
+
+        $("#sorter").children().click(function () {
+            var orders = {
+                desc: "asc",
+                asc: "desc"
+            };
+            if ($(this).attr("sort")) {
+                if ($(this).attr("sort") != $("input[name='sort']").val()) {
+                    $("input[name='sort']").val($(this).attr("sort"));
+                    $("input[name='order']").val("desc");
+                }
+                else {
+                    $("input[name='sort']").val($(this).attr("sort"));
+                    $("input[name='order']").val($(this).attr("order"));
+                }
+            }
+            else {
+                $("input[name='sort']").val("");
+                $("input[name='order']").val("");
+            }
+            $("form").submit();
+        });
     }
 
     function prepare_search_page() {
         prepare_language_filter();
-
     }
 
     $(document).ready(function () {

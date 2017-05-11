@@ -14,76 +14,83 @@ block content
             .form-group
                 label order
                 select.form-control(name="order")
-                    option(value="desc") desc
+                    option(value="") desc
                     option(value="asc") asc
 
         mixin basic-filter(params)
             .form-group
                 label Owned by
-                input.form-control(name="owner" placeholder="repository owner")
+                input.form-control(name="owner" value=params.owner placeholder="repository owner")
             .form-group
                 label including forks?
                 select.form-control(name="forks")
                     option(value="") no
-                    option(value="yes") yes
-                    option(value="only") only
-        mixin language-filter(languages)
+                    if params.fork == "yes"
+                        option(value="yes" selected) yes
+                    else
+                        option(value="yes") yes
+                    if params.fork == "only"
+                        option(value="only" selected) only
+                    else
+                        option(value="only") only
+        mixin language-filter(languages, language)
             .list-title Languages
             ul.list-group
                 li.list-group-item(style="padding: 0px;")
-                    input.form-control(style="border-radius: 0px; border: 0px;" placeholder="Enter Language...")
+                    input.form-control(style="border-radius: 0px; border: 0px;" name="language" placeholder="Enter Language..." value=language)
                 for language in languages.slice(0, 5)
-                    li.list-group-item= language
+                    li.list-group-item.language-selector= language
                 for language in languages.slice(5)
-                    li.list-group-item(style="display: none;" type="collapsed")= language
+                    li.list-group-item.language-selector(style="display: none;" type="collapsed")= language
                 if languages.length > 5
                     li.list-group-item.text-center(style="padding: 0px;")
-                        a#language-filter-expander
-                            button.btn.btn-default.btn.flat.btn-block(style="border-radius: 0px; border: 0px;") more
-        if !(query && query != "")
-            .row.query
-                .col-lg-2.col-md-2.col-sm-1.col-xs-1
-                .col-lg-8.col-md-8.col-sm-10.col-xs-10
-                    h4 Search
-                    form(action="/search" method="GET")
+                        a#language-filter-expander.btn.btn-default.btn-flat.btn-block(style="border-radius: 0px; border: 0px;") more
+        -console.log(term);
+        if term == ""
+            form(action="/search" method="GET")
+                .row.query
+                    .col-lg-2.col-md-2.col-sm-1.col-xs-1
+                    .col-lg-8.col-md-8.col-sm-10.col-xs-10
+                        h4 Search
                         .input-group.form-group
                             input.form-control(value=query name="query" placeholder="Please input your query here.")
                             span.input-group-btn
                                 button.btn.btn-default
                                     i.fa.fa-search
                                     = " GO"
-            .row
-                .col-lg-2.col-md-2.col-sm-1.col-xs-1
-                .col-lg-8.col-md-8.col-sm-10.col-xs-10
-                    p
-                        = "You can also try "
-                        a#advanced-toggler advanced search
-                        = " or use github official query syntax."
-            .row#advanced(style="display: none;")
-                .col-lg-2.col-md-2.col-sm-1.col-xs-1
-                .col-lg-4.col-md-4.col-sm-5.col-xs-5
-                    +basic-filter
-                    +order-filter
-                .col-lg-4.col-md-4.col-sm-5.col-xs-5
-                    +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"])
+                .row
+                    .col-lg-2.col-md-2.col-sm-1.col-xs-1
+                    .col-lg-8.col-md-8.col-sm-10.col-xs-10
+                        p
+                            = "You can also try "
+                            a#advanced-toggler advanced search
+                            = " or use github official query syntax."
+                .row#advanced(style="display: none;")
+                    .col-lg-2.col-md-2.col-sm-1.col-xs-1
+                    .col-lg-4.col-md-4.col-sm-5.col-xs-5
+                        +basic-filter({})
+                        +order-filter
+                    .col-lg-4.col-md-4.col-sm-5.col-xs-5
+                        +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"])
         else
-            .row
-                .col-lg-3.col-md-3.hidden-sm.hidden-xs
-                    h4 Filter
-                    +basic-filter
-                    +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"])
-                .col-lg-9.col-md-9
-                    .row
-                        .col-xs-10
-                            h4 Search result
-                        .col-xs-2.visible-xs.visible-sm
-                            h4.pull-right
-                                a.darkgray(data-toggle="modal" data-target="#filter-modal")
-                                    i.fa.fa-filter
-                                    = "Filter"
-                    .row
-                        .col-lg-10.col-md-10.col-sm-9.col-xs-9
-                            form(action="/search" method="GET")
+            form(action="/search" method="GET")
+                .row
+                    .col-lg-3.col-md-3.hidden-sm.hidden-xs
+                        h4 Filter
+                        +basic-filter({owner: owner, fork: fork})
+                        +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"], language)
+                        button.btn.btn-block.btn-primary(type="submit") submit
+                    .col-lg-9.col-md-9
+                        .row
+                            .col-xs-10
+                                h4 Search result
+                            .col-xs-2.visible-xs.visible-sm
+                                h4.pull-right
+                                    a.darkgray(data-toggle="modal" data-target="#filter-modal")
+                                        i.fa.fa-filter
+                                        = "Filter"
+                        .row
+                            .col-lg-10.col-md-10.col-sm-9.col-xs-9
                                 .input-group.form-group
                                     input.form-control(value=query name="query" placeholder="Please input your query here.")
                                     span.input-group-btn
@@ -92,62 +99,99 @@ block content
                                             = " GO"
                                 input.hidden(name="sort" value=sort)
                                 input.hidden(name="order" value=order)
-                        .col-lg-2.col-md-2.col-sm-3.col-xs-3
-                            a.btn.btn-default.btn-block(data-toggle="dropdown" data-target="#sort_dropdown")= "sort "
-                                i.fa.fa-sort
-                            ul.dropdown-menu
-                                li
-                                    a()
-                                        i.fa.fa-search
-                                        = " default"
-                                li
-                                    a()
-                                        i.fa.fa-star
-                                        = " stars"
-                                li
-                                    a()
-                                        i.fa.fa-code-fork
-                                        = " forks"
-                                li
-                                    a()
-                                        i.fa.fa-calendar
-                                        = " updated"
-                    if result.length != 0
-                        ul.list-group
-                            for item in result
+                            .col-lg-2.col-md-2.col-sm-3.col-xs-3
+                                a.btn.btn-default.btn-block(data-toggle="dropdown" data-target="#sort_dropdown")
+                                    case sort
+                                        when "stars"
+                                            = "stars "
+                                            if order == "asc"
+                                                i.fa.fa-sort-amount-asc
+                                            else
+                                                i.fa.fa-sort-amount-desc
+                                        when "forks"
+                                            = "forks "
+                                            if order == "asc"
+                                                i.fa.fa-sort-amount-asc
+                                            else
+                                                i.fa.fa-sort-amount-desc
+                                        when "updated"
+                                            = "updated "
+                                            if order == "asc"
+                                                i.fa.fa-sort-amount-asc
+                                            else
+                                                i.fa.fa-sort-amount-desc
+                                        default
+                                            = "sort "
+                                            i.fa.fa-sort
+                                ul.dropdown-menu#sorter
+                                    li(class=sort && sort != "" ? "" : "active")
+                                        a
+                                            i.fa.fa-search
+                                            = " default"
+                                    li(sort="stars" order={asc: "desc", desc: "asc"}[order] class=sort == "stars" ? "active" : "")
+                                        a
+                                            i.fa.fa-star
+                                            = " stars"
+                                            if sort == "stars"
+                                                if order == "asc"
+                                                    i.fa.fa-sort-amount-asc.pull-right
+                                                else
+                                                    i.fa.fa-sort-amount-desc.pull-right
+                                    li(sort="forks" order={asc: "desc", desc: "asc"}[order] class=sort == "forks" ? "active" : "")
+                                        a
+                                            i.fa.fa-code-fork
+                                            = " forks"
+                                            if sort == "forks"
+                                                if order == "asc"
+                                                    i.fa.fa-sort-amount-asc.pull-right
+                                                else
+                                                    i.fa.fa-sort-amount-desc.pull-right
+                                    li(sort="updated" order={asc: "desc", desc: "asc"}[order] class=sort == "updated" ? "active" : "")
+                                        a
+                                            i.fa.fa-calendar
+                                            = " updated"
+                                            if sort == "updated"
+                                                if order == "asc"
+                                                    i.fa.fa-sort-amount-asc.pull-right
+                                                else
+                                                    i.fa.fa-sort-amount-desc.pull-right
+                        if result.length != 0
+                            ul.list-group
+                                for item in result
+                                    li.list-group-item
+                                        a.list-item-title-lg(href="/repositories/" + item.id)= item.full_name
+                                        if item.language
+                                            span.pull-right.badge(style="margin-top: 5px;" + (language_style[item.language] ? "background-color: " + language_style[item.language].color + ";" : ""))
+                                                = " " + item.language
+                                        p.list-item-description= item.description
+                                        .row
+                                            .col-lg-10.col-md-10.col-sm-10.col-xs-10
+                                                p.text-muted= "Updated at " + new Date(item.updated_at).format("yyyy-MM-dd hh:mm:ss")
+                                            .col-lg-2.col-md-2.col-sm-2.col-xs-2
+                                                span.pull-right
+                                                    i.fa.fa-star
+                                                    = " " + item.stargazers_count
+                        else
+                            ul.list-group.empty-list.text-center
                                 li.list-group-item
-                                    a.list-item-title-lg(href="/repositories/" + item.id)= item.full_name
-                                    if item.language
-                                        span.pull-right.badge(style="margin-top: 5px;" + (language_style[item.language] ? "background-color: " + language_style[item.language].color + ";" : ""))
-                                            = " " + item.language
-                                    p.list-item-description= item.description
-                                    .row
-                                        .col-lg-10.col-md-10.col-sm-10.col-xs-10
-                                            p.text-muted= "Updated at " + new Date(item.updated_at).format("yyyy-MM-dd hh:mm:ss")
-                                        .col-lg-2.col-md-2.col-sm-2.col-xs-2
-                                            span.pull-right
-                                                i.fa.fa-star
-                                                = " " + item.stargazers_count
-                    else
-                        ul.list-group.empty-list.text-center
-                            li.list-group-item
-                                i.fa.fa-search
-                                = "Sorry, but nothing is found."
-                    .text-center
-                        ul.pagination
-                            if current_page > 1
-                                li
-                                    a(href="/search?query=" + query + "&page=" + (current_page - 1) + "&sort=" + sort + "&order=" + order) &laquo; 上一页
-                            - var i = Math.max(1, current_page - 3)
-                            - while(i <= Math.min(current_page + 3, total_pages))
-                                if i == current_page
-                                    li.active
-                                        a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
-                                else
-                                    li
-                                        a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
-                                - i++
-                            if current_page < total_pages
-                                li
-                                    a(href="/search?query=" + query + "&page=" + (current_page + 1) + "&sort=" + sort + "&order=" + order) 下一页 &raquo;
+                                    i.fa.fa-search
+                                    = "Sorry, but nothing is found."
+                        .text-center
+                            if total_page > 1
+                                ul.pagination
+                                    if current_page > 1
+                                        li
+                                            a(href="/search?query=" + query + "&page=" + (current_page - 1) + "&sort=" + sort + "&order=" + order) &laquo; 上一页
+                                    - var i = Math.max(1, current_page - 3)
+                                    - while(i <= Math.min(current_page + 3, total_pages))
+                                        if i == current_page
+                                            li.active
+                                                a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
+                                        else
+                                            li
+                                                a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
+                                        - i++
+                                    if current_page < total_pages
+                                        li
+                                            a(href="/search?query=" + query + "&page=" + (current_page + 1) + "&sort=" + sort + "&order=" + order) 下一页 &raquo;
     script(type="text/javascript" src="/javascript/search.js")

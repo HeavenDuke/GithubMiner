@@ -2,6 +2,8 @@
  * Created by heavenduke on 17-4-28.
  */
 
+var search = require('../../libs').search;
+
 var Github = require('github');
 
 var github = new Github({
@@ -23,10 +25,18 @@ exports.index = function (req, res, next) {
     var query = req.query.query ? req.query.query : "";
     var sort = ["stars", "forks", "updated"].includes(req.query.sort) ? req.query.sort : "";
     var order = ["desc", "asc"].includes(req.query.order) ? req.query.order : "";
+    var owner = req.query.owner;
+    var forks = req.query.forks;
+    var language = req.query.language;
     var page = Math.min((req.query.page ? parseInt(req.query.page) : 1), 10);
     var pagination = 10;
-    if (query && query != "") {
-        github.search.repos({q: query, sort: sort, order: order, per_page: pagination, page: page}).then(function (result) {
+    var term = search(query, {
+        user: owner,
+        fork: forks,
+        language: language
+    });
+    if (term != "") {
+        github.search.repos({q: term, sort: sort, order: order, per_page: pagination, page: page}).then(function (result) {
             console.log(result);
             var total_pages = Math.min(Math.ceil(result.data.total_count / pagination), 10);
             var options = {};
@@ -39,10 +49,14 @@ exports.index = function (req, res, next) {
             }
             res.render("search/index", {
                 title: "Search Page",
+                term: term,
                 info: req.flash('info'),
                 error: req.flash('error'),
                 query: query,
                 sort: sort,
+                owner: owner,
+                language: language,
+                fork: forks,
                 language_style: global.language_style,
                 order: order,
                 options: options,
@@ -55,7 +69,8 @@ exports.index = function (req, res, next) {
     else {
         res.render("search/index", {
             title: "Search Page",
-            query: req.query.query
+            query: req.query.query,
+            term: term,
         });
     }
 };
