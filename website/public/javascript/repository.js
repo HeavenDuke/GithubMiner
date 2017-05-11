@@ -36,8 +36,27 @@
             return result;
         };
 
+        var construct_empty_container = function () {
+            var result = "<li class='list-group-item'>";
+            result += "No recommendation</li>";
+            return result;
+        };
+
         if (list.length == 0) {
-            alert("No more recommendations.");
+            if (offset != 0) {
+                alert("No more recommendations.");
+            }
+            else {
+                $("#recommendation-container").children("li").remove();
+                $("#recommendation-container").addClass("empty-list");
+                $("#recommendation-container").addClass("text-center");
+                $("#recommendation-container").append($(construct_empty_container()));
+                var small_container = $("#recommendation-refresher").parent();
+                small_container.addClass("empty-list");
+                small_container.addClass("text-center");
+                small_container.append($(construct_empty_container()));
+                $("#recommendation-refresher").remove();
+            }
         }
         else {
             offset += list.length;

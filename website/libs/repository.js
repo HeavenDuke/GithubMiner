@@ -8,16 +8,21 @@ var util = require('util');
 
 var Repository = {};
 
-Repository.getReadme = function (name, callback) {
-    var url = "https://raw.githubusercontent.com/" + name + "/master/README.md";
+Repository.getReadme = function (name, branch, callback) {
+    var url = "https://raw.githubusercontent.com/" + name + "/" + (branch ? branch : "master") + "/README.md";
     var result = "";
     https.get(url, function (res) {
-        res.on('data', function (d) {
-            result += d;
-        });
-        res.on('end', function () {
-            callback(result);
-        });
+        if (res.statusCode == 404) {
+            callback();
+        }
+        else {
+            res.on('data', function (d) {
+                result += d;
+            });
+            res.on('end', function () {
+                callback(result);
+            });
+        }
     });
 };
 

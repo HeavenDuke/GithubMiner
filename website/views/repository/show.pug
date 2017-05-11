@@ -15,7 +15,14 @@ block content
                     a(href="https://github.com/" + repository.name)= repository.name
         .col-lg-4.col-md-4
     .row.hidden-sm.hidden-xs(style="margin-top: 10px;")
-        .col-lg-8.col-md-8.markdown-body.readme= readme
+        if readme
+            .col-lg-8.col-md-8.markdown-body.readme= readme
+        else
+            .col-lg-8.col-md-8
+                ul.list-group.empty-list.text-center
+                    li.list-group-item
+                        i.fa.fa-github
+                        = " This repository seems to have no readme in its default branch."
         .col-lg-4.col-md-4
             .list-title Information
             ul.list-group
@@ -77,9 +84,15 @@ block content
                     i.fa.fa-code-fork
                     = " " + (repository.forks_count ? repository.forks_count : 0) + " forks"
         .col-sm-12.col-xs-12
-            .markdown-body.readme(style="display: none;")= readme
-            button.btn.btn-default.btn-flat.btn-block#readme-viewer
-                a show README
+            if readme
+                .markdown-body.readme(style="display: none;")= readme
+                button.btn.btn-default.btn-flat.btn-block#readme-viewer
+                    a show README
+            else
+                ul.list-group.empty-list.text-center
+                    li.list-group-item
+                        i.fa.fa-github
+                        = " This repository seems to have no readme in its default branch."
         .col-sm-12.col-xs-12(style="margin-top: 10px;")
             .list-title Related Repositories
             ul.list-group
