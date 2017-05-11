@@ -42,6 +42,7 @@ exports.show = function (req, res, next) {
             else {
                 github.repos.getById({id: req.params.repository_id}).then(function (result) {
                     repository = result.data;
+                    // TODO: USE CREATE UNIQUE TO CONSTRUCT RELATIONS BETWEEN REPOSITORY AND LANGUAGE/TOPICS
                     global.db.cypherQuery(
                         "CREATE (r:Repository {repository_id: '" + repository.id
                         + "', name: '" + repository.full_name
@@ -50,7 +51,7 @@ exports.show = function (req, res, next) {
                         + ", forks_count: " + repository.forks_count
                         + ", open_issues_count: " + repository.open_issues_count
                         + ", default_branch: '" + repository.default_branch
-                        + "', description: '" + repository.description.replace("'", "\\'") + "'}) RETURN r", function (err, result) {
+                        + "', description: '" + repository.description.replace("'", "\\'") + "'}), topic", function (err, result) {
                         if (err) {
                             return next(err);
                         }
