@@ -178,16 +178,15 @@ module.exports = function (user, callback) {
             });
         }
     });
-
 };
 
-var neo4j = require('node-neo4j');
-var config = require('../config')(process.env.environment);
-
-global.db = new neo4j(config.database.queryString);
-
-module.exports({user_id: 6873217, username: "HeavenDuke", password: "win32.luhzu.a", following: 20, avatar_url: "https://avatars1.githubusercontent.com/u/6873217?v=3"}, function (err) {
-    if (err) {
-        console.log(err);
-    }
-});
+// var neo4j = require('node-neo4j');
+// var config = require('../config')(process.env.environment);
+//
+// global.db = new neo4j(config.database.queryString);
+//
+// module.exports({user_id: 6873217, username: "HeavenDuke", password: "win32.luhzu.a", following: 20, avatar_url: "https://avatars1.githubusercontent.com/u/6873217?v=3"}, function (err) {
+//     if (err) {
+//         console.log(err);
+//     }
+// });
