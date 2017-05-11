@@ -30,6 +30,21 @@ exports.index = function (req, res, next) {
     var language = req.query.language;
     var page = Math.min((req.query.page ? parseInt(req.query.page) : 1), 10);
     var pagination = 10;
+    var Helper = function (url, options) {
+        var result = [url, "?"], first = true;
+        for(var key in options) {
+            if (options[key]) {
+                if (!first) {
+                    result.push("&");
+                }
+                result.push(key);
+                result.push("=");
+                result.push(options[key]);
+                first = false;
+            }
+        }
+        return result.join("");
+    };
     var term = search(query, {
         user: owner,
         fork: forks,
@@ -61,7 +76,8 @@ exports.index = function (req, res, next) {
                 options: options,
                 result: result.data.items,
                 current_page: page,
-                total_pages: total_pages
+                total_pages: total_pages,
+                Helper: Helper
             });
         });
     }

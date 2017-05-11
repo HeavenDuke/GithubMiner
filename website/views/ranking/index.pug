@@ -3,9 +3,9 @@ extends ../layout/layout
 block content
     .container
         .row
-            .col-xs-6
+            .col-xs-4
                 h4= type + " Ranking"
-            .col-xs-6
+            .col-xs-8
                 h4.pull-right(style="display: inline-block;")
                     - var types = ["Daily", "Weekly", "Monthly", "Overall"]
                     - var first = true
@@ -62,7 +62,7 @@ block content
                                 i.fa.fa-code-fork
                                 = " " + ranking[2].forks_count + " Fork"
         .row.hidden-sm.hidden-xs
-            .col-lg-4.col-md-4
+            .col-lg-6.col-md-6
                 - var i = 4
                 ul.list-group
                     for item in ranking.slice(3, 52)
@@ -73,7 +73,7 @@ block content
                                 = " " + item.stargazers_count
                             span.pull-right.badge= i++
                             //p.list-item-description= item.description
-            .col-lg-4.col-md-4
+            .col-lg-6.col-md-6
                 ul.list-group
                     for item in ranking.slice(52, 100)
                         li.list-group-item
@@ -83,8 +83,6 @@ block content
                                 = " " + item.stargazers_count
                             span.pull-right.badge= i++
                             //p.list-item-description= item.description
-            .col-lg-4.col-md-4
-
         .row.hidden-md.hidden-lg
             .col-sm-12.col-xs-12
                 ul.list-group

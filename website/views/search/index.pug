@@ -2,7 +2,6 @@ extends ../layout/layout
 
 block content
     div
-
         mixin order-filter()
             .form-group
                 label Sorted by
@@ -45,7 +44,6 @@ block content
                 if languages.length > 5
                     li.list-group-item.text-center(style="padding: 0px;")
                         a#language-filter-expander.btn.btn-default.btn-flat.btn-block(style="border-radius: 0px; border: 0px;") more
-        -console.log(term);
         if term == ""
             form(action="/search" method="GET")
                 .row.query
@@ -56,8 +54,9 @@ block content
                             input.form-control(value=query name="query" placeholder="Please input your query here.")
                             span.input-group-btn
                                 button.btn.btn-default
+                                    = "　"
                                     i.fa.fa-search
-                                    = " GO"
+                                    = "　"
                 .row
                     .col-lg-2.col-md-2.col-sm-1.col-xs-1
                     .col-lg-8.col-md-8.col-sm-10.col-xs-10
@@ -95,8 +94,9 @@ block content
                                     input.form-control(value=query name="query" placeholder="Please input your query here.")
                                     span.input-group-btn
                                         button.btn.btn-default
+                                            = "　"
                                             i.fa.fa-search
-                                            = " GO"
+                                            = "　"
                                 input.hidden(name="sort" value=sort)
                                 input.hidden(name="order" value=order)
                             .col-lg-2.col-md-2.col-sm-3.col-xs-3
@@ -177,21 +177,21 @@ block content
                                     i.fa.fa-search
                                     = "Sorry, but nothing is found."
                         .text-center
-                            if total_page > 1
+                            if total_pages > 1
                                 ul.pagination
                                     if current_page > 1
                                         li
-                                            a(href="/search?query=" + query + "&page=" + (current_page - 1) + "&sort=" + sort + "&order=" + order) &laquo; 上一页
+                                            a(href=Helper("search", {page: current_page - 1, query: query, sort: sort, order: order, language: language, owner: owner, forks: fork})) &laquo; 上一页
                                     - var i = Math.max(1, current_page - 3)
                                     - while(i <= Math.min(current_page + 3, total_pages))
                                         if i == current_page
                                             li.active
-                                                a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
+                                                a(href=Helper("search", {page: i, query: query, sort: sort, order: order, language: language, owner: owner, forks: fork}))= i
                                         else
                                             li
-                                                a(href="/search?query=" + query + "&page=" + i + "&sort=" + sort + "&order=" + order)= i
+                                                a(href=Helper("search", {page: i, query: query, sort: sort, order: order, language: language, owner: owner, forks: fork}))= i
                                         - i++
                                     if current_page < total_pages
                                         li
-                                            a(href="/search?query=" + query + "&page=" + (current_page + 1) + "&sort=" + sort + "&order=" + order) 下一页 &raquo;
+                                            a(href=Helper("search", {page: current_page + 1, query: query, sort: sort, order: order, language: language, owner: owner, forks: fork})) 下一页 &raquo;
     script(type="text/javascript" src="/javascript/search.js")
