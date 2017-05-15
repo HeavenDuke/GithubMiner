@@ -26,4 +26,9 @@ Repository.getReadme = function (name, branch, callback) {
     });
 };
 
+// 封装刷新repository的代码
+Repository.getRepository = function (name, callback) {
+
+};
+
 module.exports = Repository;

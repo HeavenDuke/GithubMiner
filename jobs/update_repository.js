@@ -112,17 +112,26 @@ Crawler.prototype.run = function (callback) {
                         callback(err);
                     }
                     if (result.is_last) {
-                        that.start = start;
-                        cnt = 1;
+                        if (that.start == that.end) {
+                            callback();
+                        }
+                        else {
+                            that.start = start;
+                            cnt = 1;
+                            current = Date.now();
+                            console.log(current - start_at);
+                            start_at = current;
+                            setTimeout(temp, 0);
+                        }
                     }
                     else {
                         start = result.items[result.items.length - 1].stargazers_count;
                         cnt++;
+                        current = Date.now();
+                        console.log(current - start_at);
+                        start_at = current;
+                        setTimeout(temp, 0);
                     }
-                    current = Date.now();
-                    console.log(current - start_at);
-                    start_at = current;
-                    setTimeout(temp, 0);
                 });
             }
         });

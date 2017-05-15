@@ -9,3 +9,5 @@ exports.repository = require('./repository');
 exports.search = require('./search');
 
 exports.recommendation = require('./recommendation');
+
+exports.crawlers = require('./crawlers');
