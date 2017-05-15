@@ -22,6 +22,22 @@ module.exports = function (environment) {
                                  + config.database.port;
             }
         },
+        github: {
+            auth: {
+                type: "basic",
+                username: "DoubleDeckers",
+                password: "15tfosaaub_rees"
+            },
+            options: {
+                protocol: "https",
+                host: "api.github.com",
+                headers: {
+                    "Accept": "application/vnd.github.mercy-preview+json"
+                },
+                Promise: require('bluebird'),
+                timeout: 5000
+            }
+        },
         mongoose: "mongodb://localhost:27017/githubminer",
         redis: {
             options: {
