@@ -21,9 +21,7 @@ exports.show = function (req, res, next) {
                         type: "oauth",
                         token: req.session.user.access_token
                     });
-                    console.log(repository);
                     Repository.getReadme(repository.full_name, worker, function (readme) {
-                        console.log(repository);
                         return res.render("repository/show", {
                             title: repository.name,
                             info: req.flash('info'),
@@ -63,7 +61,6 @@ exports.show = function (req, res, next) {
                         }
                         else {
                             Repository.getReadme(repository.full_name, worker, function (readme) {
-                                repository.repository_id = repository.id;
                                 res.render("repository/show", {
                                     title: repository.full_name,
                                     info: req.flash('info'),
@@ -79,13 +76,12 @@ exports.show = function (req, res, next) {
                 else {
                     global.master.get_worker(function (w) {
                         worker = w;
-                        Repository.getRepository(req.params.owner + "/" + req.params.name, null, worker, function (err, repository, language) {
+                        Repository.getRepository(req.params.owner + "/" + req.params.name, null, worker, function (err, repository) {
                             if (err) {
                                 return next(err);
                             }
                             else {
                                 Repository.getReadme(repository.full_name, worker, function (readme) {
-                                    repository.repository_id = repository.id;
                                     res.render("repository/show", {
                                         title: repository.full_name,
                                         info: req.flash('info'),
