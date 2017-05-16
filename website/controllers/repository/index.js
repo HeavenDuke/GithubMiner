@@ -13,8 +13,8 @@ exports.show = function (req, res, next) {
         }
         else {
             var repository = result.data[0] ? result.data[0][0] : null;
-            repository.language = result.data[0] ? result.data[0][1] : null;
             if (repository && (repository.updated == true || !req.session.user)) {
+                repository.language = result.data[0][1];
                 Repository.getReadme(repository.name, repository.default_branch, function (readme) {
                     return res.render("repository/show", {
                         title: repository.name,
@@ -36,7 +36,6 @@ exports.show = function (req, res, next) {
                     });
                     Repository.getRepository(req.query.name, null, worker, function () {
                         Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
-                            repository.name = repository.full_name;
                             repository.repository_id = repository.id;
                             res.render("repository/show", {
                                 title: repository.full_name,
@@ -54,7 +53,6 @@ exports.show = function (req, res, next) {
                         worker = w;
                         Repository.getRepository(req.query.name, null, worker, function () {
                             Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
-                                repository.name = repository.full_name;
                                 repository.repository_id = repository.id;
                                 res.render("repository/show", {
                                     title: repository.full_name,
