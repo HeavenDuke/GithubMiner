@@ -11,7 +11,7 @@
                 collapse: "more"
             };
             $(this).parent().prevAll("[type='collapsed']").toggle("fast");
-            $(this).children().text(states[$(this).children().text().trim()]);
+            $(this).text(states[$(this).text().trim()]);
             $(this).children().blur();
             return false;
         });

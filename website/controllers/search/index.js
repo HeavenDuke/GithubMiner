@@ -35,13 +35,13 @@ exports.index = function (req, res, next) {
         fork: forks,
         language: language
     });
-    global.db.cypherQuery("MATCH (l:Language) RETURN l", function (err, result) {
+    global.db.cypherQuery("MATCH (l:Language)<-[]-(r:Repository) RETURN l.name, count(*) as score ORDER BY score DESC", function (err, result) {
         if (err) {
             return next(err);
         }
         else {
             result.data.forEach(function (l) {
-                languages.push(l.name);
+                languages.push(l[0]);
             });
             if (term != "") {
                 var github = new Github(global.config.github.options);
