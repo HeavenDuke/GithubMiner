@@ -12,7 +12,7 @@ block content
             #rid.hidden= repository.repository_id
             .repository-title
                 h3
-                    a(href="https://github.com/" + repository.name)= repository.name
+                    a(href="https://github.com/" + repository.full_name)= repository.full_name
         .col-lg-4.col-md-4
     .row.hidden-sm.hidden-xs(style="margin-top: 10px;")
         if readme
@@ -28,11 +28,11 @@ block content
             ul.list-group
                 li.list-group-item
                     | Created by
-                    a(href="https://github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
+                    a(href="https://github.com/" + repository.full_name.slice(0, repository.full_name.indexOf("/")))= " " + repository.full_name.slice(0, repository.full_name.indexOf("/"))
                 li.list-group-item
-                    a(href="https://github.com/" + repository.name)= "github.com/" + repository.name
+                    a(href="https://github.com/" + repository.full_name)= "github.com/" + repository.full_name
                 li.list-group-item Licensed with
-                    a(href="https://github.com/" + repository.name)= " " + (repository.license ? repository.license : "MIT")
+                    a(href="https://github.com/" + repository.full_name)= " " + (repository.license ? repository.license : "MIT")
                 li.list-group-item
                     span.pull-left= "Developed with："
                     span.badge(style="float: left;" + (language_style[repository.language] ? "background-color: " + language_style[repository.language].color + ";" : ""))
@@ -69,9 +69,9 @@ block content
             ul.list-group
                 li.list-group-item
                     | Created by
-                    a(href="https://github.com/" + repository.name.slice(0, repository.name.indexOf("/")))= " " + repository.name.slice(0, repository.name.indexOf("/"))
+                    a(href="https://github.com/" + repository.full_name.slice(0, repository.full_name.indexOf("/")))= " " + repository.full_name.slice(0, repository.full_name.indexOf("/"))
                 li.list-group-item
-                    a(href="https://github.com/" + repository.name)= "github.com/" + repository.name
+                    a(href="https://github.com/" + repository.full_name)= "github.com/" + repository.full_name
                 li.list-group-item Last updated at
                     strong= " " + new Date().format("yyyy-MM-dd hh:mm:ss")
                 li.list-group-item

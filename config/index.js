@@ -28,10 +28,10 @@ module.exports = function (environment) {
                 client_id: "ea9d2874e18bbcbca7b6",
                 scope: "user%20public_repo",
                 redirect_url: "http%3a%2f%2fminer.heavenduke.com%2fuser",
-                query: function () {
+                query: function (query) {
                     return config.github.oauth.api + "?client_id=" + config.github.oauth.client_id
                                                    + "&scope=" + config.github.oauth.scope
-                                                   + "&redirect_url=" + config.github.oauth.redirect_url
+                                                   + "&redirect_url=" + query ? query : config.github.oauth.redirect_url
                                                    + "&allow_signup=true"
                 }
             },
@@ -77,7 +77,6 @@ module.exports = function (environment) {
 
     }
     config.database.queryString = config.database.queryString();
-    config.github.oauth.query = config.github.oauth.query();
     return config;
 
 };
