@@ -29,10 +29,23 @@ module.exports = function (environment) {
                 scope: "user%20public_repo",
                 redirect_url: "http%3a%2f%2fminer.heavenduke.com%2fuser",
                 query: function (query) {
-                    return config.github.oauth.api + "?client_id=" + config.github.oauth.client_id
-                                                   + "&scope=" + config.github.oauth.scope
-                                                   + "&redirect_url=" + query ? query : config.github.oauth.redirect_url
-                                                   + "&allow_signup=true"
+                    function generate_nonce_str(len) {
+                        var alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
+                        var result = [];
+                        for(var i = 0; i < len; i++) {
+                            result.push(alphabet[Math.round(Math.random() * (alphabet.length - 1))]);
+                        }
+                        return result.join("");
+                    }
+                    var noncestr = generate_nonce_str(10);
+                    return {
+                        url: config.github.oauth.api + "?client_id=" + config.github.oauth.client_id
+                        + "&scope=" + config.github.oauth.scope
+                        + "&redirect_url=" + (query ? query : config.github.oauth.redirect_url)
+                        + "&state=" + noncestr
+                        + "&allow_signup=true",
+                        nonce_str: noncestr
+                    }
                 }
             },
             auth: {

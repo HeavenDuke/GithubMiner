@@ -11,3 +11,5 @@ exports.search = require('./search');
 exports.recommendation = require('./recommendation');
 
 exports.crawlers = require('./crawlers');
+
+exports.query = require('./query');

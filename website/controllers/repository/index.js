@@ -31,7 +31,7 @@ exports.show = function (req, res, next) {
             console.log(result.data);
             var repository = result.data[0][0];
             repository.language = result.data[0][1];
-            if (repository) {
+            if (repository && (repository.updated == true || !req.session.user)) {
                 Repository.getReadme(repository.name, repository.default_branch, function (readme) {
                     return res.render("repository/show", {
                         title: repository.name,
@@ -43,19 +43,41 @@ exports.show = function (req, res, next) {
                 });
             }
             else {
-                Repository.getRepository(req.query.name, null, function () {
-                    Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
-                        repository.name = repository.full_name;
-                        repository.repository_id = repository.id;
-                        res.render("repository/show", {
-                            title: repository.full_name,
-                            info: req.flash('info'),
-                            error: req.flash('error'),
-                            repository: repository,
-                            readme: readme
+                var worker;
+                if (req.session.user) {
+
+                    Repository.getRepository(req.query.name, null, worker, function () {
+                        Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
+                            repository.name = repository.full_name;
+                            repository.repository_id = repository.id;
+                            res.render("repository/show", {
+                                title: repository.full_name,
+                                info: req.flash('info'),
+                                error: req.flash('error'),
+                                repository: repository,
+                                readme: readme
+                            });
                         });
                     });
-                });
+                }
+                else {
+                    global.master.get_worker(function (w) {
+                        worker = w;
+                        Repository.getRepository(req.query.name, null, worker, function () {
+                            Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
+                                repository.name = repository.full_name;
+                                repository.repository_id = repository.id;
+                                res.render("repository/show", {
+                                    title: repository.full_name,
+                                    info: req.flash('info'),
+                                    error: req.flash('error'),
+                                    repository: repository,
+                                    readme: readme
+                                });
+                            });
+                        });
+                    })
+                }
             }
         }
     });
