@@ -54,6 +54,7 @@ exports.index = function (req, res, next) {
             }
             res.render("search/index", {
                 title: "Search Page",
+                user: req.session.user,
                 term: term,
                 info: req.flash('info'),
                 error: req.flash('error'),
@@ -75,6 +76,7 @@ exports.index = function (req, res, next) {
     else {
         res.render("search/index", {
             title: "Search Page",
+            user: req.session.user,
             query: req.query.query,
             term: term,
         });

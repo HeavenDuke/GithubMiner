@@ -14,6 +14,7 @@ exports.index = function (req, res, next) {
             else {
                 res.render("ranking/index", {
                     ranking: result.data,
+                    user: req.session.user,
                     type: type,
                     title: "Ranking"
                 });
@@ -33,6 +34,7 @@ exports.index = function (req, res, next) {
                     else {
                         res.render("ranking/index", {
                             ranking: result.data,
+                            user: req.session.user,
                             type: type,
                             title: "Ranking"
                         });

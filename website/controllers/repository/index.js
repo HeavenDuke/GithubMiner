@@ -38,6 +38,7 @@ exports.show = function (req, res, next) {
                         info: req.flash('info'),
                         error: req.flash('error'),
                         repository: repository,
+                        user: req.session.user,
                         readme: readme
                     });
                 });
@@ -55,6 +56,7 @@ exports.show = function (req, res, next) {
                                 info: req.flash('info'),
                                 error: req.flash('error'),
                                 repository: repository,
+                                user: req.session.user,
                                 readme: readme
                             });
                         });
@@ -72,6 +74,7 @@ exports.show = function (req, res, next) {
                                     info: req.flash('info'),
                                     error: req.flash('error'),
                                     repository: repository,
+                                    user: req.session.user,
                                     readme: readme
                                 });
                             });
