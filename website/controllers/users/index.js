@@ -7,6 +7,7 @@ var https = require('https');
 exports.create = function (req, res, next) {
     if (req.query.code) {
         var request_data = global.config.github.oauth.query_token(null, req.session.nonce_str, req.query.code);
+        console.log(request_data);
         var request = https.request(request_data.options, function (rs) {
             rs.on("data", function (buffer) {
                 console.log(buffer.toString());

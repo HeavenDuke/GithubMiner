@@ -9,7 +9,6 @@ module.exports = function (req, res, next) {
     else {
         var query = global.config.github.oauth.query();
         req.session.oauth_state = query.nonce_str;
-        console.log(query);
         return res.redirect(query.url);
     }
 };
