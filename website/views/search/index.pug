@@ -70,14 +70,14 @@ block content
                         +basic-filter({})
                         +order-filter
                     .col-lg-4.col-md-4.col-sm-5.col-xs-5
-                        +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"])
+                        +language-filter(languages)
         else
             form(action="/search" method="GET")
                 .row
                     .col-lg-3.col-md-3.hidden-sm.hidden-xs
                         h4 Filter
                         +basic-filter({owner: owner, fork: fork})
-                        +language-filter(["JavaScript", "C++", "Python", "Java", "C#", "Lisp"], language)
+                        +language-filter(languages, language)
                         button.btn.btn-block.btn-primary(type="submit") submit
                     .col-lg-9.col-md-9
                         .row
