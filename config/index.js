@@ -29,7 +29,7 @@ module.exports = function (environment) {
                 client_id: "ea9d2874e18bbcbca7b6",
                 client_secret: "4b2cbc7732f70666817c54f0648e25070abf73aa",
                 scope: "user%20public_repo",
-                redirect_url: "http://miner.heavenduke.com/user",
+                redirect_url: "http%3a%2f%2fminer.heavenduke.com%2fuser",
                 query: function (query) {
                     function generate_nonce_str(len) {
                         var alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
@@ -43,7 +43,7 @@ module.exports = function (environment) {
                     return {
                         url: config.github.oauth.api + "?client_id=" + config.github.oauth.client_id
                         + "&scope=" + config.github.oauth.scope
-                        + "&redirect_url=" + (query ? query : config.github.oauth.redirect_url)
+                        + "&redirect_uri=" + (query ? query : config.github.oauth.redirect_url)
                         + "&state=" + noncestr
                         + "&allow_signup=true",
                         nonce_str: noncestr
