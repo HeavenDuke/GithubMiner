@@ -18,7 +18,7 @@ block content
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
             ul.list-group
                 li.list-group-item.golden.medal-title.text-center
-                    a(href="/repositories/" + ranking[0].repository_id)= ranking[0].name.replace(/.*\//, "")
+                    a(href="/repositories/" + ranking[0].full_name)= ranking[0].full_name.replace(/.*\//, "")
                 li.list-group-item.medal-description.text-center
                     p= ranking[0].description
                 li.list-group-item
@@ -33,7 +33,7 @@ block content
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
             ul.list-group
                 li.list-group-item.silver.medal-title.text-center
-                    a(href="/repositories/" + ranking[2].repository_id)= ranking[1].name.replace(/.*\//, "")
+                    a(href="/repositories/" + ranking[1].full_name)= ranking[1].full_name.replace(/.*\//, "")
                 li.list-group-item.medal-description.text-center
                     p= ranking[1].description
                 li.list-group-item
@@ -48,7 +48,7 @@ block content
         .col-lg-4.col-md-4.col-sm-12.col-xs-12
             ul.list-group
                 li.list-group-item.bronze.medal-title.text-center
-                    a(href="/repositories/" + ranking[2].repository_id)= ranking[2].name.replace(/.*\//, "")
+                    a(href="/repositories/" + ranking[2].full_name)= ranking[2].full_name.replace(/.*\//, "")
                 li.list-group-item.medal-description.text-center
                     p= ranking[2].description
                 li.list-group-item

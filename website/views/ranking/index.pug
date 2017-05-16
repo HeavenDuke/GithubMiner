@@ -19,7 +19,7 @@ block content
             .col-lg-4.col-md-4.col-sm-12.col-xs-12
                 ul.list-group
                     li.list-group-item.golden.medal-title.text-center
-                        a(href="/repositories/" + ranking[0].repository_id)= ranking[0].name.replace(/.*\//, "")
+                        a(href="/repositories/" + ranking[0].full_name)= ranking[0].full_name.replace(/.*\//, "")
                     li.list-group-item.medal-description.text-center
                         p= ranking[0].description
                     li.list-group-item
@@ -34,7 +34,7 @@ block content
             .col-lg-4.col-md-4.col-sm-12.col-xs-12
                 ul.list-group
                     li.list-group-item.silver.medal-title.text-center
-                        a(href="/repositories/" + ranking[2].repository_id)= ranking[1].name.replace(/.*\//, "")
+                        a(href="/repositories/" + ranking[1].full_name)= ranking[1].full_name.replace(/.*\//, "")
                     li.list-group-item.medal-description.text-center
                         p= ranking[1].description
                     li.list-group-item
@@ -49,7 +49,7 @@ block content
             .col-lg-4.col-md-4.col-sm-12.col-xs-12
                 ul.list-group
                     li.list-group-item.bronze.medal-title.text-center
-                        a(href="/repositories/" + ranking[2].repository_id)= ranking[2].name.replace(/.*\//, "")
+                        a(href="/repositories/" + ranking[2].full_name)= ranking[2].full_name.replace(/.*\//, "")
                     li.list-group-item.medal-description.text-center
                         p= ranking[2].description
                     li.list-group-item
@@ -67,7 +67,7 @@ block content
                 ul.list-group
                     for item in ranking.slice(3, 52)
                         li.list-group-item
-                            a.list-item-title(href="/repositories/" + item.repository_id)= item.name + "　"
+                            a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
                                 i.fa.fa-star
                                 = " " + item.stargazers_count
@@ -77,7 +77,7 @@ block content
                 ul.list-group
                     for item in ranking.slice(52, 100)
                         li.list-group-item
-                            a.list-item-title(href="/repositories/" + item.repository_id)= item.name + "　"
+                            a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
                                 i.fa.fa-star
                                 = " " + item.stargazers_count
@@ -89,7 +89,7 @@ block content
                     - var i = 4
                     for item in ranking
                         li.list-group-item
-                            a.list-item-title(href="/repositories/" + item.repository_id)= item.name + "　"
+                            a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
                                 i.fa.fa-star
                                 = " " + item.stargazers_count
