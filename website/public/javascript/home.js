@@ -65,7 +65,7 @@
         var construct_event_item = function (item) {
             var result = "<li class='list-group-item event-item'>";
             result += "<i class='fa fa-star'></i> " + item.login + " starred ";
-            result += "<a href='/repositories/" + item.repository_id + "'>" + item.name + "</a>";
+            result += "<a href='/repositories/" + item.full_name + "'>" + item.full_name + "</a>";
             result += "<span class='text-muted pull-right'> " + item.created_at + "</span>";
             result += "</li>";
             return result;

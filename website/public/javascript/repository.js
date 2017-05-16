@@ -99,6 +99,7 @@
         });
         $("#readme-viewer").click(toggle_readme);
         repository_id = $("#rid").text();
+        console.log(repository_id);
         $("#rid").remove();
         prepare_repository_recommendation();
         fetch_recommendations(repository_id, offset);

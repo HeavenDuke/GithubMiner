@@ -83,8 +83,7 @@ module.exports = function (environment) {
                 headers: {
                     "Accept": "application/vnd.github.mercy-preview+json"
                 },
-                Promise: require('bluebird'),
-                timeout: 5000
+                Promise: require('bluebird')
             }
         },
         mongoose: "mongodb://localhost:27017/githubminer",

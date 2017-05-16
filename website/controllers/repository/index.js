@@ -7,15 +7,15 @@ var Repository = require('../../libs').repository;
 var Github = require('github');
 
 exports.show = function (req, res, next) {
-    global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.param.name + "'})-[:Use]->(l:Language) RETURN r, l.name LIMIT 1", function (err, result) {
+    global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.params.name + "'})-[:Use]->(l:Language) RETURN r, l.name LIMIT 1", function (err, result) {
         if (err) {
             return next(err);
         }
         else {
             var repository = result.data[0] ? result.data[0][0] : null;
-            if (repository && (repository.updated == true || !req.session.user)) {
+            if (repository && repository.updated == true) {
                 repository.language = result.data[0][1];
-                Repository.getReadme(repository.name, repository.default_branch, function (readme) {
+                Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
                     return res.render("repository/show", {
                         title: repository.name,
                         info: req.flash('info'),
