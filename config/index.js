@@ -12,9 +12,9 @@ module.exports = function (environment) {
         },
         database: {
             host: "localhost",
-            username: "github",
+            username: "neo4j",
             password: "github",
-            port: 7474,
+            port: 8080,
             queryString: function () {
                 return "http://" + config.database.username + ":"
                                  + config.database.password + "@"
@@ -100,7 +100,8 @@ module.exports = function (environment) {
     };
 
     if (environment == "development" || environment == "local") {
-
+        config.database.username = "github";
+        config.database.port = "7474";
     }
     config.database.queryString = config.database.queryString();
     return config;
