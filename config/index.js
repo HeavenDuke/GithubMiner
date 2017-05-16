@@ -25,7 +25,7 @@ module.exports = function (environment) {
         github: {
             oauth: {
                 api: "https://github.com/login/oauth/authorize",
-                token_api: "https://github.com/login/oauth/access_token",
+                token_api: "",
                 client_id: "ea9d2874e18bbcbca7b6",
                 client_secret: "4b2cbc7732f70666817c54f0648e25070abf73aa",
                 scope: "user%20public_repo",
@@ -50,14 +50,24 @@ module.exports = function (environment) {
                     }
                 },
                 query_token: function (query, noncestr, code) {
+                    var data = JSON.stringify({
+                        client_id: config.github.oauth.client_id,
+                        client_secret: config.github.oauth.client_secret,
+                        code: code,
+                        state: noncestr
+                    });
                     return {
-                        url: config.github.oauth.token_api
-                        + "?client_id=" + config.github.oauth.client_id
-                        + "&client_secret=" + config.github.oauth.client_secret
-                        + "&code=" + code
-                        + "&redirect_uri=" + (query ? query : config.github.oauth.redirect_url)
-                        + "&state=" + noncestr,
-                        nonce_str: noncestr
+                        options: {
+                            host: "github.com",
+                            path: "/login/oauth/access_token",
+                            method: "POST",
+                            headers: {
+                                'Content-Type' : 'application/x-www-form-urlencoded',
+                                'Content-Length' : data.length,
+                                Accept: "application/json"
+                            }
+                        },
+                        data: data
                     }
                 }
             },
