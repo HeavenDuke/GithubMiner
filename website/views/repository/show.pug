@@ -36,7 +36,7 @@ block content
                 li.list-group-item
                     span.pull-left= "Developed with："
                     span.badge(style="float: left;" + (language_style[repository.language] ? "background-color: " + language_style[repository.language].color + ";" : ""))
-                        a(style="color: white;" href="/search?language=" + repository.language ? repository.language : "")= " " + repository.language ? repository.language : "Unknown"
+                        a(style="color: white;" href="/search?language=" + (repository.language ? repository.language : ""))= " " + (repository.language ? repository.language : "Unknown")
                     | 　
                 if repository.topics && repository.topics.length != 0
                     li.list-group-item.text-center
@@ -77,7 +77,7 @@ block content
                 li.list-group-item
                     span.pull-left= "Developed with："
                     span.badge(style="float: left;" + (language_style[repository.language] ? "background-color: " + language_style[repository.language].color + ";" : ""))
-                        a(style="color: white;" href="/search?language=" + repository.language ? repository.language : "")= " " + repository.language ? repository.language : "Unknown"
+                        a(style="color: white;" href="/search?language=" + (repository.language ? repository.language : ""))= " " + (repository.language ? repository.language : "Unknown")
                     | 　
         .col-sm-6.col-xs-6
             ul.list-group

@@ -7,14 +7,13 @@ var Repository = require('../../libs').repository;
 var Github = require('github');
 
 exports.show = function (req, res, next) {
-    global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.params.name + "'})-[:Use]->(l:Language) RETURN r, l.name LIMIT 1", function (err, result) {
+    global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.params.name + "'}) RETURN r LIMIT 1", function (err, result) {
         if (err) {
             return next(err);
         }
         else {
-            var repository = result.data[0] ? result.data[0][0] : null;
+            var repository = result.data[0];
             if (repository && repository.updated == true) {
-                repository.language = result.data[0][1];
                 var worker;
                 if (req.session.user) {
                     worker = new Github(global.config.github.options);
@@ -22,7 +21,9 @@ exports.show = function (req, res, next) {
                         type: "oauth",
                         token: req.session.user.access_token
                     });
+                    console.log(repository);
                     Repository.getReadme(repository.full_name, worker, function (readme) {
+                        console.log(repository);
                         return res.render("repository/show", {
                             title: repository.name,
                             info: req.flash('info'),
@@ -61,7 +62,6 @@ exports.show = function (req, res, next) {
                             return next(err);
                         }
                         else {
-                            repository.language = language;
                             Repository.getReadme(repository.full_name, worker, function (readme) {
                                 repository.repository_id = repository.id;
                                 res.render("repository/show", {
@@ -86,7 +86,6 @@ exports.show = function (req, res, next) {
                             else {
                                 Repository.getReadme(repository.full_name, worker, function (readme) {
                                     repository.repository_id = repository.id;
-                                    repository.language = language;
                                     res.render("repository/show", {
                                         title: repository.full_name,
                                         info: req.flash('info'),
