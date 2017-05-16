@@ -38,7 +38,7 @@ Repository.getRepository = function (name, id, worker, callback) {
             forks_count: repository.forks_count,
             watchers_count: repository.watchers_count,
             open_issues_count: repository.open_issues_count,
-            description: repository.description
+            description: repository.description ? repository.description.replace("'", "\\'") : ""
         }, that = this;
         var query = "MERGE (r:Repository {repository_id: " + repo.repository_id + "})"
             + " SET r.full_name='" + repo.full_name
