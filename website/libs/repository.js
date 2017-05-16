@@ -43,7 +43,8 @@ Repository.getRepository = function (name, id, worker, callback) {
             + "', r.stargazers_count=" + repo.stargazers_count
             + ", r.forks_count=" + repo.forks_count
             + ", r.watchers_count=" + repo.watchers_count
-            + ", r.open_issues_count=" + repo.open_issues_count;
+            + ", r.open_issues_count=" + repo.open_issues_count
+            + ", r.updated=true";
         if (language) {
             query = "MATCH (l:Language {name: '" + language + "'}) " +query + " CREATE UNIQUE (r)-[:Use]->(l) RETURN r";
         }

@@ -13,7 +13,9 @@ var fs = require('fs');
 var path = require('path');
 var neo4j = require('node-neo4j');
 var mongoose = require('mongoose');
+var Github = require('github');
 var routers = require('../routers');
+var GithubMaster = require('../libs').crawlers;
 
 var Server = function (config) {
     var app = express();
@@ -72,6 +74,14 @@ Server.prototype.initialize_global_variables = function (config) {
     global.db = new neo4j(config.database.queryString);
     global.mongoose = require('../database').loader;
     global.language_style = require('../../config/laguage_colors.json');
+
+    var github = new Github(config.github.options);
+    github.authenticate({
+        type: "oauth",
+        key: config.github.oauth.client_id,
+        secret: config.github.oauth.client_secret,
+    });
+    global.master = new GithubMaster([github]);
 };
 
 Server.prototype.start_tasks = function () {

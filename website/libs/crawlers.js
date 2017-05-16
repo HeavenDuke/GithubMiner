@@ -2,24 +2,10 @@
  * Created by heavenduke on 17-5-16.
  */
 
-var Github = require('github');
-var config = require('../../config')(process.env.environment);
-
 var Master = function (accounts) {
-    this.workers = [];
+    this.workers = accounts;
     if (accounts.length == 0) {
         throw new Error("At least provide one worker!");
-    }
-    else {
-        for(var i = 0; i < accounts.length; i++) {
-            var github = new Github(config.github.options);
-            github.authenticate({
-                type: "basic",
-                username: accounts[i].username,
-                password: accounts[i].password
-            });
-            this.workers.push(github);
-        }
     }
 };
 

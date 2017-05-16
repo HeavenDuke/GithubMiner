@@ -6,22 +6,6 @@ var Repository = require('../../libs').repository;
 
 var Github = require('github');
 
-var github = new Github({
-    protocol: "https",
-    host: "api.github.com",
-    headers: {
-        Accept: "application/vnd.github.mercy-preview+json"
-    },
-    Promise: require('bluebird')
-});
-
-github.authenticate({
-    type: "basic",
-    username: "DoubleDeckers",
-    password: "15tfosaaub_rees"
-});
-
-// TODO: 重写这个接口的lazy update功能
 exports.show = function (req, res, next) {
     global.db.cypherQuery("MATCH (r:Repository {repository_id: " + req.params.repository_id + "})-[:Use]->(l:Language) RETURN r, l.name LIMIT 1", function (err, result) {
         if (err) {
@@ -46,7 +30,11 @@ exports.show = function (req, res, next) {
             else {
                 var worker;
                 if (req.session.user) {
-
+                    worker = new Github(global.config.github.options);
+                    worker.authenticate({
+                        type: "oauth",
+                        token: req.session.user.access_token
+                    });
                     Repository.getRepository(req.query.name, null, worker, function () {
                         Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
                             repository.name = repository.full_name;
