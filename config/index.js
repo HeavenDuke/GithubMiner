@@ -62,6 +62,8 @@ module.exports = function (environment) {
                             path: "/login/oauth/access_token",
                             method: "POST",
                             headers: {
+                                'Content-Type' : 'application/x-www-form-urlencoded',
+                                'Content-Length' : data.length,
                                 Accept: "application/json"
                             }
                         },
