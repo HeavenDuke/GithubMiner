@@ -37,7 +37,8 @@ Repository.getRepository = function (name, id, worker, callback) {
             stargazers_count: repository.stargazers_count,
             forks_count: repository.forks_count,
             watchers_count: repository.watchers_count,
-            open_issues_count: repository.open_issues_count
+            open_issues_count: repository.open_issues_count,
+            description: repository.description
         }, that = this;
         var query = "MERGE (r:Repository {repository_id: " + repo.repository_id + "})"
             + " SET r.full_name='" + repo.full_name
@@ -45,7 +46,8 @@ Repository.getRepository = function (name, id, worker, callback) {
             + ", r.forks_count=" + repo.forks_count
             + ", r.watchers_count=" + repo.watchers_count
             + ", r.open_issues_count=" + repo.open_issues_count
-            + ", r.updated=true";
+            + ", r.description='" + repo.description.replace("'", "\\'")
+            + "', r.updated=true";
         if (language) {
             query = "MATCH (l:Language {name: '" + language + "'}) " +query + " CREATE UNIQUE (r)-[:Use]->(l) RETURN r";
         }

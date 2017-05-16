@@ -30,7 +30,7 @@
 
         var construct_recommendation_item = function (item) {
             var result = "<li class='list-group-item'>";
-            result += "<a class='list-item-title' href='/repositories/" + item.repository_id + "'>" + item.name + "</a>";
+            result += "<a class='list-item-title' href='/repositories/" + item.full_name + "'>" + item.full_name + "</a>";
             result += "<p class='list-item-description'>" + marked(item.description ? item.description : "null", {renderer: renderer}) + "</p>";
             result += "</li>";
             return result;
