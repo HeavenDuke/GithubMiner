@@ -7,12 +7,7 @@ module.exports = function (req, res, next) {
         return next();
     }
     else {
-        req.session.user = {
-            user_id: 6873217,
-            username: "HeavenDuke",
-            password: "win32.luhzu.a",
-            avatar_url: "https://avatars1.githubusercontent.com/u/6873217?v=3"
-        };
-        return next();
+        console.log(global.config.github)
+        return res.redirect(global.config.github.oauth.query);
     }
 };

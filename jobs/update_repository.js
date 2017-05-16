@@ -36,17 +36,16 @@ Crawler.prototype.flush_item = function (repository, callback) {
         watchers_count: repository.watchers_count,
         open_issues_count: repository.open_issues_count
     }, that = this;
-    var query = "MATCH (l:Language {name: '" + language
-        + "'}) MERGE (r:Repository {repository_id: " + repo.repository_id + "})"
+    var query = "MERGE (r:Repository {repository_id: " + repo.repository_id + "})"
         + " SET r.full_name='" + repo.full_name
         + "', r.stargazers_count=" + repo.stargazers_count
         + ", r.forks_count=" + repo.forks_count
         + ", r.watchers_count=" + repo.watchers_count
-        + ", r.open_issues_count=" + repo.open_issues_count, first = true;
+        + ", r.open_issues_count=" + repo.open_issues_count;
     if (language) {
-        query += " CREATE UNIQUE (r)-[:Use]->(l)";
-        first = false;
+        query = "MATCH (l:Language {name: '" + language + "'}) " +query + " CREATE UNIQUE (r)-[:Use]->(l)";
     }
+    console.log(query);
     if (language) {
         that.db.cypherQuery("MERGE (:Language {name: '" + language + "'})", function (err, result) {
             if (err) {
@@ -102,6 +101,7 @@ Crawler.prototype.flush_batch = function (repositories, callback) {
 Crawler.prototype.run = function (callback) {
     var cnt = 1, that = this, start, start_at = Date.now(), current;
     var temp = function () {
+        console.log("star: from " + that.start + " to " + that.end);
         that.fetch_range(that.start, that.end, cnt, function (err, result) {
             if (err) {
                 callback(err);

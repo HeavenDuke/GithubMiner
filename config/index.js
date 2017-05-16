@@ -23,6 +23,18 @@ module.exports = function (environment) {
             }
         },
         github: {
+            oauth: {
+                api: "https://github.com/login/oauth/authorize",
+                client_id: "ea9d2874e18bbcbca7b6",
+                scope: "user%20public_repo",
+                redirect_url: "http%3a%2f%2fminer.heavenduke.com%2fuser",
+                query: function () {
+                    return config.github.oauth.api + "?client_id=" + config.github.oauth.client_id
+                                                   + "&scope=" + config.github.oauth.scope
+                                                   + "&redirect_url=" + config.github.oauth.redirect_url
+                                                   + "&allow_signup=true"
+                }
+            },
             auth: {
                 type: "basic",
                 username: "DoubleDeckers",
@@ -65,6 +77,7 @@ module.exports = function (environment) {
 
     }
     config.database.queryString = config.database.queryString();
+    config.github.oauth.query = config.github.oauth.query();
     return config;
 
 };

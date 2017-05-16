@@ -11,7 +11,7 @@ module.exports = function (req, res, next) {
             return next();
         }
         else {
-            req.flash("error", "Please submit query in 2 seconds");
+            req.flash("error", "Please submit query after 2 seconds");
             res.redirect('back');
         }
     }
