@@ -6,21 +6,6 @@ var search = require('../../libs').search;
 
 var Github = require('github');
 
-var github = new Github({
-    protocol: "https",
-    host: "api.github.com",
-    headers: {
-        Accept: "application/vnd.github.mercy-preview+json"
-    },
-    Promise: require('bluebird')
-});
-
-github.authenticate({
-    type: "basic",
-    username: "DoubleDeckers",
-    password: "15tfosaaub_rees"
-});
-
 exports.index = function (req, res, next) {
     var query = req.query.query ? req.query.query : "";
     var sort = ["stars", "forks", "updated"].includes(req.query.sort) ? req.query.sort : "";
@@ -51,6 +36,12 @@ exports.index = function (req, res, next) {
         language: language
     });
     if (term != "") {
+
+        var github = new Github(global.config.github.options);
+        github.authenticate({
+            type: "oauth",
+            token: req.session.user.access_token
+        });
         github.search.repos({q: term, sort: sort, order: order, per_page: pagination, page: page}).then(function (result) {
             var total_pages = Math.min(Math.ceil(result.data.total_count / pagination), 10);
             var options = {};
