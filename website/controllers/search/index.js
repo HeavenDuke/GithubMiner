@@ -36,7 +36,6 @@ exports.index = function (req, res, next) {
         language: language
     });
     if (term != "") {
-
         var github = new Github(global.config.github.options);
         github.authenticate({
             type: "oauth",
