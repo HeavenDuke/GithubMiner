@@ -55,7 +55,7 @@ module.exports = function (environment) {
                         + "?client_id=" + config.github.oauth.client_id
                         + "&client_secret=" + config.github.oauth.client_secret
                         + "&code=" + code
-                        + "&redirect_url=" + (query ? query : config.github.oauth.redirect_url)
+                        + "&redirect_uri=" + (query ? query : config.github.oauth.redirect_url)
                         + "&state=" + noncestr,
                         nonce_str: noncestr
                     }

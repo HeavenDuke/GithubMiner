@@ -3,11 +3,11 @@
  */
 
 exports.create = function (req, res, next) {
-    if (req.query.access_token) {
-
+    if (req.query.code) {
+        res.redirect(307, global.config.github.oauth.query_token(null, req.session.nonce_str, req.query.code));
     }
-    else {
-
+    else if (req.query.access_token) {
+        console.log(access_token);
     }
 };
 
