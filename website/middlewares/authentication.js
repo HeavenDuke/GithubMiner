@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
     }
     else {
         var query = global.config.github.oauth.query();
-        req.session.oauth_state = query.nonce_str;
+        req.session.nonce_str = query.nonce_str;
         return res.redirect(query.url);
     }
 };
