@@ -92,8 +92,9 @@
     };
 
     var prepare_repository_detail = function () {
-        var container = $(".readme");
-        container.html(marked(container.text(), {renderer: renderer}));
+        $(".readme").each(function () {
+            $(this).html($(this).text());
+        });
         $('pre code').each(function () {
             hljs.highlightBlock(this);
         });

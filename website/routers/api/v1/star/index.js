@@ -4,10 +4,11 @@
 
 var express = require('express');
 var star_controller = require('../../../../controllers').api.v1.stars;
+var authentication = require('../../../../middlewares').authentication;
 var router = express.Router();
 
-router.post('/', star_controller.create);
+router.post('/', authentication, star_controller.create);
 
-router.delete('/', star_controller.destroy);
+router.delete('/', authentication, star_controller.destroy);
 
 module.exports = router;

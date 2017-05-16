@@ -15,19 +15,41 @@ exports.show = function (req, res, next) {
             var repository = result.data[0] ? result.data[0][0] : null;
             if (repository && repository.updated == true) {
                 repository.language = result.data[0][1];
-                Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
-                    return res.render("repository/show", {
-                        title: repository.name,
-                        info: req.flash('info'),
-                        error: req.flash('error'),
-                        repository: repository,
-                        user: req.session.user,
-                        readme: readme
+                var worker;
+                if (req.session.user) {
+                    worker = new Github(global.config.github.options);
+                    worker.authenticate({
+                        type: "oauth",
+                        token: req.session.user.access_token
                     });
-                });
+                    Repository.getReadme(repository.full_name, worker, function (readme) {
+                        return res.render("repository/show", {
+                            title: repository.name,
+                            info: req.flash('info'),
+                            error: req.flash('error'),
+                            repository: repository,
+                            user: req.session.user,
+                            readme: readme
+                        });
+                    });
+                }
+                else {
+                    global.master.get_worker(function (w) {
+                        worker = w;
+                        Repository.getReadme(repository.full_name, worker, function (readme) {
+                            res.render("repository/show", {
+                                title: repository.full_name,
+                                info: req.flash('info'),
+                                error: req.flash('error'),
+                                repository: repository,
+                                user: req.session.user,
+                                readme: readme
+                            });
+                        });
+                    });
+                }
             }
             else {
-                var worker;
                 if (req.session.user) {
                     worker = new Github(global.config.github.options);
                     worker.authenticate({
@@ -40,7 +62,7 @@ exports.show = function (req, res, next) {
                         }
                         else {
                             repository.language = language;
-                            Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
+                            Repository.getReadme(repository.full_name, worker, function (readme) {
                                 repository.repository_id = repository.id;
                                 res.render("repository/show", {
                                     title: repository.full_name,
@@ -62,7 +84,7 @@ exports.show = function (req, res, next) {
                                 return next(err);
                             }
                             else {
-                                Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
+                                Repository.getReadme(repository.full_name, worker, function (readme) {
                                     repository.repository_id = repository.id;
                                     repository.language = language;
                                     res.render("repository/show", {
@@ -76,7 +98,7 @@ exports.show = function (req, res, next) {
                                 });
                             }
                         });
-                    })
+                    });
                 }
             }
         }

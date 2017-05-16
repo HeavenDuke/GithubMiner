@@ -81,7 +81,7 @@ module.exports = function (environment) {
                 protocol: "https",
                 host: "api.github.com",
                 headers: {
-                    "Accept": "application/vnd.github.mercy-preview+json"
+                    "Accept": "application/vnd.github.VERSION.html"
                 },
                 Promise: require('bluebird')
             }

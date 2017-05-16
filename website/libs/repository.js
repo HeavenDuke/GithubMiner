@@ -8,22 +8,9 @@ var util = require('util');
 
 var Repository = {};
 
-// TODO: 把这个改造成调用API的版本
-Repository.getReadme = function (name, branch, callback) {
-    var url = "https://raw.githubusercontent.com/" + name + "/" + (branch ? branch : "master") + "/README.md";
-    var result = "";
-    https.get(url, function (res) {
-        if (res.statusCode == 404) {
-            callback();
-        }
-        else {
-            res.on('data', function (d) {
-                result += d;
-            });
-            res.on('end', function () {
-                callback(result);
-            });
-        }
+Repository.getReadme = function (name, worker, callback) {
+    worker.repos.getReadme({owner: name.split('/')[0], repo: name.split('/')[1]}).then(function (result) {
+        callback(result.data);
     });
 };
 
