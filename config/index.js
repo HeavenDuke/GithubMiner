@@ -3,6 +3,7 @@
  */
 
 var path = require('path');
+var querystring = require('querystring');
 
 module.exports = function (environment) {
 
@@ -50,7 +51,7 @@ module.exports = function (environment) {
                     }
                 },
                 query_token: function (query, noncestr, code) {
-                    var data = JSON.stringify({
+                    var data = querystring.stringify({
                         client_id: config.github.oauth.client_id,
                         client_secret: config.github.oauth.client_secret,
                         code: code,
@@ -58,7 +59,7 @@ module.exports = function (environment) {
                     });
                     return {
                         options: {
-                            host: "github.com",
+                            hostname: "github.com",
                             path: "/login/oauth/access_token",
                             method: "POST",
                             headers: {
