@@ -7,7 +7,7 @@ var Repository = require('../../libs').repository;
 var Github = require('github');
 
 exports.show = function (req, res, next) {
-    global.db.cypherQuery("MATCH (r:Repository {repository_id: " + req.params.repository_id + "})-[:Use]->(l:Language) RETURN r, l.name LIMIT 1", function (err, result) {
+    global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.param.name + "'})-[:Use]->(l:Language) RETURN r, l.name LIMIT 1", function (err, result) {
         if (err) {
             return next(err);
         }
@@ -34,24 +34,12 @@ exports.show = function (req, res, next) {
                         type: "oauth",
                         token: req.session.user.access_token
                     });
-                    Repository.getRepository(req.query.name, null, worker, function () {
-                        Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
-                            repository.repository_id = repository.id;
-                            res.render("repository/show", {
-                                title: repository.full_name,
-                                info: req.flash('info'),
-                                error: req.flash('error'),
-                                repository: repository,
-                                user: req.session.user,
-                                readme: readme
-                            });
-                        });
-                    });
-                }
-                else {
-                    global.master.get_worker(function (w) {
-                        worker = w;
-                        Repository.getRepository(req.query.name, null, worker, function () {
+                    Repository.getRepository(req.params.owner + "/" + req.params.name, null, worker, function (err, repository, language) {
+                        if (err) {
+                            return next(err);
+                        }
+                        else {
+                            repository.language = language;
                             Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
                                 repository.repository_id = repository.id;
                                 res.render("repository/show", {
@@ -63,6 +51,30 @@ exports.show = function (req, res, next) {
                                     readme: readme
                                 });
                             });
+                        }
+                    });
+                }
+                else {
+                    global.master.get_worker(function (w) {
+                        worker = w;
+                        Repository.getRepository(req.params.owner + "/" + req.params.name, null, worker, function (err, repository, language) {
+                            if (err) {
+                                return next(err);
+                            }
+                            else {
+                                Repository.getReadme(repository.full_name, repository.default_branch, function (readme) {
+                                    repository.repository_id = repository.id;
+                                    repository.language = language;
+                                    res.render("repository/show", {
+                                        title: repository.full_name,
+                                        info: req.flash('info'),
+                                        error: req.flash('error'),
+                                        repository: repository,
+                                        user: req.session.user,
+                                        readme: readme
+                                    });
+                                });
+                            }
                         });
                     })
                 }

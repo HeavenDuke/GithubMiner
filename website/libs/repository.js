@@ -62,7 +62,7 @@ Repository.getRepository = function (name, id, worker, callback) {
                             callback(err);
                         }
                         else {
-                            callback(null, result.data[0]);
+                            callback(null, result.data[0], language);
                         }
                     });
                 }
@@ -74,26 +74,22 @@ Repository.getRepository = function (name, id, worker, callback) {
                     callback(err);
                 }
                 else {
-                    callback(null, result.data[0]);
+                    callback(null, result.data[0], language);
                 }
             });
         }
     };
 
     if (name) {
-        worker.repos.get({owner: name.split('/')[0], repo: name.split[1]}).then(function (result) {
-            flush_item(result.data, function (err) {
-                callback(err);
-            });
+        worker.repos.get({owner: name.split('/')[0], repo: name.split('/')[1]}).then(function (result) {
+            flush_item(result.data, callback);
         }).catch(function (err) {
             callback(err);
         });
     }
     else {
         worker.repos.getById({id: id}).then(function (result) {
-            flush_item(result.data, function (err) {
-                callback(err);
-            });
+            flush_item(result.data, callback);
         }).catch(function (err) {
             callback(err);
         });

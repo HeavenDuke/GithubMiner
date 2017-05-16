@@ -6,6 +6,6 @@ var express = require('express');
 var repository_controller = require('../../controllers').repositories;
 var router = express.Router();
 
-router.get('/:repository_id', repository_controller.show);
+router.get('/:owner/:name', repository_controller.show);
 
 module.exports = router;
