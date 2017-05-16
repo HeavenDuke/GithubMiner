@@ -29,7 +29,7 @@ module.exports = function (environment) {
                 client_id: "ea9d2874e18bbcbca7b6",
                 client_secret: "4b2cbc7732f70666817c54f0648e25070abf73aa",
                 scope: "user%20public_repo",
-                redirect_url: "http%3a%2f%2fminer.heavenduke.com%2fuser",
+                redirect_url: "http://miner.heavenduke.com/user",
                 query: function (query) {
                     function generate_nonce_str(len) {
                         var alphabet = "qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM";
