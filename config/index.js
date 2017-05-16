@@ -25,7 +25,9 @@ module.exports = function (environment) {
         github: {
             oauth: {
                 api: "https://github.com/login/oauth/authorize",
+                token_api: "https://github.com/login/oauth/access_token",
                 client_id: "ea9d2874e18bbcbca7b6",
+                client_secret: "4b2cbc7732f70666817c54f0648e25070abf73aa",
                 scope: "user%20public_repo",
                 redirect_url: "http%3a%2f%2fminer.heavenduke.com%2fuser",
                 query: function (query) {
@@ -44,6 +46,17 @@ module.exports = function (environment) {
                         + "&redirect_url=" + (query ? query : config.github.oauth.redirect_url)
                         + "&state=" + noncestr
                         + "&allow_signup=true",
+                        nonce_str: noncestr
+                    }
+                },
+                query_token: function (query, noncestr, code) {
+                    return {
+                        url: config.github.oauth.token_api
+                        + "?client_id=" + config.github.oauth.client_id
+                        + "&client_secret=" + config.github.oauth.client_secret
+                        + "&code=" + code
+                        + "&redirect_url=" + (query ? query : config.github.oauth.redirect_url)
+                        + "&state=" + noncestr,
                         nonce_str: noncestr
                     }
                 }
