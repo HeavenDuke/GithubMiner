@@ -62,7 +62,11 @@ block content
                             = " " + ranking[2].forks_count + " Fork"
     .row(style="margin-top: 10px;")
         .col-lg-8.col-md-8.col-sm-12.col-xs-12
-            .list-title Events
+            .list-title(style="display: inline-block;") Events
+            if user
+                .btn-group.pull-right
+                    button.btn.btn-xs.btn-inverse(style="width: 70px;") All
+                    button.btn.btn-xs.btn-default(style="width: 70px;") Follow
             ul.list-group
                 button.btn.btn-default.btn-flat.btn-block#event-refresher
                     a Show More
