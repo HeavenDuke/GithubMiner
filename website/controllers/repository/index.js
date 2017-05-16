@@ -12,9 +12,8 @@ exports.show = function (req, res, next) {
             return next(err);
         }
         else {
-            console.log(result.data);
-            var repository = result.data[0][0];
-            repository.language = result.data[0][1];
+            var repository = result.data[0] ? result.data[0][0] : null;
+            repository.language = result.data[0] ? result.data[0][1] : null;
             if (repository && (repository.updated == true || !req.session.user)) {
                 Repository.getReadme(repository.name, repository.default_branch, function (readme) {
                     return res.render("repository/show", {
