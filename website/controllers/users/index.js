@@ -9,7 +9,7 @@ exports.create = function (req, res, next) {
         var request_data = global.config.github.oauth.query_token(null, req.session.nonce_str, req.query.code);
         var request = https.request(request_data.options, function (rs) {
             rs.on("data", function (buffer) {
-                console.log(buffer);
+                console.log(buffer.toString());
             });
         });
         request.write(request_data.data);
