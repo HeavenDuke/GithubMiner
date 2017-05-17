@@ -38,7 +38,6 @@ exports.destroy = function (req, res, next) {
             return next(err);
         }
         else {
-            console.log(result.data);
             var repository = result.data[0];
             if (repository) {
                 var github = new Github(global.config.github.options);
