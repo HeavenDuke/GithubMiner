@@ -32,11 +32,12 @@ exports.create = function (req, res, next) {
 };
 
 exports.destroy = function (req, res, next) {
-    global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.params.name + "'}) RETURN r", function (err, result) {
+    global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.params.name + "'}) RETURN r LIMIT 1", function (err, result) {
         if (err) {
             return next(err);
         }
         else {
+            console.log(result.data);
             var repository = result.data[0];
             if (repository) {
                 var github = new Github(global.config.github.options);

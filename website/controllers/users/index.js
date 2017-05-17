@@ -24,11 +24,11 @@ exports.create = function (req, res, next) {
                         global.db.cypherQuery("MERGE (u:User {user_id: " + user.id
                             + "}) SET u.login='" + user.login
                             + "', u.avatar_url='" + user.avatar_url + "'", function (err, result) {
+                            user.user_id = user.id;
                             req.session.user = {
                                 access_token: access_token,
                                 info: user
                             };
-                            user.user_id = user.id;
                             Profile.construct_profile(user, github, function (err) {
                                 if (err) {
                                     console.log(err);
