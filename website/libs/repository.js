@@ -101,7 +101,7 @@ Repository.getRepository = function (name, id, worker, callback) {
             + ", r.forks_count=" + repo.forks_count
             + ", r.watchers_count=" + repo.watchers_count
             + ", r.open_issues_count=" + repo.open_issues_count
-            + ", r.description='" + repo.description.replace("'", "\\'")
+            + ", r.description='" + repo.description
             + "', r.default_branch='" + repo.default_branch
             + "', r.updated=true" + (repo.language ? ",r.language='" + repo.language + "'" : "");
         if (language) {
