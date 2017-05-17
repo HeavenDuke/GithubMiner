@@ -67,9 +67,16 @@ block content
                 .btn-group.pull-right
                     button.btn.btn-xs.btn-inverse(style="width: 70px;") All
                     button.btn.btn-xs.btn-default(style="width: 70px;") Follow
-            ul.list-group
-                button.btn.btn-default.btn-flat.btn-block#event-refresher
-                    a Show More
+                ul.list-group#broadcast-event-container
+                    button.btn.btn-default.btn-flat.btn-block#broadcast-event-refresher
+                        a Show More
+                ul.list-group#following-event-container(style="display: none;")
+                    button.btn.btn-default.btn-flat.btn-block#following-event-refresher
+                        a Show More
+            else
+                ul.list-group#event-container
+                    button.btn.btn-default.btn-flat.btn-block#event-refresher
+                        a Show More
         .col-lg-4.col-md-4.hidden-sm.hidden-xs
             .list-title
                 | You might like ...

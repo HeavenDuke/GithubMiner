@@ -53,15 +53,32 @@
         });
     };
 
-    var fetch_events = function (first) {
-        $.get("/api/v1/events", {
-            offset: offset
-        }, function (data, status) {
-            construct_event_list(data.events);
-        });
+    var fetch_events = function (type) {
+        switch(type) {
+            case "following":
+                $.get("/api/v1/events?type=following", {
+                    offset: offset
+                }, function (data, status) {
+                    construct_event_list($("#following-event-container"), $("#following-event-refresher"), data.events);
+                });
+                break;
+            case "broadcast":
+                $.get("/api/v1/events", {
+                    offset: offset
+                }, function (data, status) {
+                    construct_event_list($("#broadcast-event-container"), $("#broadcast-event-refresher"), data.events);
+                });
+                break;
+            default:
+                $.get("/api/v1/events", {
+                    offset: offset
+                }, function (data, status) {
+                    construct_event_list($("#event-container"), $("#event-refresher"), data.events);
+                });
+        }
     };
 
-    var construct_event_list = function (list) {
+    var construct_event_list = function (container, refresher, list) {
         var construct_event_item = function (item) {
             var result = "<li class='list-group-item event-item'>";
             result += "<i class='fa fa-star'></i> " + item.login + " starred ";
@@ -77,11 +94,11 @@
         else {
             offset += list.length;
             list.forEach(function (item) {
-                if ($("#event-refresher").prev().length == 0) {
-                    $("#event-refresher").before($(construct_event_item(item)));
+                if (refresher.prev().length == 0) {
+                    refresher.before($(construct_event_item(item)));
                 }
                 else {
-                    $("#event-refresher").prev().after($(construct_event_item(item)));
+                    refresher.prev().after($(construct_event_item(item)));
                 }
             });
         }
@@ -98,7 +115,16 @@
 
     var prepare_repository_event = function () {
         $("#event-refresher").click(function () {
-            fetch_events(false);
+            fetch_events("");
+            $(this).blur();
+        });
+        $("#broadcast-event-refresher").click(function () {
+            fetch_events("broadcast");
+            $(this).blur();
+        });
+        $("#following-event-refresher").click(function () {
+            fetch_events("following");
+            $(this).blur();
         });
     };
 
