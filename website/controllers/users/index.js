@@ -4,6 +4,7 @@
 
 var https = require('https');
 var Github = require('github');
+var Profile = require('../../libs').profile;
 
 exports.create = function (req, res, next) {
     if (req.query.code) {
@@ -19,11 +20,20 @@ exports.create = function (req, res, next) {
                         token: access_token
                     });
                     github.users.get({}).then(function (result) {
-                        req.session.user = {
-                            access_token: access_token,
-                            info: result.data
-                        };
-                        res.redirect(req.session.astepback);
+                        var user = result.data;
+                        global.db.cypherQuery("MERGE (u:User {user_id: " + user.id
+                            + "}) SET u.login='" + user.login
+                            + "', u.avatar_url='" + user.avatar_url + "'", function (err, result) {
+                            req.session.user = {
+                                access_token: access_token,
+                                info: user
+                            };
+                            user.user_id = user.id;
+                            Profile.construct_profile(user, github);
+                            res.redirect(req.session.astepback);
+                        });
+                    }).catch(function (err) {
+                        return next(err);
                     });
                 }
                 else {
