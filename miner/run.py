@@ -4,7 +4,7 @@ from utils.repositories import fetch_accepted_repository_list
 from utils.Time import Time
 from py2neo import Graph
 
-graph = Graph("http://localhost:7474", user = "github", password = "github")
+graph = Graph("http://localhost:7474", user = "neo4j", password = "github")
 
 ar = fetch_accepted_repository_list(graph)
 
