@@ -91,7 +91,7 @@ Repository.getRepository = function (name, id, worker, callback) {
             forks_count: repository.forks_count,
             watchers_count: repository.watchers_count,
             open_issues_count: repository.open_issues_count,
-            description: repository.description ? repository.description.replace(/'/g, "\'") : "",
+            description: repository.description ? repository.description.replace(/'/g, "\\'") : "",
             language: repository.language,
             default_branch: repository.default_branch
         }, that = this;
