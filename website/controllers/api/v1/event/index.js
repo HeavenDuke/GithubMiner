@@ -6,7 +6,7 @@ exports.index = function (req, res, next) {
     var query;
     var offset = isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset);
     var pagination = 30;
-    if (!req.session.user || req.query.type == "following") {
+    if (!req.session.user || req.query.type != "following") {
         query = "MATCH (u:User)-[s:Star]->(r:Repository) "
               + "RETURN u.login as login, s.created_at as created_at, r.repository_id as repository_id, r.full_name as full_name "
               + "ORDER BY created_at DESC SKIP " + offset + " LIMIT " + pagination;
