@@ -32,7 +32,6 @@ var fetch_follow = function (user, worker, callback) {
         }
 
         worker.users.getFollowingForUser({username: user.login, per_page: 100, page: page}).then(function (result) {
-            console.log(result);
             flush_batch(user.user_id, result.data, function (err) {
                 if (err) {
                     return callback(err);
@@ -88,7 +87,6 @@ var fetch_starred = function (user, worker, callback) {
         }
 
         worker.activity.getStarredReposForUser({username: user.login, per_page: 100, page: page}).then(function (result) {
-            console.log(result);
             flush_batch(user.user_id, result.data, function (err) {
                 if (err) {
                     return callback(err);
