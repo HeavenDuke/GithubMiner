@@ -12,7 +12,7 @@ var fetch_follow = function (user, worker, callback) {
                     + " MERGE (u:User {user_id: " + users[cnt].id + "})"
                     + " SET u.login='" + users[cnt].login + "',"
                     + " u.avatar_url='" + users[cnt].avatar_url
-                    + " CREATE UNIQUE (u0)-[:Follow]->(u)";
+                    + "' CREATE UNIQUE (u0)-[:Follow]->(u)";
                 global.db.cypherQuery(query, function (err, result) {
                     if (err) {
                         callback(err);
@@ -68,7 +68,7 @@ var fetch_starred = function (user, worker, callback) {
                     + "', r.default_branch='" + repositories[cnt].default_branch
                     + "', r.updated=true" + (repositories[cnt].language ? ",r.language='" + repositories[cnt].language + "'" : "")
                     + " CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
-                global.db.cypherQuery(query, function (err, result) {
+                global.db.cypherQuery(query, function (err, result) {repository
                     if (err) {
                         callback(err);
                     }
