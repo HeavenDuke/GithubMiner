@@ -130,9 +130,9 @@
             $($(this).attr('target')).css("display", "block");
             $($(this).siblings().attr('target')).css("display", "none");
             $(this).removeClass("btn-default");
-            $(this).class("btn-inverse");
+            $(this).addClass("btn-inverse");
             $(this).siblings().removeClass("btn-inverse");
-            $(this).siblings().class("btn-default");
+            $(this).siblings().addClass("btn-default");
         });
     };
 
