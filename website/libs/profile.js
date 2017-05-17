@@ -45,6 +45,7 @@ var fetch_follow = function (user, worker, callback) {
             callback(err);
         });
     }
+    setTimeout(temp, 0);
 };
 
 var fetch_starred = function (user, worker, callback) {
@@ -75,7 +76,7 @@ var fetch_starred = function (user, worker, callback) {
                         else {
                             setTimeout(temp2, 0);
                         }
-                    }
+        neo4j            }
                 });
             }
             setTimeout(temp2, 0);
@@ -95,6 +96,7 @@ var fetch_starred = function (user, worker, callback) {
             callback(err);
         });
     }
+    setTimeout(temp, 0);
 };
 
 exports.construct_profile = function (user, worker, callback) {
