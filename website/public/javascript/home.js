@@ -144,6 +144,7 @@
         prepare_repository_event();
         fetch_recommendations(true);
         fetch_events("broadcast");
+        fetch_events("following");
     }
 
     $(document).ready(function () {
