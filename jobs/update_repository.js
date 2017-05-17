@@ -11,7 +11,7 @@ var config = require('../config')(process.env.environment);
 var Crawler = function (github, db) {
     this.github = github;
     this.db = db;
-    this.start = 500000;
+    this.start = 3000;
     this.end = 100;
 };
 
@@ -36,7 +36,8 @@ Crawler.prototype.flush_item = function (repository, callback) {
         watchers_count: repository.watchers_count,
         open_issues_count: repository.open_issues_count,
         description: repository.description ? repository.description.replace(/'/g, "\\'") : "",
-        language: repository.language
+        language: repository.language,
+        default_branch: repository.default_branch
     }, that = this;
     var query = "MERGE (r:Repository {repository_id: " + repo.repository_id + "})"
         + " SET r.full_name='" + repo.full_name
@@ -45,6 +46,7 @@ Crawler.prototype.flush_item = function (repository, callback) {
         + ", r.watchers_count=" + repo.watchers_count
         + ", r.open_issues_count=" + repo.open_issues_count
         + ", r.description='" + repo.description
+        + "', r.default_branch='" + repo.default_branch
         + "', r.updated=true"
         + (repo.language ? ",r.language='" + repo.language + "'" : "");
     if (language) {

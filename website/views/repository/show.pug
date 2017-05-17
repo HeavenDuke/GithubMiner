@@ -3,21 +3,23 @@ extends ../layout/layout
 block specified_ref
     link(rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/highlight.js/9.11.0/styles/github.min.css")
     link(rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/github-markdown-css/2.6.0/github-markdown.min.css")
-    link(rel="stylesheet" type="text/css" href="/css/gb-buttons.css")
     script(type="text/javascript" src="https://cdn.bootcss.com/marked/0.3.6/marked.min.js")
     script(type="text/javascript" src="https://cdn.bootcss.com/highlight.js/9.11.0/highlight.min.js")
 
 block content
     .repository-header.row
-        .col-lg-8.col-md-8
+        .col-lg-8.col-md-8.col-sm-8.col-xs-8
             #rid.hidden= repository.repository_id
+            #url.hidden= "https://github.com/" + repository.full_name + "/raw/" + (repository.default_branch ? repository.default_branch : "master")
             .repository-title
                 h3
-                    a(href="https://github.com/" + repository.full_name)= repository.full_name
-        .col-lg-4.col-md-4
-            //a.button.pull-right
-            //    i.fa.fa-star
-            //    = " Star"
+                    a.star(onclick="$(this).children('form').submit();")
+                        if starred
+                            i.fa.fa-star
+                        else
+                            i.fa.fa-star-o
+                        form.hidden(action="/repositories/" + repository.full_name + "?_method=" + (starred ? "DELETE" : "POST") method="POST")
+                    a(style="margin-left: 10px;" href="https://github.com/" + repository.full_name)= repository.full_name
     .row.hidden-sm.hidden-xs(style="margin-top: 10px;")
         if readme
             .col-lg-8.col-md-8.markdown-body.readme= readme

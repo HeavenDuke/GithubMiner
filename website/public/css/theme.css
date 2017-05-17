@@ -125,3 +125,8 @@ li.medal-description p {
 .language-selector {
     cursor: pointer;
 }
+
+.star {
+    color: #404448;
+    cursor: pointer;
+}
