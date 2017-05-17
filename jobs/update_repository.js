@@ -11,7 +11,7 @@ var config = require('../config')(process.env.environment);
 var Crawler = function (github, db) {
     this.github = github;
     this.db = db;
-    this.start = 3000;
+    this.start = 500000;
     this.end = 100;
 };
 
@@ -52,7 +52,6 @@ Crawler.prototype.flush_item = function (repository, callback) {
     if (language) {
         query = " MATCH (l:Language {name: '" + language + "'}) " +query + " CREATE UNIQUE (r)-[:Use]->(l)";
     }
-    console.log(query);
     if (language) {
         that.db.cypherQuery("MERGE (:Language {name: '" + language + "'})", function (err, result) {
             if (err) {
@@ -160,5 +159,3 @@ module.exports = function () {
         }
     });
 };
-
-module.exports();
