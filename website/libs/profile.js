@@ -32,6 +32,7 @@ var fetch_follow = function (user, worker, callback) {
         }
 
         worker.users.getFollowingForUser({username: user.login, per_page: 100, page: page}).then(function (result) {
+            console.log(result);
             flush_batch(user.user_id, result.data, function (err) {
                 if (err) {
                     return callback(err);
@@ -68,7 +69,7 @@ var fetch_starred = function (user, worker, callback) {
                     + "', r.default_branch='" + repositories[cnt].default_branch
                     + "', r.updated=true" + (repositories[cnt].language ? ",r.language='" + repositories[cnt].language + "'" : "")
                     + " CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
-                global.db.cypherQuery(query, function (err, result) {repository
+                global.db.cypherQuery(query, function (err, result) {
                     if (err) {
                         callback(err);
                     }
@@ -87,6 +88,7 @@ var fetch_starred = function (user, worker, callback) {
         }
 
         worker.activity.getStarredReposForUser({username: user.login, per_page: 100, page: page}).then(function (result) {
+            console.log(result);
             flush_batch(user.user_id, result.data, function (err) {
                 if (err) {
                     return callback(err);
