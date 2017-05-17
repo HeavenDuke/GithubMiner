@@ -65,6 +65,7 @@ var fetch_starred = function (user, worker, callback) {
                     + ", r.watchers_count=" + repositories[cnt].watchers_count
                     + ", r.open_issues_count=" + repositories[cnt].open_issues_count
                     + ", r.description='" + repositories[cnt].description.replace("'", "\\'")
+                    + "', r.default_branch='" + repo.default_branch
                     + "', r.updated=true" + (repositories[cnt].language ? ",r.language='" + repositories[cnt].language + "'" : "")
                     + " CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
                 global.db.cypherQuery(query, function (err, result) {
@@ -73,7 +74,7 @@ var fetch_starred = function (user, worker, callback) {
                     }
                     else {
                         cnt++;
-                        if (cnt == users.length) {
+                        if (cnt == repositories.length) {
                             callback();
                         }
                         else {
