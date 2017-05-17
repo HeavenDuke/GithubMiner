@@ -8,7 +8,7 @@ var fetch_follow = function (user, worker, callback) {
         function flush_batch(id, users, callback) {
             var cnt = 0;
             function temp2() {
-                var query = "MATCH (u0:User {user_id: " + id + "}"
+                var query = "MATCH (u0:User {user_id: " + id + "})"
                     + " MERGE (u:User {user_id: " + users[cnt].id + "})"
                     + " SET u.login='" + users[cnt].login + "',"
                     + " u.avatar_url='" + users[cnt].avatar_url
@@ -57,7 +57,7 @@ var fetch_starred = function (user, worker, callback) {
         function flush_batch(id, repositories, callback) {
             var cnt = 0;
             function temp2() {
-                var query = "MATCH (u:User {user_id: " + id + "}"
+                var query = "MATCH (u:User {user_id: " + id + "})"
                     + " MERGE (r:Repository {repository_id: " + repositories[cnt].id + "})"
                     + " SET r.full_name='" + repositories[cnt].full_name
                     + "', r.stargazers_count=" + repositories[cnt].stargazers_count
