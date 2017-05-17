@@ -135,7 +135,7 @@
         prepare_recommendation();
         prepare_repository_event();
         fetch_recommendations(true);
-        fetch_events();
+        fetch_events("broadcast");
     }
 
     $(document).ready(function () {
