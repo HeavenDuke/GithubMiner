@@ -67,7 +67,7 @@ exports.show = function (req, res, next) {
                             return next(err);
                         }
                         else {
-                            global.db.cypherQuery("MATCH (u:User {user_id: " + req.session.user.id + "})-[s:Star]->(r:Repository {repository_id: " + repository.repository_id + "}) RETURN s", function (err, result) {
+                            global.db.cypherQuery("MATCH (u:User {user_id: " + req.session.user.info.id + "})-[s:Star]->(r:Repository {repository_id: " + repository.repository_id + "}) RETURN s", function (err, result) {
                                 if (err) {
                                     return next(err);
                                 }
