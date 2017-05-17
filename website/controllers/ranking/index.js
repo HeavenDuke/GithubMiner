@@ -12,7 +12,14 @@ exports.index = function (req, res, next) {
                 return next(err);
             }
             var languages = result.data;
-            global.db.cypherQuery("MATCH (r:Repository) RETURN r ORDER BY r.stargazers_count DESC LIMIT 100", function (err, result) {
+            var query;
+            if(req.query.language) {
+                query = "MATCH (l:Language {name: '" + req.query.language + "'})<-[:Use]-(r:Repository) RETURN r ORDER BY r.stargazers_count DESC LIMIT 100";
+            }
+            else {
+                query = "MATCH (r:Repository)  RETURN r ORDER BY r.stargazers_count DESC LIMIT 100";
+            }
+            global.db.cypherQuery(query, function (err, result) {
                 if (err) {
                     return next(err);
                 }
@@ -21,6 +28,7 @@ exports.index = function (req, res, next) {
                         ranking: result.data,
                         user: req.session.user,
                         languages: languages,
+                        language: req.query.language,
                         type: type,
                         title: "Ranking"
                     });

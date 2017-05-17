@@ -29,7 +29,7 @@
             fontFamily: 'Finger Paint, cursive, sans-serif',
             list: languages,
             click: function(item) {
-                window.location.href="/ranking?type=Overall&language" + item[0];
+                window.location.href="/ranking?type=Overall&language=" + encodeURIComponent(item[0]);
             },
             backgroundColor: '#FFFFFF'
         });

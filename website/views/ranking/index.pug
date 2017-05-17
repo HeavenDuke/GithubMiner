@@ -4,7 +4,7 @@ block content
     .container
         .row
             .col-xs-4
-                h4= type + " Ranking"
+                h4= type + " Ranking" + (language ? " - " + language : "")
             .col-xs-8
                 h4.pull-right(style="display: inline-block;")
                     - var types = ["Daily", "Weekly", "Monthly", "Overall"]
@@ -69,7 +69,7 @@ block content
             .col-lg-6.col-md-6
                 - var i = 1
                 ul.list-group
-                    for item in ranking.slice(0, 50)
+                    for item in ranking.slice(0, (ranking.length + 1) / 2)
                         li.list-group-item
                             a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
@@ -87,13 +87,21 @@ block content
                             //p.list-item-description= item.description
             .col-lg-6.col-md-6
                 ul.list-group
-                    for item in ranking.slice(50, 100)
+                    for item in ranking.slice((ranking.length + 1) / 2)
                         li.list-group-item
                             a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
                                 i.fa.fa-star
                                 = " " + item.stargazers_count
-                            span.pull-right.badge= i++
+                            case i
+                                when 1
+                                    span.pull-right.badge.golden= i++
+                                when 2
+                                    span.pull-right.badge.silver= i++
+                                when 3
+                                    span.pull-right.badge.bronze= i++
+                                default
+                                    span.pull-right.badge= i++
         .row.hidden-md.hidden-lg
             .col-sm-12.col-xs-12
                 ul.list-group
