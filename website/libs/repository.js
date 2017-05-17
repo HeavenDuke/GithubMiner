@@ -16,7 +16,51 @@ Repository.getReadme = function (name, worker, callback) {
     });
 };
 
-// 封装刷新repository的代码
+Repository.getStargazers = function (repository, worker, callback) {
+    var page = 1;
+    function temp () {
+        function flush_batch(id, users, callback) {
+            var cnt = 0;
+            function temp2() {
+                var query = "MATCH (r:Repository {repository_id: " + id + "}"
+                    + " MERGE (u:User {user_id: " + users[cnt].id + "})"
+                    + " SET u.login='" + users[cnt].login + "',"
+                    + " u.avatar_url='" + users[cnt].avatar_url
+                    + " CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
+                global.db.cypherQuery(query, function (err, result) {
+                    if (err) {
+                        callback(err);
+                    }
+                    else {
+                        cnt++;
+                        if (cnt == users.length) {
+                            callback();
+                        }
+                        else {
+                            setTimeout(temp2, 0);
+                        }
+                    }
+                });
+            }
+            setTimeout(temp2, 0);
+        }
+
+        worker.activity.getStargazersForRepo({owner: repository.full_name.split('/')[0], repo: repository.full_name.split('/')[1], per_page: 100, page: page}).then(function (result) {
+            flush_batch(repository.repository_id, result.data, function (err) {
+                if (result.meta.link.match(/rel="last"/) == null) {
+                    callback();
+                }
+                else {
+                    page++;
+                    setTimeout(temp, 0);
+                }
+            });
+        }).catch(function (err) {
+            callback(err);
+        });
+    }
+};
+
 Repository.getRepository = function (name, id, worker, callback) {
     var flush_item = function (repository, callback) {
         var language = repository.language;
@@ -27,7 +71,7 @@ Repository.getRepository = function (name, id, worker, callback) {
             forks_count: repository.forks_count,
             watchers_count: repository.watchers_count,
             open_issues_count: repository.open_issues_count,
-            description: repository.description ? repository.description.replace("'", "\'") : "",
+            description: repository.description ? repository.description.replace(/'/g, "\'") : "",
             language: repository.language
         }, that = this;
         var query = "MERGE (r:Repository {repository_id: " + repo.repository_id + "})"

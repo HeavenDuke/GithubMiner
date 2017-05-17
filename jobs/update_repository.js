@@ -35,7 +35,7 @@ Crawler.prototype.flush_item = function (repository, callback) {
         forks_count: repository.forks_count,
         watchers_count: repository.watchers_count,
         open_issues_count: repository.open_issues_count,
-        description: repository.description ? repository.description.replace("'", "\'") : "",
+        description: repository.description ? repository.description.replace(/'/g, "\\'") : "",
         language: repository.language
     }, that = this;
     var query = "MERGE (r:Repository {repository_id: " + repo.repository_id + "})"
@@ -46,9 +46,9 @@ Crawler.prototype.flush_item = function (repository, callback) {
         + ", r.open_issues_count=" + repo.open_issues_count
         + ", r.description='" + repo.description
         + "', r.updated=true"
-        + "', r.updated=true" + (repo.language ? ",r.language='" + repo.language + "'" : "");
+        + (repo.language ? ",r.language='" + repo.language + "'" : "");
     if (language) {
-        query = "MATCH (l:Language {name: '" + language + "'}) " +query + " CREATE UNIQUE (r)-[:Use]->(l)";
+        query = " MATCH (l:Language {name: '" + language + "'}) " +query + " CREATE UNIQUE (r)-[:Use]->(l)";
     }
     console.log(query);
     if (language) {
