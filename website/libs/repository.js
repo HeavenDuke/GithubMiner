@@ -61,6 +61,26 @@ Repository.getStargazers = function (repository, worker, callback) {
     }
 };
 
+Repository.starRepository = function (user, repository, worker, callback) {
+    worker.activity.starRepo({owner: repository.full_name.split('/')[0], repo: repository.full_name.split('/')[1]}).then(function () {
+        var query = "MATCH (u:User {user_id: " + user.user_id + "}),"
+            + "(r:Repository {repository_id: " + repository.repository_id + "})"
+            + " CREATE UNIQUE (u)-[:Star]->(r)";
+        global.db.cypherQuery(query, callback);
+    }).catch(function (err) {
+        callback(err);
+    });
+};
+
+Repository.unstarRepository = function (user, repository, worker, callback) {
+    worker.activity.unstarRepo({owner: repository.full_name.split('/')[0], repo: repository.full_name.split('/')[1]}).then(function () {
+        var query = "MATCH (:User {user_id: " + user.user_id + "})-[r:Star]->(:Repository {repository_id: " + repository.repository_id + "}) DELETE r";
+        global.db.cypherQuery(query, callback);
+    }).catch(function (err) {
+        callback(err);
+    });
+};
+
 Repository.getRepository = function (name, id, worker, callback) {
     var flush_item = function (repository, callback) {
         var language = repository.language;
