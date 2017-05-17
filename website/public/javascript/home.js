@@ -126,6 +126,14 @@
             fetch_events("following");
             $(this).blur();
         });
+        $(".event-switcher").click(function () {
+            $($(this).attr('target')).css("display", "block");
+            $($(this).siblings().attr('target')).css("display", "none");
+            $(this).removeClass("btn-default");
+            $(this).class("btn-inverse");
+            $(this).siblings().removeClass("btn-inverse");
+            $(this).siblings().class("btn-default");
+        });
     };
 
     function prepare_homepage (){

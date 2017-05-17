@@ -65,8 +65,8 @@ block content
             .list-title(style="display: inline-block;") Events
             if user
                 .btn-group.pull-right
-                    button.btn.btn-xs.btn-inverse(style="width: 70px;") All
-                    button.btn.btn-xs.btn-default(style="width: 70px;") Follow
+                    button.event-switcher.btn.btn-xs.btn-inverse(target="#broadcast-event-container" style="width: 70px;") All
+                    button.event-switcher.btn.btn-xs.btn-default(target="#following-event-container" style="width: 70px;") Follow
                 ul.list-group#broadcast-event-container
                     button.btn.btn-default.btn-flat.btn-block#broadcast-event-refresher
                         a Show More
