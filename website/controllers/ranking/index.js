@@ -7,18 +7,25 @@ var neo4j = require('node-neo4j');
 exports.index = function (req, res, next) {
     var type = ["Daily", "Weekly", "Hourly", "Overall"].includes(req.query.type) ? req.query.type : "Daily";
     if (type == "Overall") {
-        global.db.cypherQuery("MATCH (r:Repository) RETURN r ORDER BY r.stargazers_count DESC LIMIT 100", function (err, result) {
+        global.db.cypherQuery("MATCH (l:Language)<-[]-(r:Repository) RETURN l.name, count(*) as score ORDER BY score DESC LIMIT 50", function (err, result) {
             if (err) {
                 return next(err);
             }
-            else {
-                res.render("ranking/index", {
-                    ranking: result.data,
-                    user: req.session.user,
-                    type: type,
-                    title: "Ranking"
-                });
-            }
+            var languages = result.data;
+            global.db.cypherQuery("MATCH (r:Repository) RETURN r ORDER BY r.stargazers_count DESC LIMIT 100", function (err, result) {
+                if (err) {
+                    return next(err);
+                }
+                else {
+                    res.render("ranking/index", {
+                        ranking: result.data,
+                        user: req.session.user,
+                        languages: languages,
+                        type: type,
+                        title: "Ranking"
+                    });
+                }
+            });
         });
     }
     else {

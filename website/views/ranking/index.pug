@@ -16,82 +16,102 @@ block content
                             = t
                         - first = false
         .row
-            .col-lg-4.col-md-4.col-sm-12.col-xs-12
-                ul.list-group
-                    li.list-group-item.golden.medal-title.text-center
-                        a(href="/repositories/" + ranking[0].full_name)= ranking[0].full_name.replace(/.*\//, "")
-                    li.list-group-item.medal-description.text-center
-                        p= ranking[0].description
-                    li.list-group-item
-                        div(style="width: 50%; display: inline-block; padding-right: 5px;")
-                            a.btn.btn-default.btn-block.btn-flat
-                                i.fa.fa-star
-                                = " " + ranking[0].stargazers_count + " Star"
-                        div(style="width: 50%; display: inline-block; padding-left: 5px;")
-                            a.btn.btn-default.btn-block.btn-flat
-                                i.fa.fa-code-fork
-                                = " " + ranking[0].forks_count + " Fork"
-            .col-lg-4.col-md-4.col-sm-12.col-xs-12
-                ul.list-group
-                    li.list-group-item.silver.medal-title.text-center
-                        a(href="/repositories/" + ranking[1].full_name)= ranking[1].full_name.replace(/.*\//, "")
-                    li.list-group-item.medal-description.text-center
-                        p= ranking[1].description
-                    li.list-group-item
-                        div(style="width: 50%; display: inline-block; padding-right: 5px;")
-                            a.btn.btn-default.btn-block.btn-flat
-                                i.fa.fa-star
-                                = " " + ranking[1].stargazers_count + " Star"
-                        div(style="width: 50%; display: inline-block; padding-left: 5px;")
-                            a.btn.btn-default.btn-block.btn-flat
-                                i.fa.fa-code-fork
-                                = " " + ranking[1].forks_count + " Fork"
-            .col-lg-4.col-md-4.col-sm-12.col-xs-12
-                ul.list-group
-                    li.list-group-item.bronze.medal-title.text-center
-                        a(href="/repositories/" + ranking[2].full_name)= ranking[2].full_name.replace(/.*\//, "")
-                    li.list-group-item.medal-description.text-center
-                        p= ranking[2].description
-                    li.list-group-item
-                        div(style="width: 50%; display: inline-block; padding-right: 5px;")
-                            a.btn.btn-default.btn-block.btn-flat
-                                i.fa.fa-star
-                                = " " + ranking[2].stargazers_count + " Star"
-                        div(style="width: 50%; display: inline-block; padding-left: 5px;")
-                            a.btn.btn-default.btn-block.btn-flat
-                                i.fa.fa-code-fork
-                                = " " + ranking[2].forks_count + " Fork"
+            if type == 'Overall'
+                .col-lg-12.col-md-12.col-sm-12.col-xs-12
+                    canvas#cloud(data=JSON.stringify(languages))
+            else
+                .col-lg-4.col-md-4.col-sm-12.col-xs-12
+                    ul.list-group
+                        li.list-group-item.golden.medal-title.text-center
+                            a(href="/repositories/" + ranking[0].full_name)= ranking[0].full_name.replace(/.*\//, "")
+                        li.list-group-item.medal-description.text-center
+                            p= ranking[0].description
+                        li.list-group-item
+                            div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                                a.btn.btn-default.btn-block.btn-flat
+                                    i.fa.fa-star
+                                    = " " + ranking[0].stargazers_count + " Star"
+                            div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                                a.btn.btn-default.btn-block.btn-flat
+                                    i.fa.fa-code-fork
+                                    = " " + ranking[0].forks_count + " Fork"
+                .col-lg-4.col-md-4.col-sm-12.col-xs-12
+                    ul.list-group
+                        li.list-group-item.silver.medal-title.text-center
+                            a(href="/repositories/" + ranking[1].full_name)= ranking[1].full_name.replace(/.*\//, "")
+                        li.list-group-item.medal-description.text-center
+                            p= ranking[1].description
+                        li.list-group-item
+                            div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                                a.btn.btn-default.btn-block.btn-flat
+                                    i.fa.fa-star
+                                    = " " + ranking[1].stargazers_count + " Star"
+                            div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                                a.btn.btn-default.btn-block.btn-flat
+                                    i.fa.fa-code-fork
+                                    = " " + ranking[1].forks_count + " Fork"
+                .col-lg-4.col-md-4.col-sm-12.col-xs-12
+                    ul.list-group
+                        li.list-group-item.bronze.medal-title.text-center
+                            a(href="/repositories/" + ranking[2].full_name)= ranking[2].full_name.replace(/.*\//, "")
+                        li.list-group-item.medal-description.text-center
+                            p= ranking[2].description
+                        li.list-group-item
+                            div(style="width: 50%; display: inline-block; padding-right: 5px;")
+                                a.btn.btn-default.btn-block.btn-flat
+                                    i.fa.fa-star
+                                    = " " + ranking[2].stargazers_count + " Star"
+                            div(style="width: 50%; display: inline-block; padding-left: 5px;")
+                                a.btn.btn-default.btn-block.btn-flat
+                                    i.fa.fa-code-fork
+                                    = " " + ranking[2].forks_count + " Fork"
         .row.hidden-sm.hidden-xs
             .col-lg-6.col-md-6
-                - var i = 4
+                - var i = 1
                 ul.list-group
-                    for item in ranking.slice(3, 52)
+                    for item in ranking.slice(0, 50)
                         li.list-group-item
                             a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
                                 i.fa.fa-star
                                 = " " + item.stargazers_count
-                            span.pull-right.badge= i++
+                            case i
+                                when 1
+                                    span.pull-right.badge.golden= i++
+                                when 2
+                                    span.pull-right.badge.silver= i++
+                                when 3
+                                    span.pull-right.badge.bronze= i++
+                                default
+                                    span.pull-right.badge= i++
                             //p.list-item-description= item.description
             .col-lg-6.col-md-6
                 ul.list-group
-                    for item in ranking.slice(52, 100)
+                    for item in ranking.slice(50, 100)
                         li.list-group-item
                             a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
                                 i.fa.fa-star
                                 = " " + item.stargazers_count
                             span.pull-right.badge= i++
-                            //p.list-item-description= item.description
         .row.hidden-md.hidden-lg
             .col-sm-12.col-xs-12
                 ul.list-group
-                    - var i = 4
+                    - var i = 1
                     for item in ranking
                         li.list-group-item
                             a.list-item-title(href="/repositories/" + item.full_name)= item.full_name + "　"
                             span
                                 i.fa.fa-star
                                 = " " + item.stargazers_count
-                            span.pull-right.badge= i++
-                            //p.list-item-description= item.description
+                            case i
+                                when 1
+                                    span.pull-right.badge.golden= i++
+                                when 2
+                                    span.pull-right.badge.silver= i++
+                                when 3
+                                    span.pull-right.badge.bronze= i++
+                                default
+                                    span.pull-right.badge= i++
+    script(type="text/javascript" src="https://cdn.bootcss.com/wordcloud2.js/1.0.6/wordcloud2.min.js")
+    script(type="text/javascript" src="/javascript/ranking.js")
