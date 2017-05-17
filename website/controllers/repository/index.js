@@ -100,11 +100,6 @@ exports.show = function (req, res, next) {
                                 return next(err);
                             }
                             else {
-                                Repository.getStargazers(repository, worker, function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                });
                                 Repository.getReadme(repository.full_name, worker, function (readme) {
                                     res.render("repository/show", {
                                         title: repository.full_name,
