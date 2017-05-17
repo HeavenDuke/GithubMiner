@@ -72,6 +72,16 @@ exports.show = function (req, res, next) {
                                     return next(err);
                                 }
                                 var starred = result.data.length != 0;
+                                Repository.getStargazers(repository, worker, function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                });
+                                Repository.getStargazers(repository, worker, function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                });
                                 Repository.getReadme(repository.full_name, worker, function (readme) {
                                     return res.render("repository/show", {
                                         title: repository.name,
@@ -95,6 +105,11 @@ exports.show = function (req, res, next) {
                                 return next(err);
                             }
                             else {
+                                Repository.getStargazers(repository, worker, function (err) {
+                                    if (err) {
+                                        console.log(err);
+                                    }
+                                });
                                 Repository.getReadme(repository.full_name, worker, function (readme) {
                                     res.render("repository/show", {
                                         title: repository.full_name,
