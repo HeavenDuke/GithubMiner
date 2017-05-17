@@ -133,6 +133,7 @@
             $(this).addClass("btn-inverse");
             $(this).siblings().removeClass("btn-inverse");
             $(this).siblings().addClass("btn-default");
+            $(this).blur();
         });
     };
 
