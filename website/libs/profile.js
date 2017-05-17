@@ -115,6 +115,7 @@ exports.construct_profile = function (user, worker, callback) {
     };
     fetch_follow(user, worker, function (err) {
         if (err) {
+            console.log(err);
             return callback(err);
         }
         state.follow = true;
@@ -124,6 +125,7 @@ exports.construct_profile = function (user, worker, callback) {
     });
     fetch_starred(user, worker, function (err) {
         if (err) {
+            console.log(err);
             return callback(err);
         }
         state.follow = true;
