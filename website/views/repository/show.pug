@@ -18,7 +18,7 @@ block content
                             i.fa.fa-star
                         else
                             i.fa.fa-star-o
-                        form.hidden(action="/repositories/" + repository.full_name + "?_method=" + (starred ? "DELETE" : "POST") method="POST")
+                        form.hidden(action="/repositories/" + repository.full_name + "/star?_method=" + (starred ? "DELETE" : "POST") method="POST")
                     a(style="margin-left: 10px;" href="https://github.com/" + repository.full_name)= repository.full_name
     .row.hidden-sm.hidden-xs(style="margin-top: 10px;")
         if readme
