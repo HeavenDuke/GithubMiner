@@ -6,6 +6,7 @@ var https = require('https');
 var Github = require('github');
 var Profile = require('../../libs').profile;
 
+// TODO: 把这里的github worker的header改成能用来抓取用户star时间的版本
 exports.create = function (req, res, next) {
     if (req.query.code) {
         var request_data = global.config.github.oauth.query_token(null, req.session.nonce_str, req.query.code);
