@@ -72,7 +72,7 @@
         };
 
         if (list.length == 0) {
-            alert("No more recommendations.");
+            alert("No more event.");
         }
         else {
             offset += list.length;
