@@ -16,26 +16,24 @@ Repository.getReadme = function (name, worker, callback) {
     });
 };
 
-// TODO: 这里改成能获取时间的版本
 Repository.getStargazers = function (repository, worker, callback) {
     var page = 1;
     function temp () {
-        function flush_batch(id, users, callback) {
+        function flush_batch(id, records, callback) {
             var cnt = 0;
             function temp2() {
                 var query = "MATCH (r:Repository {repository_id: " + id + "})"
-                    + " MERGE (u:User {user_id: " + users[cnt].id + "})"
-                    + " SET u.login='" + users[cnt].login + "',"
-                    + " u.avatar_url='" + users[cnt].avatar_url
-                    + "' CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
-                console.log(query);
+                    + " MERGE (u:User {user_id: " + records[cnt].user.id + "})"
+                    + " SET u.login='" + records[cnt].user.login + "',"
+                    + " u.avatar_url='" + records[cnt].user.avatar_url
+                    + "' CREATE UNIQUE (u)-[:Star {type: 'Star', created_at: " + Math.round(Date.parse(records[cnt].starred_at) / 1000) + "}]->(r)";
                 global.db.cypherQuery(query, function (err, result) {
                     if (err) {
                         callback(err);
                     }
                     else {
                         cnt++;
-                        if (cnt == users.length) {
+                        if (cnt == records.length) {
                             callback();
                         }
                         else {
@@ -48,6 +46,7 @@ Repository.getStargazers = function (repository, worker, callback) {
         }
 
         worker.activity.getStargazersForRepo({owner: repository.full_name.split('/')[0], repo: repository.full_name.split('/')[1], per_page: 100, page: page}).then(function (result) {
+            console.log(result);
             flush_batch(repository.repository_id, result.data, function (err) {
                 if (err) {
                     return callback(err);

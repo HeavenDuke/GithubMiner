@@ -15,7 +15,9 @@ exports.create = function (req, res, next) {
             rs.on("data", function (buffer) {
                 var access_token = JSON.parse(buffer.toString()).access_token;
                 if (access_token) {
-                    var github = new Github(global.config.github.options);
+                    var options = JSON.parse(JSON.stringify(global.config.github.options));
+                    options.headers.Accept = "application/vnd.github.v3.star+json";
+                    var github = new Github(options);
                     github.authenticate({
                         type: "oauth",
                         token: access_token
