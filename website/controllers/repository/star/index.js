@@ -32,6 +32,7 @@ exports.create = function (req, res, next) {
 };
 
 exports.destroy = function (req, res, next) {
+    console.log(req.params);
     global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.params.name + "'}) RETURN r LIMIT 1", function (err, result) {
         if (err) {
             return next(err);
