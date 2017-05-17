@@ -144,8 +144,13 @@
         prepare_recommendation();
         prepare_repository_event();
         fetch_recommendations(true);
-        fetch_events("broadcast");
-        fetch_events("following");
+        if ($("#broadcast-event-refresher").length > 0) {
+            fetch_events("broadcast");
+            fetch_events("following");
+        }
+        else {
+            fetch_events("");
+        }
     }
 
     $(document).ready(function () {
