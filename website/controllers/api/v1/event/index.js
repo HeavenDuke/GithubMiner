@@ -14,7 +14,7 @@ exports.index = function (req, res, next) {
     else {
         query = "MATCH (user:User {user_id: " + req.session.user.user_id + "})-[:Follow]->(u:User)-[s:Star]->(r:Repository) "
               + "RETURN u.login as login, s.created_at as created_at, r.repository_id as repository_id, r.full_name as full_name "
-              + "ORDER BY created_at DESC SKIP " + offset + " LIMIT 15" + pagination;
+              + "ORDER BY created_at DESC SKIP " + offset + " LIMIT " + pagination;
     }
     global.db.cypherQuery(query, function (err, result) {
         if (err) {

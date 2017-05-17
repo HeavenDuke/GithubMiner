@@ -17,6 +17,7 @@ exports.home = function (req, res, next) {
                         info: req.flash('info'),
                         error: req.flash('error'),
                         ranking: result.data,
+                        user: req.session.user,
                         title: "GithubMiner"
                     });
                 }
