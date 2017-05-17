@@ -46,7 +46,6 @@ Repository.getStargazers = function (repository, worker, callback) {
         }
 
         worker.activity.getStargazersForRepo({owner: repository.full_name.split('/')[0], repo: repository.full_name.split('/')[1], per_page: 100, page: page}).then(function (result) {
-            console.log(result);
             flush_batch(repository.repository_id, result.data, function (err) {
                 if (err) {
                     return callback(err);
