@@ -69,7 +69,7 @@ var fetch_starred = function (user, worker, callback) {
                     + " CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
                 global.db.cypherQuery(query, function (err, result) {
                     if (err) {
-                        return callback(err);
+                        callback(err);
                     }
                     else {
                         cnt++;
@@ -79,7 +79,7 @@ var fetch_starred = function (user, worker, callback) {
                         else {
                             setTimeout(temp2, 0);
                         }
-        neo4j            }
+                    }
                 });
             }
             setTimeout(temp2, 0);
