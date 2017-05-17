@@ -5,6 +5,7 @@
 var Repository = require('../../../libs').repository;
 var Github = require('github');
 
+// todo: 这里似乎有些错误
 exports.create = function (req, res, next) {
     global.db.cypherQuery("MATCH (r:Repository {full_name: '" + req.params.owner + "/" + req.params.name + "'}) RETURN r", function (err, result) {
         if (err) {
