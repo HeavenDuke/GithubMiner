@@ -51,6 +51,7 @@ var fetch_follow = function (user, worker, callback) {
     setTimeout(temp, 0);
 };
 
+// TODO: 这里改成能获取时间的版本
 var fetch_starred = function (user, worker, callback) {
     var page = 1;
     function temp () {

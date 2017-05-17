@@ -16,17 +16,19 @@ Repository.getReadme = function (name, worker, callback) {
     });
 };
 
+// TODO: 这里改成能获取时间的版本
 Repository.getStargazers = function (repository, worker, callback) {
     var page = 1;
     function temp () {
         function flush_batch(id, users, callback) {
             var cnt = 0;
             function temp2() {
-                var query = "MATCH (r:Repository {repository_id: " + id + "}"
+                var query = "MATCH (r:Repository {repository_id: " + id + "})"
                     + " MERGE (u:User {user_id: " + users[cnt].id + "})"
                     + " SET u.login='" + users[cnt].login + "',"
                     + " u.avatar_url='" + users[cnt].avatar_url
-                    + " CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
+                    + "' CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
+                console.log(query);
                 global.db.cypherQuery(query, function (err, result) {
                     if (err) {
                         callback(err);
@@ -47,6 +49,9 @@ Repository.getStargazers = function (repository, worker, callback) {
 
         worker.activity.getStargazersForRepo({owner: repository.full_name.split('/')[0], repo: repository.full_name.split('/')[1], per_page: 100, page: page}).then(function (result) {
             flush_batch(repository.repository_id, result.data, function (err) {
+                if (err) {
+                    return callback(err);
+                }
                 if (result.meta.link.match(/rel="last"/) == null) {
                     callback();
                 }
@@ -59,6 +64,7 @@ Repository.getStargazers = function (repository, worker, callback) {
             callback(err);
         });
     }
+    setTimeout(temp, 0);
 };
 
 Repository.starRepository = function (user, repository, worker, callback) {
