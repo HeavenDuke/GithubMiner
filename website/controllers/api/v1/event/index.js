@@ -8,7 +8,7 @@ exports.index = function (req, res, next) {
     var pagination = 30;
     if (!req.session.user || req.query.type != "following") {
         query = "MATCH (u:User)-[s:Star]->(r:Repository) "
-              + (req.session.user ? "WHERE u.user_id<>" + req.session.user.user_id + " " : "")
+              + (req.session.user ? "WHERE u.user_id<>" + req.session.user.info.user_id + " " : "")
               + "RETURN u.login as login, s.created_at as created_at, r.repository_id as repository_id, r.full_name as full_name "
               + "ORDER BY created_at DESC SKIP " + offset + " LIMIT " + pagination;
     }
