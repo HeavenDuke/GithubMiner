@@ -29,7 +29,11 @@ exports.create = function (req, res, next) {
                                 info: user
                             };
                             user.user_id = user.id;
-                            Profile.construct_profile(user, github, function () {});
+                            Profile.construct_profile(user, github, function (err) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                            });
                             res.redirect(req.session.astepback);
                         });
                     }).catch(function (err) {
