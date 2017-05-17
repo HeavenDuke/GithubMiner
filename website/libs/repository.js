@@ -26,7 +26,7 @@ Repository.getStargazers = function (repository, worker, callback) {
                     + " MERGE (u:User {user_id: " + records[cnt].user.id + "})"
                     + " SET u.login='" + records[cnt].user.login + "',"
                     + " u.avatar_url='" + records[cnt].user.avatar_url
-                    + "' CREATE UNIQUE (u)-[:Star {type: 'Star', created_at: " + Math.round(Date.parse(records[cnt].starred_at) / 1000) + "}]->(r)";
+                    + "' CREATE UNIQUE (u)-[:Star {type: 'Star', created_at: " + Math.round(Date.parse(records[cnt].starred_at) / 1000.) + "}]->(r)";
                 global.db.cypherQuery(query, function (err, result) {
                     if (err) {
                         callback(err);

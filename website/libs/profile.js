@@ -51,24 +51,23 @@ var fetch_follow = function (user, worker, callback) {
     setTimeout(temp, 0);
 };
 
-// TODO: 这里改成能获取时间的版本
 var fetch_starred = function (user, worker, callback) {
     var page = 1;
     function temp () {
-        function flush_batch(id, repositories, callback) {
+        function flush_batch(id, records, callback) {
             var cnt = 0;
             function temp2() {
                 var query = "MATCH (u:User {user_id: " + id + "})"
-                    + " MERGE (r:Repository {repository_id: " + repositories[cnt].id + "})"
-                    + " SET r.full_name='" + repositories[cnt].full_name
-                    + "', r.stargazers_count=" + repositories[cnt].stargazers_count
-                    + ", r.forks_count=" + repositories[cnt].forks_count
-                    + ", r.watchers_count=" + repositories[cnt].watchers_count
-                    + ", r.open_issues_count=" + repositories[cnt].open_issues_count
-                    + ", r.description='" + (repositories[cnt].description ? repositories[cnt].description.replace(/'/g, "\\'") : "")
-                    + "', r.default_branch='" + repositories[cnt].default_branch
-                    + "', r.updated=true" + (repositories[cnt].language ? ",r.language='" + repositories[cnt].language + "'" : "")
-                    + " CREATE UNIQUE (u)-[:Star {type: 'Star'}]->(r)";
+                    + " MERGE (r:Repository {repository_id: " + records[cnt].repo.id + "})"
+                    + " SET r.full_name='" + records[cnt].repo.full_name
+                    + "', r.stargazers_count=" + records[cnt].repo.stargazers_count
+                    + ", r.forks_count=" + records[cnt].repo.forks_count
+                    + ", r.watchers_count=" + records[cnt].repo.watchers_count
+                    + ", r.open_issues_count=" + records[cnt].repo.open_issues_count
+                    + ", r.description='" + (records[cnt].repo.description ? records[cnt].repo.description.replace(/'/g, "\\'") : "")
+                    + "', r.default_branch='" + records[cnt].repo.default_branch
+                    + "', r.updated=true" + (records[cnt].repo.language ? ",r.language='" + records[cnt].repo.language + "'" : "")
+                    + " CREATE UNIQUE (u)-[:Star {type: 'Star' created_at: " + Math.round(Date.parse(records[cnt].starred_at) / 1000.) + "}]->(r)";
                 global.db.cypherQuery(query, function (err, result) {
                     if (err) {
                         callback(err);
