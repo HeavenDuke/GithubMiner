@@ -35,7 +35,9 @@ exports.create = function (req, res, next) {
         request.end();
     }
     else {
-        res.json({message: "invalid access"});
+        var query = global.config.github.oauth.query();
+        req.session.nonce_str = query.nonce_str;
+        return res.redirect(query.url);
     }
 };
 

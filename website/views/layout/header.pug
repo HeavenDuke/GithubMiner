@@ -20,18 +20,17 @@ nav.navbar.navbar-inverse
                     a(href="/ranking") Ranking
                 if !user
                     li.visible-xs
-                        a(href="#")
+                        a(href="/user")
                             i.fa.fa-github
                             |  Sign In
                 else
                     li.visible-xs
-                        a(href="")
-                            i.fa.fa-github
-                            |  Sign Out
+                        a(onclick="$(this).children().submit();") Sigh Out
+                            form.hidden(method="POST" action="/user?_method=DELETE")
             ul.nav.navbar-nav.pull-right.hidden-xs
                 if !user
                     li
-                        a(href="#")
+                        a(href="/user")
                             i.fa.fa-github
                             |  Sign In
                 else
