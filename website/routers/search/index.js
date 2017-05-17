@@ -9,6 +9,6 @@ var astepback = require('../../middlewares').astepback;
 var rate_limit = require('../../middlewares').rate_limit;
 var router = express.Router();
 
-router.get('/', astepback, /*authentication, rate_limit, */search_controller.index);
+router.get('/', astepback, authentication, rate_limit, search_controller.index);
 
 module.exports = router;

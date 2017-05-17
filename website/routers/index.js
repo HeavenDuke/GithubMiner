@@ -9,9 +9,10 @@ var ranking_router = require('./ranking');
 var repository_router = require('./repository');
 var search_router = require('./search');
 var api_router = require('./api');
+var astepback = require('../middlewares').astepback;
 var router = express.Router();
 
-router.get('/', home_controller);
+router.get('/', astepback, home_controller);
 
 router.use('/user', user_router);
 

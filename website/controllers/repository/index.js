@@ -21,14 +21,21 @@ exports.show = function (req, res, next) {
                         type: "oauth",
                         token: req.session.user.access_token
                     });
-                    Repository.getReadme(repository.full_name, worker, function (readme) {
-                        return res.render("repository/show", {
-                            title: repository.name,
-                            info: req.flash('info'),
-                            error: req.flash('error'),
-                            repository: repository,
-                            user: req.session.user,
-                            readme: readme
+                    global.db.cypherQuery("MATCH (u:User {user_id: " + req.session.user.id + "})-[:Star]->(r:Repository {repository_id: " + repository.repository_id + "})", function (err, result) {
+                        if (err) {
+                            return next(err);
+                        }
+                        var starred = result.data.length != 0;
+                        Repository.getReadme(repository.full_name, worker, function (readme) {
+                            return res.render("repository/show", {
+                                title: repository.name,
+                                info: req.flash('info'),
+                                error: req.flash('error'),
+                                repository: repository,
+                                starred: starred,
+                                user: req.session.user,
+                                readme: readme
+                            });
                         });
                     });
                 }
@@ -55,19 +62,26 @@ exports.show = function (req, res, next) {
                         type: "oauth",
                         token: req.session.user.access_token
                     });
-                    Repository.getRepository(req.params.owner + "/" + req.params.name, null, worker, function (err, repository, language) {
+                    Repository.getRepository(req.params.owner + "/" + req.params.name, null, worker, function (err, repository) {
                         if (err) {
                             return next(err);
                         }
                         else {
-                            Repository.getReadme(repository.full_name, worker, function (readme) {
-                                res.render("repository/show", {
-                                    title: repository.full_name,
-                                    info: req.flash('info'),
-                                    error: req.flash('error'),
-                                    repository: repository,
-                                    user: req.session.user,
-                                    readme: readme
+                            global.db.cypherQuery("MATCH (u:User {user_id: " + req.session.user.id + "})-[:Star]->(r:Repository {repository_id: " + repository.repository_id + "})", function (err, result) {
+                                if (err) {
+                                    return next(err);
+                                }
+                                var starred = result.data.length != 0;
+                                Repository.getReadme(repository.full_name, worker, function (readme) {
+                                    return res.render("repository/show", {
+                                        title: repository.name,
+                                        info: req.flash('info'),
+                                        error: req.flash('error'),
+                                        repository: repository,
+                                        starred: starred,
+                                        user: req.session.user,
+                                        readme: readme
+                                    });
                                 });
                             });
                         }
@@ -99,3 +113,5 @@ exports.show = function (req, res, next) {
         }
     });
 };
+
+exports.stars = require('./star');

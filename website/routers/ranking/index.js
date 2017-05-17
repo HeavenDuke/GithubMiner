@@ -4,8 +4,9 @@
 
 var express = require('express');
 var ranking_controller = require('../../controllers').ranking;
+var astepback = require('../../middlewares').astepback;
 var router = express.Router();
 
-router.get('/', ranking_controller.index);
+router.get('/', astepback, ranking_controller.index);
 
 module.exports = router;

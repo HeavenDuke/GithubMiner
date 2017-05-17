@@ -20,7 +20,7 @@
             }
         }
         var width = $("#cloud").parent()[0].clientWidth;
-        var height = width * 9 / 16;
+        var height = Math.min(width * 9 / 16, 400);
         $("#cloud").attr("width", width);
         $("#cloud").attr("height", height);
 
