@@ -37,7 +37,7 @@ var fetch_follow = function (user, worker, callback) {
                 if (err) {
                     return callback(err);
                 }
-                if (result.meta.link.match(/rel="last"/) == null) {
+                if (!result.meta.link || result.meta.link.match(/rel="last"/) == null) {
                     return callback();
                 }
                 else {
@@ -93,7 +93,7 @@ var fetch_starred = function (user, worker, callback) {
                 if (err) {
                     return callback(err);
                 }
-                if (result.meta.link.match(/rel="last"/) == null) {
+                if (!result.meta.link || result.meta.link.match(/rel="last"/) == null) {
                     callback();
                 }
                 else {
