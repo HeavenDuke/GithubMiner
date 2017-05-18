@@ -23,7 +23,7 @@ exports.lucky_guess = function (excluded, offset, limit, callback) {
 };
 
 exports.collaborative_filtering = function (user, excluded, offset, limit, callback) {
-    global.mongoose.db.itemcf.findAll({
+    global.mongoose.db.itemcf.find({
         where: {
             user_id: user.user_id,
             repository_id: {
