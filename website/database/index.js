@@ -21,7 +21,7 @@ var ItemCFSchema = new Schema(ItemCF.Schema, {collection: "itemcf0"});
 
 database1.itemcf = mongoose.model('itemcf0', ItemCFSchema);
 
-ItemCFSchema = new Schema(ItemCF.Schema, {collection: "itemcf0"});
+ItemCFSchema = new Schema(ItemCF.Schema, {collection: "itemcf1"});
 
 database2.itemcf = mongoose.model('itemcf1', ItemCFSchema);
 
