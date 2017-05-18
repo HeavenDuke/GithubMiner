@@ -46,7 +46,7 @@ class UserRepositoryMatrixConstructor(object):
                 i += 1
 
     def construct_event_log(self, graph):
-        query = "MATCH (u:User)-[a:Star|Issue|Contribute|Membership|Fork]-(r:Repository) RETURN u.user_id AS user_id, {Star: 1, Issue: 2, Fork: 3, Contribute: 4, Membership: 5}[a.type] AS score,r.repository_id AS repository_id"
+        query = "MATCH (u:User)-[a:Star|Issue|Contribute|Membership|Fork]->(r:Repository) RETURN u.user_id AS user_id, {Star: 1, Issue: 2, Fork: 3, Contribute: 4, Membership: 5}[a.type] AS score,r.repository_id AS repository_id"
         self.event_logs += graph.run(query).data()
 
     def construct_score_matrix(self):
