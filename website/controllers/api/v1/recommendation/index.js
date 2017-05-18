@@ -49,17 +49,61 @@ exports.repository = function (req, res, next) {
         else {
             var repository = result.data[0];
             if (repository) {
-                engines.social(repository, (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset)) , pagination, function (err, result) {
-                    if (err) {
-                        return next(err);
-                    }
-                    else {
-                        res.json({
-                            message: "success",
-                            recommendations: result
-                        });
-                    }
-                });
+                var list = [];
+                if (req.query.type != "content") {
+                    engines.similar_social_repository(repository, (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset)), pagination, function (err, result) {
+                        if (err) {
+                            return next(err);
+                        }
+                        else {
+                            list = list.concat(result);
+                            if (list.length < pagination) {
+                                engines.similar_content_repository(repository, 0, pagination - result.length, function (err, result) {
+                                    if (err) {
+                                        res.json({
+                                            message: "success",
+                                            recommendations: list,
+                                            type: "content"
+                                        });
+                                    }
+                                    else {
+                                        list = list.concat(result);
+                                        res.json({
+                                            message: "success",
+                                            recommendations: list,
+                                            type: "content",
+                                            offset: result.length
+                                        });
+                                    }
+                                });
+                            }
+                            else {
+                                res.json({
+                                    message: "success",
+                                    recommendations: result
+                                });
+                            }
+                        }
+                    });
+                }
+                else {
+                    engines.similar_content_repository(repository, (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset)), pagination, function (err, result) {
+                        if (err) {
+                            res.json({
+                                message: "success",
+                                recommendations: []
+                            });
+                        }
+                        else {
+                            list = list.concat(result);
+                            res.json({
+                                message: "success",
+                                recommendations: list,
+                                type: "content"
+                            });
+                        }
+                    });
+                }
             }
             else {
                 res.json({

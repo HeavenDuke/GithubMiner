@@ -12,7 +12,7 @@ var Crawler = function (github, db) {
     this.github = github;
     this.db = db;
     this.start = 500000;
-    this.end = 100;
+    this.end = 90;
 };
 
 Crawler.prototype.fetch_range = function (start, end, page, callback) {

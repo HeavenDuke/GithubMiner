@@ -5,7 +5,7 @@
 
 (function () {
 
-    var offset = 0, repository_id;
+    var offset = 0, repository_id, type;
     var renderer = new marked.Renderer();
     renderer.image = function(href, title, text) {
         var out = '<img class="md-image" style="max-width: 100%;" src="' + href + '" alt="' + text + '"';
@@ -76,8 +76,13 @@
     var fetch_recommendations = function (rid, skip) {
         $.get("/api/v1/recommendation/repository", {
             repository_id: rid,
-            offset: skip
+            offset: skip,
+            type: type
         }, function (data, status) {
+            type = data.type;
+            if (data.offset) {
+                offset = data.offset;
+            }
             construct_recommendation_list(data.recommendations);
         });
     };
