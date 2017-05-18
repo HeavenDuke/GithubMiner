@@ -4,7 +4,7 @@
 
 (function () {
 
-    var offset = 0, type;
+    var offset = 0, roffset = 0, refreshed = true, type;
 
     var renderer = new marked.Renderer();
     renderer.image = function(href, title, text) {
@@ -30,6 +30,9 @@
             alert("No more recommendations.");
         }
         else {
+            if (!refreshed) {
+                roffset += list.length;
+            }
             $("#recommendation-container").children("li").remove();
             list.forEach(function (item) {
                 $("#recommendation-container").append($(construct_recommendation_item(item)));
@@ -45,7 +48,7 @@
 
     var fetch_recommendations = function (first) {
         var params = {
-            offset: offset
+            offset: roffset
         };
         if (first) {
             params["restart"] = true;
@@ -56,7 +59,11 @@
                 type = data.type;
             }
             if (data.offset) {
-                offset = data.offset;
+                roffset = data.offset;
+                refreshed = true;
+            }
+            else {
+                refreshed = false;
             }
             construct_recommendation_list(data.recommendations);
         });
