@@ -25,16 +25,14 @@ exports.lucky_guess = function (excluded, offset, limit, callback) {
 exports.collaborative_filtering = function (user, excluded, offset, limit, callback) {
     console.log(user);
     global.mongoose.db.itemcf.find({
-        where: {
-            user_id: user.user_id,
-            repository_id: {
-                $nin: excluded
-            }
-        },
-        order: [["score", "DESC"]],
-        limit: limit,
-        offset: offset
-    }).then(function (result) {
+        user_id: user.user_id,
+        repository_id: {
+            $nin: excluded
+        }
+    }).sort({score: -1})
+        .limit(limit)
+        .skip(offset)
+        .then(function (result) {
         console.log(result);
         var metas = {}, rids = [];
         result.forEach(function (item) {
