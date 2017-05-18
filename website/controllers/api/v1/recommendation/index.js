@@ -4,6 +4,7 @@
 
 var engines = require('../../../../libs').recommendation;
 
+// TODO：重写推荐算法，先接入协同过滤的版本
 exports.guess = function (req, res, next) {
     var pagination = 6, restart = !!req.query.restart, excludes;
     if (restart) {

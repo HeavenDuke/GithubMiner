@@ -11,17 +11,13 @@ ItemCF.Schema = {
         required: true
     },
     repository_id: {
-        type: String,
+        type: Number,
         required: true
     },
     score: {
         type: Number,
         required: true
     }
-};
-
-ItemCF.collection = {
-    collection: "itemcf"
 };
 
 module.exports = ItemCF;

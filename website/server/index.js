@@ -72,7 +72,11 @@ Server.prototype.initialize_global_variables = function (config) {
     require('../libs').date();
     global.config = config;
     global.db = new neo4j(config.database.queryString);
-    global.mongoose = require('../database').loader;
+    global.mongoose = {
+        db1: require('../database').loader1,
+        db2: require('../database').loader2,
+        flag: require('../database').flagdatabase
+    };
     global.language_style = require('../../config/laguage_colors.json');
 
     var github = new Github(config.github.options);
