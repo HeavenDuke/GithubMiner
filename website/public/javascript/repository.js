@@ -113,28 +113,24 @@
         $(".readme").find("a").each(function () {
             var href = $(this).attr("href");
             if (href) {
-                console.log(href);
                 if (href.match(/(^.\/)|(^..\/)(^.\\)|(^..\\)/) != null) {
                     href = url + href.replace(/($.\/)|($..\/)($.\\)|($..\\)/, "/");
                 }
                 else if (href.match(/(^http:\\\\)|(^https:\/\/)|(#)/) == null) {
                     href = url + "/" + href;
                 }
-                console.log(href);
             }
             $(this).attr('href', href);
         });
         $(".readme").find("img").each(function () {
             var src = $(this).attr("src");
             if (src) {
-                console.log(src);
                 if (src.match(/(^.\/)|(^..\/)(^.\\)|(^..\\)/) != null) {
                     src = url + src.replace(/($.\/)|($..\/)($.\\)|($..\\)/, "/");
                 }
                 else if (src.match(/(^http:\\\\)|(^https:\/\/)|(#)/) == null) {
                     src = url + "/" + src;
                 }
-                console.log(src);
             }
             $(this).attr('src', src);
         });
