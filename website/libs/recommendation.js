@@ -2,8 +2,8 @@
  * Created by heavenduke on 17-5-10.
  */
 
-exports.lucky_guess = function (offset, limit, callback) {
-    var query = "MATCH (r:Repository) RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.stargazers_count as stargazers_count, rand() as score ORDER BY score DESC "
+exports.lucky_guess = function (excluded, offset, limit, callback) {
+    var query = "MATCH (r:Repository) WHERE NOT(r.repository_id IN " + JSON.stringify(excluded) + ") RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.stargazers_count as stargazers_count, rand() as score ORDER BY score DESC "
         + "SKIP " + offset + " LIMIT " + limit;
     global.db.cypherQuery(query, function (err, result) {
         if (err) {
@@ -22,10 +22,13 @@ exports.lucky_guess = function (offset, limit, callback) {
     });
 };
 
-exports.collaborative_filtering = function (user, offset, limit, callback) {
+exports.collaborative_filtering = function (user, excluded, offset, limit, callback) {
     global.mongoose.db.itemcf.findAll({
         where: {
-            user_id: user.user_id
+            user_id: user.user_id,
+            repository_id: {
+                $nin: excluded
+            }
         },
         order: [["score", "DESC"]],
         limit: limit,
@@ -37,9 +40,10 @@ exports.collaborative_filtering = function (user, offset, limit, callback) {
     });
 };
 
-exports.similar_social_repository = function (repository, offset, limit, callback) {
+exports.similar_social_repository = function (repository, excluded, offset, limit, callback) {
     var query = "MATCH (r0:Repository {repository_id: " + repository.repository_id + "})<-[]-(u:User)-[]->(r:Repository) "
               + "WHERE r.repository_id<>" + repository.repository_id + " "
+              + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
               + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description,count(*) AS score, r.language=r0.language as sim ORDER BY score DESC, sim DESC "
               + "SKIP " + offset + " LIMIT " + limit;
     global.db.cypherQuery(query, function (err, result) {
@@ -59,9 +63,10 @@ exports.similar_social_repository = function (repository, offset, limit, callbac
     });
 };
 
-exports.similar_content_repository = function (repository, offset, limit, callback) {
+exports.similar_content_repository = function (repository, excluded, offset, limit, callback) {
     var query = "MATCH (r:Repository {language: '" + repository.language + "'}) "
         + "WHERE r.repository_id<>" + repository.repository_id + " "
+        + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
         + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description ORDER BY r.stargazers_count "
         + "SKIP " + offset + " LIMIT " + limit;
     global.db.cypherQuery(query, function (err, result) {
@@ -81,8 +86,7 @@ exports.similar_content_repository = function (repository, offset, limit, callba
     });
 };
 
-exports.from_explore_action = function (action, offset, limit, callback) {
-
+exports.from_explore_action = function (action, excluded, offset, limit, callback) {
     function construct_map(action) {
         var result = "{", first = true;
         for(var repository_id in action) {
@@ -114,6 +118,7 @@ exports.from_explore_action = function (action, offset, limit, callback) {
         query = "MATCH (r0:Repository)<-[]-(u:User)-[]->(r:Repository) "
             + "WHERE NOT(r.repository_id IN " + construct_list(action) + ") "
             + "AND r0.repository_id IN " + construct_list(action) + " "
+            + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
             + " RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description,sum(CASE r0.repository_id ";
         for(var repository_id in action) {
             query += "WHEN " + repository_id + " THEN " + action[repository_id] + " ";
@@ -123,7 +128,8 @@ exports.from_explore_action = function (action, offset, limit, callback) {
     }
     else {
         query = "MATCH (r:Repository) "
-            + "WHERE r.language IN []"
+            + "WHERE r.language IN [] "
+            + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
             + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description "
             + "SKIP " + offset + " LIMIT " + limit;
     }
@@ -144,11 +150,12 @@ exports.from_explore_action = function (action, offset, limit, callback) {
     });
 };
 
-exports.from_explore_languages = function (languages, offset, limit, callback) {
+exports.from_explore_languages = function (languages, excluded, offset, limit, callback) {
     var query;
     if (Object.keys(languages).length != 0) {
         query = "MATCH (r:Repository) "
         + "WHERE r.language IN " + JSON.stringify(Object.keys(languages)) + " "
+        + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
         + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, ";
         query += "CASE r.language ";
         for(var l in languages) {
@@ -160,7 +167,8 @@ exports.from_explore_languages = function (languages, offset, limit, callback) {
     }
     else {
         query = "MATCH (r:Repository) "
-            + "WHERE r.language IN []"
+            + "WHERE r.language IN [] "
+            + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
             + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description "
             + "SKIP " + offset + " LIMIT " + limit;
     }
