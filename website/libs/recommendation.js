@@ -34,7 +34,25 @@ exports.collaborative_filtering = function (user, excluded, offset, limit, callb
         limit: limit,
         offset: offset
     }).then(function (result) {
-        return callback(null, result);
+        var metas = {}, rids = [];
+        result.forEach(function (item) {
+            rids.push(item.repository_id);
+            metas[item.repository_id] = item.score;
+        });
+        global.db.cypherQuery("MATCH (r:Repository) WHERE r.repository_id IN " + JSON.stringify(rids) + " RETURN r", function (err, result) {
+            if (err) {
+                return callback(err);
+            }
+            else {
+                result.data.forEach(function (item) {
+                    item.score = metas["" + item.repository_id];
+                });
+                result.data.sort(function (i1, i2) {
+                    return i1.score < i2.score;
+                });
+                return callback(null, result.data);
+            }
+        });
     }).catch(function (err) {
         return callback(err);
     });
