@@ -67,7 +67,7 @@ var fetch_starred = function (user, worker, callback) {
                     + ", r.description='" + (records[cnt].repo.description ? records[cnt].repo.description.replace(/'/g, "\\'") : "")
                     + "', r.default_branch='" + records[cnt].repo.default_branch
                     + "', r.updated=true" + (records[cnt].repo.language ? ",r.language='" + records[cnt].repo.language + "'" : "")
-                    + " CREATE UNIQUE (u)-[:Star {type: 'Star' created_at: " + Math.round(Date.parse(records[cnt].starred_at) / 1000.) + "}]->(r)";
+                    + " CREATE UNIQUE (u)-[:Star {type: 'Star', created_at: " + Math.round(Date.parse(records[cnt].starred_at) / 1000.) + "}]->(r)";
                 global.db.cypherQuery(query, function (err, result) {
                     if (err) {
                         callback(err);
