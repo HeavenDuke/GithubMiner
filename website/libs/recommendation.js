@@ -34,6 +34,7 @@ exports.collaborative_filtering = function (user, excluded, offset, limit, callb
         limit: limit,
         offset: offset
     }).then(function (result) {
+        console.log(result);
         var metas = {}, rids = [];
         result.forEach(function (item) {
             rids.push(item.repository_id);
