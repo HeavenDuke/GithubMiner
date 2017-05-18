@@ -118,7 +118,7 @@ exports.guess = function (req, res, next) {
                 });
                 break;
             default:
-                engines.collaborative_filtering(req.session.user.info, excluded, offset, limit, function (err, result) {
+                engines.collaborative_filtering(req.session.user.info, excluded, offset, pagination, function (err, result) {
                     if (!err) {
                         list = list.concat(result);
                     }
