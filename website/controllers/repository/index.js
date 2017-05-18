@@ -3,6 +3,7 @@
  */
 
 var Repository = require('../../libs').repository;
+var Profile = require('../../libs').profile;
 
 var Github = require('github');
 
@@ -29,6 +30,7 @@ exports.show = function (req, res, next) {
                         }
                         var starred = result.data.length != 0;
                         Repository.getReadme(repository.full_name, worker, function (readme) {
+                            Profile.record_action(req.session, repository);
                             return res.render("repository/show", {
                                 title: repository.name,
                                 info: req.flash('info'),
@@ -45,6 +47,7 @@ exports.show = function (req, res, next) {
                     global.master.get_worker(function (w) {
                         worker = w;
                         Repository.getReadme(repository.full_name, worker, function (readme) {
+                            Profile.record_action(req.session, repository);
                             res.render("repository/show", {
                                 title: repository.full_name,
                                 info: req.flash('info'),
@@ -82,6 +85,7 @@ exports.show = function (req, res, next) {
                                     }
                                 });
                                 Repository.getReadme(repository.full_name, worker, function (readme) {
+                                    Profile.record_action(req.session, repository);
                                     return res.render("repository/show", {
                                         title: repository.name,
                                         info: req.flash('info'),
@@ -105,6 +109,7 @@ exports.show = function (req, res, next) {
                             }
                             else {
                                 Repository.getReadme(repository.full_name, worker, function (readme) {
+                                    Profile.record_action(req.session, repository);
                                     res.render("repository/show", {
                                         title: repository.full_name,
                                         info: req.flash('info'),

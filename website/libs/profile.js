@@ -133,3 +133,22 @@ exports.construct_profile = function (user, worker, callback) {
         }
     });
 };
+
+exports.record_action = function (session, repository) {
+    if (!session.action) {
+        session.action = {};
+    }
+    if (!session.languages) {
+        session.languages = {};
+    }
+    if (!session.action[repository.repository_id]) {
+        session.action[repository.repository_id] = 0;
+    }
+    session.action[repository.repository_id]++;
+    if (repository.language) {
+        if (!session.languages[repository.language]) {
+            session.languages[repository.language] = 0;
+        }
+        session.languages[repository.language]++;
+    }
+};

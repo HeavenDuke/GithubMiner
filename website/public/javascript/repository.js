@@ -79,7 +79,9 @@
             offset: skip,
             type: type
         }, function (data, status) {
-            type = data.type;
+            if (data.type) {
+                type = data.type;
+            }
             if (data.offset) {
                 offset = data.offset;
             }

@@ -4,7 +4,7 @@
 
 (function () {
 
-    var offset = 0;
+    var offset = 0, type;
 
     var renderer = new marked.Renderer();
     renderer.image = function(href, title, text) {
@@ -44,11 +44,20 @@
     };
 
     var fetch_recommendations = function (first) {
-        var params = {};
+        var params = {
+            offset: offset
+        };
         if (first) {
             params["restart"] = true;
         }
+        params["type"] = type;
         $.get("/api/v1/recommendation/guess", params, function (data, status) {
+            if (data.type) {
+                type = data.type;
+            }
+            if (data.offset) {
+                offset = data.offset;
+            }
             construct_recommendation_list(data.recommendations);
         });
     };
@@ -87,6 +96,7 @@
             result += "</li>";
             return result;
         };
+
 
         if (list.length == 0) {
             alert("No more event.");

@@ -1,47 +1,166 @@
 /**
  * Created by heavenduke on 17-4-28.
  */
-
+var http = require('http');
 var engines = require('../../../../libs').recommendation;
 
-// TODO：重写推荐算法，先接入协同过滤的版本
 exports.guess = function (req, res, next) {
-    var pagination = 6, restart = !!req.query.restart, excludes;
-    if (restart) {
-        excludes = [];
-        req.session.guess_excludes = excludes;
+    // 一共10个位置，采用：ITEM-CF > ACTION > LANGUAGE > LUCKY GUESS
+    var pagination = 10;
+    var offset = (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset));
+    var list = [];
+    if (!req.session.action) {
+        req.session.action = {};
     }
-    else {
-        excludes = req.session.guess_excludes;
-        if (!excludes) {
-            excludes = [];
-        }
+    if (!req.session.languages) {
+        req.session.languages = {};
     }
-    global.db.cypherQuery("MATCH (r:Repository) WHERE NOT(r.repository_id IN " + JSON.stringify(excludes) + ") RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.stargazers_count as stargazers_count, rand() as score ORDER BY score DESC LIMIT " + pagination + "", function (err, result) {
-        if (err) {
-            return next(err);
-        }
-        else {
-            for(var i = 0; i < result.data.length; i++) {
-                excludes.push(result.data[i][0]);
-                result.data[i] = {
-                    repository_id: result.data[i][0],
-                    full_name: result.data[i][1],
-                    description: result.data[i][2],
-                    stargazers_count: result.data[i][3]
+    if (!req.query.type && !req.session.user) {
+        req.query.type = "action";
+    }
+    switch(req.query.type) {
+        case "action":
+            engines.from_explore_action(req.session.action, offset, pagination, function (err, result) {
+                if (!err) {
+                    list = list.concat(result);
                 }
-            }
-            req.session.guess_excludes = excludes;
-            res.json({
-                message: "success",
-                recommendations: result.data
+                console.log(err);
+                if (err || list.length >= pagination) {
+                    return res.json({
+                        message: 'success',
+                        recommendations: list
+                    });
+                }
+                else {
+                    engines.from_explore_languages(req.session.languages, 0, pagination - list.length, function (err, result) {
+                        if (!err) {
+                            list = list.concat(result);
+                        }
+                        console.log(err);
+                        if (err || list.length >= pagination) {
+                            return res.json({
+                                message: 'success',
+                                recommendations: list,
+                                type: "language",
+                                offset: result instanceof Array ? result.length : 0
+                            });
+                        }
+                        else {
+                            engines.lucky_guess(offset, pagination - list.length, function (err, result) {
+                                if (!err) {
+                                    list = list.concat(result);
+                                }
+                                console.log(err);
+                                return res.json({
+                                    message: 'success',
+                                    recommendations: list,
+                                    type: 'lucky',
+                                    offset: result instanceof Array ? result.length : 0
+                                });
+                            });
+                        }
+                    });
+                }
             });
-        }
-    });
+            break;
+        case "language":
+            engines.from_explore_languages(req.session.languages, offset, pagination, function (err, result) {
+                if (!err) {
+                    list = list.concat(result);
+                }
+                if (err || list.length >= pagination) {
+                    return res.json({
+                        message: 'success',
+                        recommendations: list
+                    });
+                }
+                else {
+                    engines.lucky_guess(0, pagination - list.length, function (err, result) {
+                        if (!err) {
+                            list = list.concat(result);
+                        }
+                        return res.json({
+                            message: 'success',
+                            recommendations: list,
+                            type: 'lucky',
+                            offset: result instanceof Array ? result.length : 0
+                        });
+                    });
+                }
+            });
+            break;
+        case "lucky":
+            engines.lucky_guess(offset, pagination, function (err, result) {
+                if (!err) {
+                    list = list.concat(result);
+                }
+                return res.json({
+                    message: 'success',
+                    recommendations: list
+                });
+            });
+            break;
+        default:
+            engines.collaborative_filtering(req.session.user.info, offset, limit, function (err, result) {
+                if (!err) {
+                    list = list.concat(result);
+                }
+                if (err || list.length >= pagination) {
+                    return res.json({
+                        message: 'success',
+                        recommendations: list
+                    });
+                }
+                else {
+                    engines.from_explore_action(req.session.action, 0, pagination - list.length, function (err, result) {
+                        if (!err) {
+                            list = list.concat(result);
+                        }
+                        if (err || list.length >= pagination) {
+                            return res.json({
+                                message: 'success',
+                                recommendations: list,
+                                type: 'action',
+                                offset: result instanceof Array ? result.length : 0
+                            });
+                        }
+                        else {
+                            engines.from_explore_languages(req.session.languages, 0, pagination - list.length, function (err, result) {
+                                if (!err) {
+                                    list = list.concat(result);
+                                }
+                                if (err || list.length >= pagination) {
+                                    return res.json({
+                                        message: 'success',
+                                        recommendations: list,
+                                        type: "language",
+                                        offset: result instanceof Array ? result.length : 0
+                                    });
+                                }
+                                else {
+                                    engines.lucky_guess(offset, pagination - list.length, function (err, result) {
+                                        if (!err) {
+                                            list = list.concat(result);
+                                        }
+                                        return res.json({
+                                            message: 'success',
+                                            recommendations: list,
+                                            type: 'lucky',
+                                            offset: result instanceof Array ? result.length : 0
+                                        });
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+            break;
+    }
 };
 
 exports.repository = function (req, res, next) {
-    var pagination = 6;
+    var pagination = 10, offset = (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset));
     global.db.cypherQuery("MATCH (r:Repository {repository_id: " + req.query.repository_id + "}) RETURN r LIMIT 1", function (err, result) {
         if (err) {
             return next(err);
@@ -51,7 +170,7 @@ exports.repository = function (req, res, next) {
             if (repository) {
                 var list = [];
                 if (req.query.type != "content") {
-                    engines.similar_social_repository(repository, (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset)), pagination, function (err, result) {
+                    engines.similar_social_repository(repository, offset, pagination, function (err, result) {
                         if (err) {
                             return next(err);
                         }
@@ -87,7 +206,7 @@ exports.repository = function (req, res, next) {
                     });
                 }
                 else {
-                    engines.similar_content_repository(repository, (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset)), pagination, function (err, result) {
+                    engines.similar_content_repository(repository, offset, pagination, function (err, result) {
                         if (err) {
                             res.json({
                                 message: "success",
