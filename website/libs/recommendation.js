@@ -216,6 +216,7 @@ exports.from_explore_languages = function (languages, excluded, offset, limit, c
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
                     description: result.data[i][2],
+                    why: "preferred language",
                     language: result.data[i][3],
                     color: language_colors[result.data[i][3]] ? language_colors[result.data[i][3]].color : ""
                 };
