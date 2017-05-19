@@ -189,7 +189,7 @@ exports.from_explore_languages = function (languages, excluded, offset, limit, c
         query = "MATCH (r:Repository) "
         + "WHERE r.language IN " + JSON.stringify(Object.keys(languages)) + " "
         + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
-        + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language ";
+        + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language, ";
         query += "CASE r.language ";
         for(var l in languages) {
             query += "WHEN '" + l + "' ";
@@ -207,6 +207,7 @@ exports.from_explore_languages = function (languages, excluded, offset, limit, c
     }
     global.db.cypherQuery(query, function (err, result) {
         if (err) {
+            console.log(err);
             return callback(err);
         }
         else {
