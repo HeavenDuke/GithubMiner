@@ -14,6 +14,7 @@ var path = require('path');
 var neo4j = require('node-neo4j');
 var mongoose = require('mongoose');
 var Github = require('github');
+var schedule = require('node-schedule');
 var routers = require('../routers');
 var GithubMaster = require('../libs').crawlers;
 
@@ -88,7 +89,18 @@ Server.prototype.initialize_global_variables = function (config) {
     global.master = new GithubMaster([github]);
 };
 
-Server.prototype.start_tasks = function () {
+Server.prototype.schedule_tasks = function (config) {
+    var jobs = require('../jobs');
+
+    var j1 = schedule.scheduleJob("0 0 0 * * *", jobs.RefreshRepositoryUpdateStatusJob(config));
+
+    var j2 = schedule.scheduleJob("0 0 0 * * *", jobs.RefreshRankingJob(config));
+
+    var j3 = schedule.scheduleJob("0 5 0 * * *", jobs.UpdateNewRepositoryRankingJob(config));
+
+    var j4 = schedule.scheduleJob("0 0 * * * *", jobs.FetchActionJob(config));
+
+    var j5 = schedule.scheduleJob("0 10 0 * * *", jobs.UpdateRecommendationCacheJob(config));
 
 };
 

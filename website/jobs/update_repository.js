@@ -6,7 +6,6 @@
 
 var Github = require('github');
 var Neo4j = require('node-neo4j');
-var config = require('../config')(process.env.environment);
 
 var Crawler = function (github, db) {
     this.github = github;
@@ -145,17 +144,20 @@ Crawler.prototype.run = function (callback) {
     setTimeout(temp, 0);
 };
 
-module.exports = function () {
-    var github = new Github(config.github.options);
-    var db = new Neo4j(config.database.queryString);
-    github.authenticate(config.github.auth);
-    var crawler = new Crawler(github, db);
-    crawler.run(function (err) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log("successfully update all top repositories");
-        }
-    });
+module.exports = function (config) {
+
+    return function () {
+        var github = new Github(config.github.options);
+        var db = new Neo4j(config.database.queryString);
+        github.authenticate(config.github.auth);
+        var crawler = new Crawler(github, db);
+        crawler.run(function (err) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log("successfully update all top repositories");
+            }
+        });
+    };
 };

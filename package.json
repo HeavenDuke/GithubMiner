@@ -10,7 +10,6 @@
     "body-parser": "^1.17.1",
     "connect-flash": "^0.1.1",
     "connect-redis": "^3.2.0",
-    "cron": "^1.2.1",
     "express": "^4.14.1",
     "express-session": "^1.15.2",
     "github": "^9.2.0",
@@ -18,6 +17,7 @@
     "mongoose": "^4.9.8",
     "morgan": "^1.8.1",
     "node-neo4j": "latest",
+    "node-schedule": "^1.2.1",
     "octokat": "^0.6.2",
     "pug": "^2.0.0-beta11",
     "sleep": "latest"

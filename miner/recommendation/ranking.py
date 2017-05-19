@@ -61,8 +61,7 @@ class RankingCalculator(object):
 
         batch_size = 100
         index = 0
-        while index < 10 and index * batch_size < len(ranking):
-            print index
+        while index < 1 and index * batch_size < len(ranking):
             if index + 1 * batch_size > len(ranking):
                 batch = ranking[index * batch_size:]
             else:
