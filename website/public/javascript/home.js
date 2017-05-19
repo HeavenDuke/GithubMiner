@@ -23,6 +23,11 @@
             result += "<a class='list-item-title' href='/repositories/" + item.full_name + "'>" + item.full_name + "</a>";
             result += "<p class='list-item-description'>" + marked(item.description ? item.description : "null", {renderer: renderer}) + "</p>";
             result += "<p class='list-item-memo text-muted'><strong>Based on </strong>" + item.why + "</p>";
+            if (item.language && item.language != "") {
+                result += "<span class='pull-right badge' style='background-color: " + item.color + ";'>";
+                result += "<a style='color: white;' href='/search?language='" + item.language + "> " + item.language + "</a>";
+                result += "</span>";
+            }
             result += "</li>";
             return result;
         };

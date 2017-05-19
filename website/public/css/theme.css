@@ -48,6 +48,7 @@ form.navbar-form input {
 .list-item-memo {
     font-size: 10px;
     margin-bottom: 0;
+    display: inline-block;
 }
 
 .list-nothing {

@@ -2,8 +2,10 @@
  * Created by heavenduke on 17-5-10.
  */
 
+var language_colors = require('../../config/laguage_colors.json');
+
 exports.lucky_guess = function (excluded, offset, limit, callback) {
-    var query = "MATCH (r:Repository) WHERE NOT(r.repository_id IN " + JSON.stringify(excluded) + ") RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.stargazers_count as stargazers_count, rand() as score ORDER BY score DESC "
+    var query = "MATCH (r:Repository) WHERE NOT(r.repository_id IN " + JSON.stringify(excluded) + ") RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.stargazers_count as stargazers_count, r.language as language, rand() as score ORDER BY score DESC "
         + "SKIP " + offset + " LIMIT " + limit;
     global.db.cypherQuery(query, function (err, result) {
         if (err) {
@@ -15,7 +17,9 @@ exports.lucky_guess = function (excluded, offset, limit, callback) {
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
                     description: result.data[i][2],
-                    why: "lucky guess"
+                    why: "lucky guess",
+                    language: result.data[i][3],
+                    color: language_colors[result.data[i][3]] ? language_colors[result.data[i][3]].color : ""
                 };
             }
             return callback(null, result.data);
@@ -34,7 +38,6 @@ exports.collaborative_filtering = function (user, excluded, offset, limit, callb
         .limit(limit)
         .skip(offset)
         .then(function (result) {
-        console.log(result);
         var metas = {}, rids = [];
         result.forEach(function (item) {
             rids.push(item.repository_id);
@@ -47,7 +50,8 @@ exports.collaborative_filtering = function (user, excluded, offset, limit, callb
             else {
                 result.data.forEach(function (item) {
                     item.score = metas["" + item.repository_id];
-                    item.why = "what you like"
+                    item.color = language_colors[item.language] ? language_colors[item.language].color : "";
+                    item.why = "what you like";
                 });
                 result.data.sort(function (i1, i2) {
                     return i1.score < i2.score;
@@ -64,7 +68,7 @@ exports.similar_social_repository = function (repository, excluded, offset, limi
     var query = "MATCH (r0:Repository {repository_id: " + repository.repository_id + "})<-[]-(u:User)-[]->(r:Repository) "
               + "WHERE r.repository_id<>" + repository.repository_id + " "
               + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
-              + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description,count(*) AS score, r.language=r0.language as sim ORDER BY score DESC, sim DESC "
+              + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language, count(*) AS score, r.language=r0.language as sim ORDER BY score DESC, sim DESC "
               + "SKIP " + offset + " LIMIT " + limit;
     global.db.cypherQuery(query, function (err, result) {
         if (err) {
@@ -76,7 +80,9 @@ exports.similar_social_repository = function (repository, excluded, offset, limi
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
                     description: result.data[i][2],
-                    why: "what people also like"
+                    why: "what people also like",
+                    language: result.data[i][3],
+                    color: language_colors[result.data[i][3]] ? language_colors[result.data[i][3]].color : ""
                 };
             }
             return callback(null, result.data);
@@ -88,7 +94,7 @@ exports.similar_content_repository = function (repository, excluded, offset, lim
     var query = "MATCH (r:Repository {language: '" + repository.language + "'}) "
         + "WHERE r.repository_id<>" + repository.repository_id + " "
         + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
-        + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description ORDER BY r.stargazers_count "
+        + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language ORDER BY r.stargazers_count "
         + "SKIP " + offset + " LIMIT " + limit;
     global.db.cypherQuery(query, function (err, result) {
         if (err) {
@@ -100,7 +106,9 @@ exports.similar_content_repository = function (repository, excluded, offset, lim
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
                     description: result.data[i][2],
-                    why: "same language"
+                    why: "same language",
+                    language: result.data[i][3],
+                    color: language_colors[result.data[i][3]] ? language_colors[result.data[i][3]].color : ""
                 };
             }
             return callback(null, result.data);
@@ -141,7 +149,7 @@ exports.from_explore_action = function (action, excluded, offset, limit, callbac
             + "WHERE NOT(r.repository_id IN " + construct_list(action) + ") "
             + "AND r0.repository_id IN " + construct_list(action) + " "
             + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
-            + " RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description,sum(CASE r0.repository_id ";
+            + " RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language, sum(CASE r0.repository_id ";
         for(var repository_id in action) {
             query += "WHEN " + repository_id + " THEN " + action[repository_id] + " ";
         }
@@ -152,7 +160,7 @@ exports.from_explore_action = function (action, excluded, offset, limit, callbac
         query = "MATCH (r:Repository) "
             + "WHERE r.language IN [] "
             + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
-            + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description "
+            + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language "
             + "SKIP " + offset + " LIMIT " + limit;
     }
     global.db.cypherQuery(query, function (err, result) {
@@ -165,7 +173,9 @@ exports.from_explore_action = function (action, excluded, offset, limit, callbac
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
                     description: result.data[i][2],
-                    why: "what you've explored"
+                    why: "what you've explored",
+                    language: result.data[i][3],
+                    color: language_colors[result.data[i][3]] ? language_colors[result.data[i][3]].color : ""
                 };
             }
             return callback(null, result.data);
@@ -179,7 +189,7 @@ exports.from_explore_languages = function (languages, excluded, offset, limit, c
         query = "MATCH (r:Repository) "
         + "WHERE r.language IN " + JSON.stringify(Object.keys(languages)) + " "
         + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
-        + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, ";
+        + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language ";
         query += "CASE r.language ";
         for(var l in languages) {
             query += "WHEN '" + l + "' ";
@@ -192,7 +202,7 @@ exports.from_explore_languages = function (languages, excluded, offset, limit, c
         query = "MATCH (r:Repository) "
             + "WHERE r.language IN [] "
             + "AND NOT(r.repository_id IN " + JSON.stringify(excluded) + ") "
-            + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description "
+            + "RETURN r.repository_id as repository_id, r.full_name as full_name, r.description as description, r.language as language "
             + "SKIP " + offset + " LIMIT " + limit;
     }
     global.db.cypherQuery(query, function (err, result) {
@@ -205,7 +215,8 @@ exports.from_explore_languages = function (languages, excluded, offset, limit, c
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
                     description: result.data[i][2],
-                    why: "preferred languages"
+                    language: result.data[i][3],
+                    color: language_colors[result.data[i][3]] ? language_colors[result.data[i][3]].color : ""
                 };
             }
             return callback(null, result.data);
