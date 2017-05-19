@@ -14,7 +14,8 @@ exports.lucky_guess = function (excluded, offset, limit, callback) {
                 result.data[i] = {
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
-                    description: result.data[i][2]
+                    description: result.data[i][2],
+                    why: "lucky guess"
                 };
             }
             return callback(null, result.data);
@@ -46,6 +47,7 @@ exports.collaborative_filtering = function (user, excluded, offset, limit, callb
             else {
                 result.data.forEach(function (item) {
                     item.score = metas["" + item.repository_id];
+                    item.why = "what you like"
                 });
                 result.data.sort(function (i1, i2) {
                     return i1.score < i2.score;
@@ -73,7 +75,8 @@ exports.similar_social_repository = function (repository, excluded, offset, limi
                 result.data[i] = {
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
-                    description: result.data[i][2]
+                    description: result.data[i][2],
+                    why: "what people also like"
                 };
             }
             return callback(null, result.data);
@@ -96,7 +99,8 @@ exports.similar_content_repository = function (repository, excluded, offset, lim
                 result.data[i] = {
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
-                    description: result.data[i][2]
+                    description: result.data[i][2],
+                    why: "same language"
                 };
             }
             return callback(null, result.data);
@@ -160,7 +164,8 @@ exports.from_explore_action = function (action, excluded, offset, limit, callbac
                 result.data[i] = {
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
-                    description: result.data[i][2]
+                    description: result.data[i][2],
+                    why: "what you've explored"
                 };
             }
             return callback(null, result.data);
@@ -199,7 +204,8 @@ exports.from_explore_languages = function (languages, excluded, offset, limit, c
                 result.data[i] = {
                     repository_id: result.data[i][0],
                     full_name: result.data[i][1],
-                    description: result.data[i][2]
+                    description: result.data[i][2],
+                    why: "preferred languages"
                 };
             }
             return callback(null, result.data);

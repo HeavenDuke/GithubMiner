@@ -19,8 +19,7 @@ block content
             ul.list-group
                 li.list-group-item.golden.medal-title.text-center
                     a(href="/repositories/" + ranking[0].full_name)= ranking[0].full_name.replace(/.*\//, "")
-                li.list-group-item.medal-description.text-center
-                    p= ranking[0].description
+                li.list-group-item.medal-description.text-center= ranking[0].description
                 li.list-group-item
                     div(style="width: 50%; display: inline-block; padding-right: 5px;")
                             a.btn.btn-default.btn-block.btn-flat
@@ -34,8 +33,7 @@ block content
             ul.list-group
                 li.list-group-item.silver.medal-title.text-center
                     a(href="/repositories/" + ranking[1].full_name)= ranking[1].full_name.replace(/.*\//, "")
-                li.list-group-item.medal-description.text-center
-                    p= ranking[1].description
+                li.list-group-item.medal-description.text-center= ranking[1].description
                 li.list-group-item
                     div(style="width: 50%; display: inline-block; padding-right: 5px;")
                         a.btn.btn-default.btn-block.btn-flat
@@ -49,8 +47,7 @@ block content
             ul.list-group
                 li.list-group-item.bronze.medal-title.text-center
                     a(href="/repositories/" + ranking[2].full_name)= ranking[2].full_name.replace(/.*\//, "")
-                li.list-group-item.medal-description.text-center
-                    p= ranking[2].description
+                li.list-group-item.medal-description.text-center= ranking[2].description
                 li.list-group-item
                     div(style="width: 50%; display: inline-block; padding-right: 5px;")
                         a.btn.btn-default.btn-block.btn-flat
