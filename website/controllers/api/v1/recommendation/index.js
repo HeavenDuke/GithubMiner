@@ -5,8 +5,7 @@ var http = require('http');
 var engines = require('../../../../libs').recommendation;
 
 exports.guess = function (req, res, next) {
-    // 一共10个位置，采用：ITEM-CF > ACTION > LANGUAGE > LUCKY GUESS
-    var pagination = 10;
+    var pagination = 6;
     var offset = (isNaN(parseInt(req.query.offset)) ? 0 : parseInt(req.query.offset));
     var list = [];
     if (!req.session.action) {

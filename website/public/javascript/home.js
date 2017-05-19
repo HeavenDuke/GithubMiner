@@ -22,6 +22,7 @@
             var result = "<li class='list-group-item'>";
             result += "<a class='list-item-title' href='/repositories/" + item.full_name + "'>" + item.full_name + "</a>";
             result += "<p class='list-item-description'>" + marked(item.description ? item.description : "null", {renderer: renderer}) + "</p>";
+            result += "<p class='list-item-memo text-muted'><strong>Based on </strong>" + item.why + "</p>";
             result += "</li>";
             return result;
         };

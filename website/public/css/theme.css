@@ -45,6 +45,11 @@ form.navbar-form input {
     margin-top: 5px;
 }
 
+.list-item-memo {
+    font-size: 10px;
+    margin-bottom: 0;
+}
+
 .list-nothing {
     height: 150px;
     font-size: 30px;
