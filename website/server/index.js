@@ -46,7 +46,7 @@ var Server = function (config) {
 
     app.use(flash());
 
-    app.use(express.static("public", config.static));
+    app.use(express.static("public/dist", config.static));
     app.set('view engine', 'pug');
     app.use(methodOverride('_method'));
     app.use('/', routers);
