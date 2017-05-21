@@ -30,6 +30,11 @@ exports.show = function (req, res, next) {
                         }
                         var starred = result.data.length != 0;
                         Repository.getReadme(repository.full_name, worker, function (err, readme) {
+                            worker = new Github(global.config.github.options);
+                            worker.authenticate({
+                                type: "oauth",
+                                token: req.session.user.access_token
+                            });
                             Profile.record_action(req.session, repository);
                             return res.render("repository/show", {
                                 title: repository.name,
@@ -85,6 +90,11 @@ exports.show = function (req, res, next) {
                                     }
                                 });
                                 Repository.getReadme(repository.full_name, worker, function (err, readme) {
+                                    worker = new Github(global.config.github.options);
+                                    worker.authenticate({
+                                        type: "oauth",
+                                        token: req.session.user.access_token
+                                    });
                                     Profile.record_action(req.session, repository);
                                     return res.render("repository/show", {
                                         title: repository.name,
