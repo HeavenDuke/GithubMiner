@@ -9,12 +9,9 @@ var util = require('util');
 var Repository = {};
 
 Repository.getReadme = function (name, worker, callback) {
-    console.log(name);
     worker.repos.getReadme({owner: name.split('/')[0], repo: name.split('/')[1]}).then(function (result) {
-        console.log(result);
         callback(null, result.data);
     }).catch(function (err) {
-        console.log(err);
         callback(err);
     });
 };
