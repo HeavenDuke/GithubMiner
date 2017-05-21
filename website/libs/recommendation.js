@@ -18,8 +18,8 @@ exports.lucky_guess = function (excluded, offset, limit, callback) {
                     full_name: result.data[i][1],
                     description: result.data[i][2],
                     why: "lucky guess",
-                    language: result.data[i][3],
-                    color: language_colors[result.data[i][3]] ? language_colors[result.data[i][3]].color : ""
+                    language: result.data[i][4],
+                    color: language_colors[result.data[i][4]] ? language_colors[result.data[i][4]].color : ""
                 };
             }
             return callback(null, result.data);

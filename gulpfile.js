@@ -58,4 +58,4 @@ gulp.task('ranking', function () {
         .pipe(notify({message: 'finish building js for ranking module'}));
 });
 
-gulp.watch(['public/src/**/*.*'], ['default']);
+gulp.watch(['website/public/src/**/*.*'], ['default']);
