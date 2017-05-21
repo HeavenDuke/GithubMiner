@@ -17,9 +17,7 @@ exports.show = function (req, res, next) {
             if (repository && repository.updated == true) {
                 var worker;
                 if (req.session.user) {
-                    var options = JSON.parse(JSON.stringify(global.config.github.options));
-                    options.headers.Accept = "application/vnd.github.v3.star+json";
-                    worker = new Github(options);
+                    worker = new Github(global.config.github.options);
                     worker.authenticate({
                         type: "oauth",
                         token: req.session.user.access_token
@@ -30,7 +28,9 @@ exports.show = function (req, res, next) {
                         }
                         var starred = result.data.length != 0;
                         Repository.getReadme(repository.full_name, worker, function (err, readme) {
-                            worker = new Github(global.config.github.options);
+                            var options = JSON.parse(JSON.stringify(global.config.github.options));
+                            options.headers.Accept = "application/vnd.github.v3.star+json";
+                            worker = new Github(options);
                             worker.authenticate({
                                 type: "oauth",
                                 token: req.session.user.access_token
@@ -67,9 +67,7 @@ exports.show = function (req, res, next) {
             }
             else {
                 if (req.session.user) {
-                    options = JSON.parse(JSON.stringify(global.config.github.options));
-                    options.headers.Accept = "application/vnd.github.v3.star+json";
-                    worker = new Github(options);
+                    worker = new Github(global.config.github.options);
                     worker.authenticate({
                         type: "oauth",
                         token: req.session.user.access_token
@@ -90,7 +88,9 @@ exports.show = function (req, res, next) {
                                     }
                                 });
                                 Repository.getReadme(repository.full_name, worker, function (err, readme) {
-                                    worker = new Github(global.config.github.options);
+                                    var options = JSON.parse(JSON.stringify(global.config.github.options));
+                                    options.headers.Accept = "application/vnd.github.v3.star+json";
+                                    worker = new Github(options);
                                     worker.authenticate({
                                         type: "oauth",
                                         token: req.session.user.access_token
