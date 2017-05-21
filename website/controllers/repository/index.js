@@ -29,7 +29,7 @@ exports.show = function (req, res, next) {
                             return next(err);
                         }
                         var starred = result.data.length != 0;
-                        Repository.getReadme(repository.full_name, worker, function (readme) {
+                        Repository.getReadme(repository.full_name, worker, function (err, readme) {
                             Profile.record_action(req.session, repository);
                             return res.render("repository/show", {
                                 title: repository.name,
@@ -46,7 +46,7 @@ exports.show = function (req, res, next) {
                 else {
                     global.master.get_worker(function (w) {
                         worker = w;
-                        Repository.getReadme(repository.full_name, worker, function (readme) {
+                        Repository.getReadme(repository.full_name, worker, function (err, readme) {
                             Profile.record_action(req.session, repository);
                             res.render("repository/show", {
                                 title: repository.full_name,
@@ -84,7 +84,7 @@ exports.show = function (req, res, next) {
                                         console.log(err);
                                     }
                                 });
-                                Repository.getReadme(repository.full_name, worker, function (readme) {
+                                Repository.getReadme(repository.full_name, worker, function (err, readme) {
                                     Profile.record_action(req.session, repository);
                                     return res.render("repository/show", {
                                         title: repository.name,
@@ -108,7 +108,7 @@ exports.show = function (req, res, next) {
                                 return next(err);
                             }
                             else {
-                                Repository.getReadme(repository.full_name, worker, function (readme) {
+                                Repository.getReadme(repository.full_name, worker, function (err, readme) {
                                     Profile.record_action(req.session, repository);
                                     res.render("repository/show", {
                                         title: repository.full_name,
