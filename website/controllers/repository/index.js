@@ -82,11 +82,6 @@ exports.show = function (req, res, next) {
                                     return next(err);
                                 }
                                 var starred = result.data.length != 0;
-                                Repository.getStargazers(repository, worker, function (err) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                });
                                 Repository.getReadme(repository.full_name, worker, function (err, readme) {
                                     var options = JSON.parse(JSON.stringify(global.config.github.options));
                                     options.headers.Accept = "application/vnd.github.v3.star+json";
@@ -94,6 +89,11 @@ exports.show = function (req, res, next) {
                                     worker.authenticate({
                                         type: "oauth",
                                         token: req.session.user.access_token
+                                    });
+                                    Repository.getStargazers(repository, worker, function (err) {
+                                        if (err) {
+                                            console.log(err);
+                                        }
                                     });
                                     Profile.record_action(req.session, repository);
                                     return res.render("repository/show", {
