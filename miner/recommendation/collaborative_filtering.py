@@ -101,7 +101,7 @@ class UserRepositoryMatrixConstructor(object):
         collection.insert(docs)
 
 
-g = Graph("http://localhost:7474", user = "github", password = "github")
+g = Graph("http://localhost:7474", user = "neo4j", password = "github")
 client = MongoClient("localhost", 27017)
 
 UserRepositoryMatrixConstructor(graph = g, mongo = client)
