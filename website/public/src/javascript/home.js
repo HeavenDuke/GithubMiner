@@ -21,7 +21,7 @@
         var construct_recommendation_item = function (item) {
             var result = "<li class='list-group-item'>";
             result += "<a class='list-item-title' href='/repositories/" + item.full_name + "'>" + item.full_name + "</a>";
-            result += "<a class='pull-right badge' style='background-color: #B0B0B0; margin-top: 5px;' onclick='$(this).children(\'form\').submit();'><form class='hidden' method='POST' action='/repositories/" + item.full_name + "/star'></form><i class='fa fa-star'></i> Star</a>";
+            result += "<a class='pull-right badge' style='background-color: #B0B0B0; margin-top: 5px;' onclick='$(this).children(\"form\").submit();'><form class='hidden' method='POST' action='/repositories/" + item.full_name + "/star'></form><i class='fa fa-star'></i> Star</a>";
             result += "<p class='list-item-description'>" + marked(item.description ? item.description : "null", {renderer: renderer}) + "</p>";
             result += "<p class='list-item-memo text-muted'><strong>Based on </strong>" + item.why + "</p>";
             if (item.language && item.language != "") {
