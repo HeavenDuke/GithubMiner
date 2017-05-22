@@ -57,7 +57,7 @@ class UserRepositoryMatrixConstructor(object):
         self.similarity = cosine_similarity(np.transpose(self.data), dense_output = False)
 
     def calculate_rating(self):
-        self.score = self.data * preprocessing.normalize(self.similarity, norm = "l1", axis = 1)
+        self.score = self.data * preprocessing.normalize(self.similarity, norm = "l1", axis = 0)
 
     def select_db(self, mongo):
         db = mongo["githubminer"]
