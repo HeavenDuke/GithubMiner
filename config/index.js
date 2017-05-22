@@ -27,8 +27,8 @@ module.exports = function (environment) {
             oauth: {
                 api: "https://github.com/login/oauth/authorize",
                 token_api: "",
-                client_id: "ea9d2874e18bbcbca7b6",
-                client_secret: "4b2cbc7732f70666817c54f0648e25070abf73aa",
+                client_id: "【Fill the blank here】",
+                client_secret: "【Fill the blank here】",
                 scope: "user%20public_repo",
                 redirect_url: "http%3a%2f%2fminer.heavenduke.com%2fuser",
                 query: function (query) {
@@ -92,7 +92,7 @@ module.exports = function (environment) {
                 host: '127.0.0.1',
                 port: 6379
             },
-            queue: "queue:second_grade",
+            queue: "queue:githubminer",
             secret: '654321_SeCoNd-GrAdE^123456'
         },
         static: {
